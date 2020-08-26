@@ -1,5 +1,6 @@
 from pytest import fixture
 from pyLithoSurferAPI import Literature
+import pandas as pd
 
 #@fixture
 def literature_keys():
@@ -51,6 +52,15 @@ def test_literature_info():
     assert response['id'] == 625501, "The ID should be in response"
     assert set(literature_keys()).issubset(list(response.keys())), "All keys should be in the response"
 
+
+def test_literature_get_all():
+    """ Test API Call to get all literatures entries """
+
+    data = Literature.get_all()
+    assert isinstance(data, pd.DataFrame)
+    assert set(literature_keys()).issubset(list(data.columns))
+    assert len(data) > 20
+
 def test_literature_create():
     literature_instance = Literature(**literature_example())
     response = literature_instance.push_new_entry()
@@ -70,6 +80,7 @@ def test_literature_update():
     literature_instance = Literature(**literature_example())
     literature_instance.author = "Bob Dylan"
     response = literature_instance.update_entry()
+    print(response)
     assert isinstance(response, dict)
     assert response["id"] == 625501
     assert response["author"] == "Bob Dylan"

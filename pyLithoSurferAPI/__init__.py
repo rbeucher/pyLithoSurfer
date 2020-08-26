@@ -26,7 +26,7 @@ if LITHOSURFER_API_KEY is None:
 session = requests.Session()
 session.headers = {}
 session.headers["Authorization"] = f"Bearer {LITHOSURFER_API_KEY}"
-session.headers["Accept"] = "application/json"
-session.headers["Content-Type"] = "application/json"
+#session.headers["Accept"] = "*/*"
+#session.headers["Content-Type"] = "*/*"
 
 from .literature import Literature

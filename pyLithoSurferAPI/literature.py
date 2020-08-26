@@ -1,5 +1,6 @@
 from . import session, URL_BASE
 import json
+import pandas as pd
 
 
 class Literature(object):
@@ -7,6 +8,13 @@ class Literature(object):
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
+
+    @classmethod
+    def get_all(cls):
+        path = URL_BASE+'/api/literature/'
+        response = session.get(path, data={"size":200})
+        records = response.json()
+        return pd.DataFrame.from_records(records)
 
     @property
     def id(self):
@@ -241,7 +249,10 @@ class Literature(object):
         path = URL_BASE+'/api/literature/'
         data = self.to_dict()
         data.pop("id")
-        response = session.post(path, data=json.dumps(data))
+        headers = session.headers
+        headers["Accept"] = "application/json"
+        headers["Content-Type"] = "application/json"
+        response = session.post(path, data=json.dumps(data), headers=headers)
         if response.status_code == 200:
             id_value = response.json()["id"]
             print(f"Literature Entry with id={id_value} has been successfully created")
@@ -251,7 +262,10 @@ class Literature(object):
 
     def update_entry(self):
         path = URL_BASE+'/api/literature/'
-        response = session.put(path, data=self.to_json())
+        headers = session.headers
+        headers["Accept"] = "application/json"
+        headers["Content-Type"] = "application/json"
+        response = session.put(path, data=self.to_json(), headers=headers)
         if response.status_code == 200:
             id_value = response.json()["id"]
             print(f"Literature Entry with id={id_value} has been successfully updated")
