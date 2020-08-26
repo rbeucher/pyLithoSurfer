@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrMineral(object):
+class lChrMineral(APIRequests):
+
+    path = URL_BASE + "/api/l-chr-minerals"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

@@ -2,7 +2,9 @@ from . import session, URL_BASE
 import json
 
 
-class lVerticalDatum(object):
+class lVerticalDatum(APIRequests):
+
+    path = URL_BASE + "/api/l-vertical-data"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class helium(object):
+class helium(APIRequests):
+
+    path = URL_BASE + "/api/heliums"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class kArgon(object):
+class kArgon(APIRequests):
+
+    path = URL_BASE + "/api/k-argons"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -57,11 +60,11 @@ class kArgon(object):
         self._kperc = value
 
     @property
-    def lambda(self):
+    def lambda_(self):
         return self._lambda
 
-    @lambda.setter
-    def lambda(self, value):
+    @lambda_.setter
+    def lambda_(self, value):
         self._lambda = value
 
     @property

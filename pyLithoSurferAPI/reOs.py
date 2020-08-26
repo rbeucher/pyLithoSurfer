@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class reOs(object):
+class reOs(APIRequests):
+
+    path = URL_BASE + "/api/re-os"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

@@ -1,20 +1,16 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 import pandas as pd
 
 
-class SHRIMPDataPoint(object):
+class SHRIMPDataPoint(APIRequests):
+        
+    path = URL_BASE+'/api/shrimp-data-points'
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @classmethod
-    def get_all(cls):
-        path = URL_BASE+'/api/shrimp-data-points/'
-        response = session.get(path, data={"size":200})
-        records = response.json()
-        return pd.DataFrame.from_records(records)
 
     @property
     def age(self):
@@ -151,69 +147,3 @@ class SHRIMPDataPoint(object):
     @singleGrainName.setter
     def singleGrainName(self, value):
         self._singleGrainName = value
-
-    def info(self):
-        if self.id:
-            path = URL_BASE+'/api/shrimp-data-points/' + str(self.id)
-            response = session.get(path)
-            if response.status_code == 200:
-                return response.json()
-
-    def get_from_id(self, id_value):
-        path = URL_BASE+'/api/shrimp-data-points/' + str(id_value)
-        response = session.get(path)
-
-        if response.status_code == 200:
-            data = response.json()
-            self.__init__(**data)
-        return response.json()
-
-    def push_new_entry(self):
-        path = URL_BASE+'/api/shrimp-data-points/'
-        data = self.to_dict()
-        data.pop("id")
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.post(path, data=json.dumps(data), headers=headers)
-        if response.status_code == 200:
-            id_value = response.json()["id"]
-            print(f"SHRIMP DATA POINT Entry with id={id_value} has been successfully created")
-        else:
-            print("Could not create Entry")
-        return response.json()
-
-    def update_entry(self):
-        path = URL_BASE+'/api/shrimp-data-points/'
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.put(path, data=self.to_json(), headers=headers)
-        if response.status_code == 200:
-            id_value = response.json()["id"]
-            print(f"SHRIMP Data Entry with id={id_value} has been successfully updated")
-        else:
-            print("Could not update Entry")
-        return response.json()
-
-    def delete_entry(self):
-        path = URL_BASE+'/api/shrimp-data-points/' + str(self.id)
-        response = session.delete(path)
-        if response.status_code == 200:
-            print(f"SHRIMP DATA POINT Entry with id={self.id} has been deleted")
-        if response.status_code == 500:
-            print("Cannot find SHRIMP DATA POINT Entry with id={id_value}")
-        return response.json()
-
-    @classmethod
-    def get_shrimp_data_count(cls):
-        path = URL_BASE+'/api/shrimp-data-points/count'
-        response = session.get(path)
-        return response.json()   
-
-    def to_json(self):
-        return json.dumps(self, default=lambda o: {key.replace("_", ""): val for key, val in o.__dict__.items()}, 
-            sort_keys=True) 
-
-    def to_dict(self):
-        return {key.replace("_", ""): val for key, val in self.__dict__.items()}

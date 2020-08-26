@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class singleGrainHe(object):
+class singleGrainHe(APIRequests):
+
+    path = URL_BASE + "/api/single-grain-hes"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

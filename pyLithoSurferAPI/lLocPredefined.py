@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLocPredefined(object):
+class lLocPredefined(APIRequests):
+
+    path = URL_BASE + "/api/l-loc-predefineds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

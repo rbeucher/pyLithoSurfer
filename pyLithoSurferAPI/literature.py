@@ -1,20 +1,15 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
-import pandas as pd
 
 
-class Literature(object):
+class Literature(APIRequests):
+
+    path =  URL_BASE+'/api/literature/'
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @classmethod
-    def get_all(cls):
-        path = URL_BASE+'/api/literature/'
-        response = session.get(path, data={"size":200})
-        records = response.json()
-        return pd.DataFrame.from_records(records)
 
     @property
     def id(self):
@@ -220,22 +215,6 @@ class Literature(object):
     def pages(self, value):
         self._pages = value
 
-    def info(self):
-        if self.id:
-            path = URL_BASE+'/api/literature/' + str(self.id)
-            response = session.get(path)
-            if response.status_code == 200:
-                return response.json()
-
-    def get_from_id(self, id_value):
-        path = URL_BASE+'/api/literature/' + str(id_value)
-        response = session.get(path)
-
-        if response.status_code == 200:
-            data = response.json()
-            self.__init__(**data)
-        return response.json()
-
     def get_from_doi(self, doi):
         import requests
         response = requests.get('https://api.crossref.org/works/' + str(doi), 
@@ -245,46 +224,3 @@ class Literature(object):
             return data
         return response.json()
 
-    def push_new_entry(self):
-        path = URL_BASE+'/api/literature/'
-        data = self.to_dict()
-        data.pop("id")
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.post(path, data=json.dumps(data), headers=headers)
-        if response.status_code == 200:
-            id_value = response.json()["id"]
-            print(f"Literature Entry with id={id_value} has been successfully created")
-        else:
-            print("Could not create Entry")
-        return response.json()
-
-    def update_entry(self):
-        path = URL_BASE+'/api/literature/'
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.put(path, data=self.to_json(), headers=headers)
-        if response.status_code == 200:
-            id_value = response.json()["id"]
-            print(f"Literature Entry with id={id_value} has been successfully updated")
-        else:
-            print("Could not update Entry")
-        return response.json()
-
-    def delete_entry(self):
-        path = URL_BASE+'/api/literature/' + str(self.id)
-        response = session.delete(path)
-        if response.status_code == 200:
-            print(f"Literature Entry with id={self.id} has been deleted")
-        if response.status_code == 500:
-            print("Cannot find Literature Entry with id={id_value}")
-        return response.json()
-
-    def to_json(self):
-        return json.dumps(self, default=lambda o: {key.replace("_", ""): val for key, val in o.__dict__.items()}, 
-            sort_keys=True) 
-
-    def to_dict(self):
-        return {key.replace("_", ""): val for key, val in self.__dict__.items()}

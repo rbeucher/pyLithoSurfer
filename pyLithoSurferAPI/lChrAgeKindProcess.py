@@ -1,8 +1,11 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAgeKindProcess(object):
+class lChrAgeKindProcess(APIRequests):
+
+    path = URL_BASE + "/api/l-chr-age-kind-processes"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
