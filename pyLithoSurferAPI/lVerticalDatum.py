@@ -1,4 +1,5 @@
 from . import session, URL_BASE
+from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
