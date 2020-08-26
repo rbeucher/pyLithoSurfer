@@ -30,3 +30,4 @@ session.headers["Authorization"] = f"Bearer {LITHOSURFER_API_KEY}"
 #session.headers["Content-Type"] = "*/*"
 
 from .literature import Literature
+from .SHRIMPDataPoint import SHRIMPDataPoint
