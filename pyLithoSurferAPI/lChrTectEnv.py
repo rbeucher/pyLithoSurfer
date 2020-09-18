@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrTectEnv(APIRequests):
+class LChrTectEnv(APIRequests):
 
     path = URL_BASE + "/api/l-chr-tect-envs"
 

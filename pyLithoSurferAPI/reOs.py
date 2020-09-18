@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class reOs(APIRequests):
+class ReOs(APIRequests):
 
     path = URL_BASE + "/api/re-os"
 

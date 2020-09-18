@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class singleGrain(APIRequests):
+class SingleGrain(APIRequests):
 
     path = URL_BASE + "/api/single-grains"
 

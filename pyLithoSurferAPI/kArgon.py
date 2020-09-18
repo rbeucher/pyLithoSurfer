@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class kArgon(APIRequests):
+class KArgon(APIRequests):
 
     path = URL_BASE + "/api/k-argons"
 

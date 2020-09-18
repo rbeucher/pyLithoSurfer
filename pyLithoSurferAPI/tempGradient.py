@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class gradientAndTemp(APIRequests):
+class TempGradient(APIRequests):
 
     path = URL_BASE + "/api/temp-gradients"
 

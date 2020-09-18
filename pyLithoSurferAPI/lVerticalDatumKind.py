@@ -3,21 +3,13 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAnalyticalMethod(APIRequests):
+class LVerticalDatumKind(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-analytical-methods"
+    path = URL_BASE + "/api/l-vertical-data"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @property
-    def analyticalMethod(self):
-        return self._analyticalMethod
-
-    @analyticalMethod.setter
-    def analyticalMethod(self, value):
-        self._analyticalMethod = value
 
     @property
     def description(self):
@@ -34,4 +26,12 @@ class lChrAnalyticalMethod(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 

@@ -8,7 +8,7 @@ class APIRequests(ABC):
     # GET ALL
     @classmethod
     def get_all(cls):
-        response = session.get(cls.path, data={"size":200})
+        response = session.get(cls.path, data={"size":222222})
         records = response.json()
         return pd.DataFrame.from_records(records)
 
@@ -39,9 +39,11 @@ class APIRequests(ABC):
 
     # DELETE
     def delete(self):
+        headers = session.headers
+        headers["Accept"] = "application/json"
+        headers["Content-Type"] = "application/json"
         path = self.path + "/" + str(self.id)
         response = session.delete(path)
-        return response.json()
 
     # GET FROM ID
     def get_from_id(self, id_value):

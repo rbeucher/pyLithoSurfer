@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class helium(APIRequests):
+class Helium(APIRequests):
 
     path = URL_BASE + "/api/heliums"
 

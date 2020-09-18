@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class trackLength(APIRequests):
+class TrackLength(APIRequests):
 
     path = URL_BASE + "/api/track-lengths"
 

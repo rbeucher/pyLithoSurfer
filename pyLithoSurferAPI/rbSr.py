@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class rbSr(APIRequests):
+class RbSr(APIRequests):
 
     path = URL_BASE + "/api/rb-srs"
 

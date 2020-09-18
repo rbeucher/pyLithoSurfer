@@ -20,6 +20,14 @@ class Literature(APIRequests):
         self._id = int(value)
 
     @property
+    def sourceId(self):
+        return self._sourceId
+
+    @id.setter
+    def sourceId(self, value):
+        self._sourceId = int(value)
+
+    @property
     def author(self):
         return self._author
     
@@ -41,7 +49,6 @@ class Literature(APIRequests):
     
     @year.setter
     def year(self, value):
-        assert isinstance(value, int)
         self._year = value
 
     @property

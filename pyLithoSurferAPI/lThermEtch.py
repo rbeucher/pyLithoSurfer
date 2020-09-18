@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lThermEtch(APIRequests):
+class LThermEtch(APIRequests):
 
     path = URL_BASE + "/api/l-therm-etches"
 

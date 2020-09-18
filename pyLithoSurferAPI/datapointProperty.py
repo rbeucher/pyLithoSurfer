@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class datapointProperty(object):
+class DatapointProperty(object):
 
     path = URL_BASE + "/api/datapoint-properties"
 

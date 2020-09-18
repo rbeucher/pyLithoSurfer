@@ -3,9 +3,9 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLithologyType(object):
+class LLithologyKind(object):
 
-    path = URL_BASE + "/api/l-lithology-types"
+    path = URL_BASE + "/api/l-lithology-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -35,3 +35,18 @@ class lLithologyType(object):
     def name(self, value):
         self._name = value
 
+    @property
+    def synonym_name(self):
+        return self._synonym_name
+
+    @synonym_name.setter
+    def synonym_name(self, value):
+        self._synonym_name = value
+    
+    @property
+    def mindat_hyperlink(self):
+        return self._mindat_hyperlink
+
+    @mindat_hyperlink.setter
+    def mindat_hypelink(self, value):
+        self._mindat_hyperlink = value

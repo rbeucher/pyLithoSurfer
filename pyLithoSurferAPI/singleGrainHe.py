@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class singleGrainHe(APIRequests):
+class SingleGrainHe(APIRequests):
 
     path = URL_BASE + "/api/single-grain-hes"
 

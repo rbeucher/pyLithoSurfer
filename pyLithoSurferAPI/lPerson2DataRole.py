@@ -3,9 +3,9 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLocKind(APIRequests):
+class LPerson2DataRole(APIRequests):
 
-    path = URL_BASE + "/api/l-loc-kinds"
+    path = URL_BASE + "/api/l-person-2-data-point-roles"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -28,10 +28,10 @@ class lLocKind(APIRequests):
         self._id = value
 
     @property
-    def kind(self):
-        return self._kind
+    def name(self):
+        return self._name
 
-    @kind.setter
-    def kind(self, value):
-        self._kind = value
+    @name.setter
+    def name(self, value):
+        self._name = value
 

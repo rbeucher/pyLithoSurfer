@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lThermDiffusion(APIRequests):
+class LThermDiffusion(APIRequests):
 
     path = URL_BASE + "/api/l-therm-diffusions"
 

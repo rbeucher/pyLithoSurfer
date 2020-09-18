@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lithoRequest(APIRequests):
+class LithoRequest(APIRequests):
 
     path = URL_BASE + "/api/litho-requests"
 

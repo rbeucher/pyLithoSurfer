@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class dataPackage(APIRequests):
+class DataPackage(APIRequests):
 
     path = URL_BASE + "/api/data-packages"
 

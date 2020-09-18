@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class fissionTrack(APIRequests):
+class FissionTrack(APIRequests):
 
     path = URL_BASE + "/api/fission-tracks"
 

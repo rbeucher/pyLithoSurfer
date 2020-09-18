@@ -3,21 +3,21 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAnalyticalSystem(APIRequests):
+class LCountry(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-analytical-systems"
+    path = URL_BASE + "/api/l-countries"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
 
     @property
-    def analyticalSystem(self):
-        return self._analyticalSystem
+    def name(self):
+        return self._name
 
-    @analyticalSystem.setter
-    def analyticalSystem(self, value):
-        self._analyticalSystem = value
+    @name.setter
+    def name(self, value):
+        self._name = value
 
     @property
     def description(self):

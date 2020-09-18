@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class location(APIRequests):
+class Location(APIRequests):
 
     path = URL_BASE + "/api/locations"
 
@@ -12,20 +12,20 @@ class location(APIRequests):
             setattr(self, key, val)
 
     @property
-    def comment(self):
-        return self._comment
-
-    @comment.setter
-    def comment(self, value):
-        self._comment = value
-
-    @property
     def id(self):
         return self._id
 
     @id.setter
     def id(self, value):
         self._id = value
+    
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value
 
     @property
     def lat(self):
@@ -52,12 +52,12 @@ class location(APIRequests):
         self._locCaptureMethod = value
 
     @property
-    def locName(self):
-        return self._locName
+    def name(self):
+        return self._name
 
-    @locName.setter
-    def locName(self, value):
-        self._locName = value
+    @name.setter
+    def name(self, value):
+        self._name = value
 
     @property
     def locPredefinedId(self):
@@ -76,28 +76,12 @@ class location(APIRequests):
         self._locPredefinedName = value
 
     @property
-    def locationGroupIdx(self):
-        return self._locationGroupIdx
-
-    @locationGroupIdx.setter
-    def locationGroupIdx(self, value):
-        self._locationGroupIdx = value
-
-    @property
     def lockKindId(self):
         return self._lockKindId
 
     @lockKindId.setter
     def lockKindId(self, value):
         self._lockKindId = value
-
-    @property
-    def lockKindKind(self):
-        return self._lockKindKind
-
-    @lockKindKind.setter
-    def lockKindKind(self, value):
-        self._lockKindKind = value
 
     @property
     def lon(self):
@@ -108,26 +92,41 @@ class location(APIRequests):
         self._lon = value
 
     @property
-    def precisionM(self):
-        return self._precisionM
+    def latLonPrecision(self):
+        return self._latLonPrecision
 
-    @precisionM.setter
-    def precisionM(self, value):
-        self._precisionM = value
-
-    @property
-    def qcIdx(self):
-        return self._qcIdx
-
-    @qcIdx.setter
-    def qcIdx(self, value):
-        self._qcIdx = value
+    @latLonPrecision.setter
+    def latLonPrecision(self, value):
+        self._latLonPrecision = value
 
     @property
-    def uploadIdx(self):
-        return self._uploadIdx
+    def trueVerticalDepthMin(self):
+        return self._trueVerticalDepthMin
 
-    @uploadIdx.setter
-    def uploadIdx(self, value):
-        self._uploadIdx = value
+    @trueVerticalDepthMin.setter
+    def trueVerticalDepthMin(self, value):
+        self._trueVerticalDepthMin = value
 
+    @property
+    def trueVerticalDepthMax(self):
+        return self._trueVerticalDepthMax
+
+    @trueVerticalDepthMax.setter
+    def trueVerticalDepthMax(self, value):
+        self._trueVerticalDepthMax = value
+
+    @property
+    def groundLevelDataSource(self):
+        return self._groundLevelDataSource
+
+    @groundLevelDataSource.setter
+    def groundLevelDataSource(self, value):
+        self._groundLevelDataSource = value
+
+    @property
+    def groundLevelElevation(self):
+        return self._groundLevelElevation
+
+    @groundLevelElevation.setter
+    def groundLevelElevation(self, value):
+        self._groundLevelElevation = value

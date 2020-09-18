@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLocCapture(APIRequests):
+class LLocCapture(APIRequests):
 
     path = URL_BASE + "/api/l-loc-captures"
 

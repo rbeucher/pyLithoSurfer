@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLocPredefined(APIRequests):
+class LLocPredefined(APIRequests):
 
     path = URL_BASE + "/api/l-loc-predefineds"
 

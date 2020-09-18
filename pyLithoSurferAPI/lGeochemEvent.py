@@ -3,21 +3,13 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAgeKindProcess(APIRequests):
+class LGeochemEvent(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-age-kind-processes"
+    path = URL_BASE + "/api/l-geochem-events"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @property
-    def ageKindProcess(self):
-        return self._ageKindProcess
-
-    @ageKindProcess.setter
-    def ageKindProcess(self, value):
-        self._ageKindProcess = value
 
     @property
     def description(self):
@@ -34,4 +26,12 @@ class lChrAgeKindProcess(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 

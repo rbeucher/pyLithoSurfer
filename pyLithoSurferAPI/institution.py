@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class institution(APIRequests):
+class Institution(APIRequests):
 
     path = URL_BASE + "/api/institutionss"
 

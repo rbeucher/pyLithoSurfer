@@ -3,21 +3,13 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAnalyticalKind(APIRequests):
+class LSampleMethod(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-analytical-kinds"
+    path = URL_BASE + "/api/l-sample-methods"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @property
-    def analyticalKind(self):
-        return self._analyticalKind
-
-    @analyticalKind.setter
-    def analyticalKind(self, value):
-        self._analyticalKind = value
 
     @property
     def description(self):
@@ -34,4 +26,12 @@ class lChrAnalyticalKind(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 

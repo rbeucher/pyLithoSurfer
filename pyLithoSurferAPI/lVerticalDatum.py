@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lVerticalDatum(APIRequests):
+class LVerticalDatum(APIRequests):
 
     path = URL_BASE + "/api/l-vertical-data"
 

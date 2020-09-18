@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class locationProperty(APIRequests):
+class LocationProperty(APIRequests):
 
     path = URL_BASE + "/api/location-properties"
 

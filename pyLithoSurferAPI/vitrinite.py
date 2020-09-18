@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class vitrinite(APIRequests):
+class Vitrinite(APIRequests):
 
     path = URL_BASE + "/api/vitrinites"
 

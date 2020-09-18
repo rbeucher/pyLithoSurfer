@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class smNd(APIRequests):
+class SmNd(APIRequests):
 
     path = URL_BASE + "/api/sm-nds"
 

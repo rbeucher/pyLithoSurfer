@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class community(APIRequests):
+class Community(APIRequests):
 
     path = URL_BASE + "/api/communities"
 

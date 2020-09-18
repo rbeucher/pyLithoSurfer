@@ -3,21 +3,13 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAgeKind(APIRequests):
+class LAnalyteKind(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-age-kinds"
+    path = URL_BASE + "/api/l-analyte-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @property
-    def ageKind(self):
-        return self._ageKind
-
-    @ageKind.setter
-    def ageKind(self, value):
-        self._ageKind = value
 
     @property
     def description(self):
@@ -34,4 +26,12 @@ class lChrAgeKind(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 

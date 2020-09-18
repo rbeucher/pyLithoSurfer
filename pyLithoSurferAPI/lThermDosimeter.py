@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lThermDosimeter(APIRequests):
+class LThermDosimeter(APIRequests):
 
     path = URL_BASE + "/api/l-therm-dosimeters"
 

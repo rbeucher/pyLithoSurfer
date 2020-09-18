@@ -3,9 +3,9 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrMineral(APIRequests):
+class LSpecimenKind(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-minerals"
+    path = URL_BASE + "/api/l-specimen-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -28,18 +28,10 @@ class lChrMineral(APIRequests):
         self._id = value
 
     @property
-    def mineral(self):
-        return self._mineral
+    def name(self):
+        return self._name
 
-    @mineral.setter
-    def mineral(self, value):
-        self._mineral = value
-
-    @property
-    def synonym(self):
-        return self._synonym
-
-    @synonym.setter
-    def synonym(self, value):
-        self._synonym = value
+    @name.setter
+    def name(self, value):
+        self._name = value
 

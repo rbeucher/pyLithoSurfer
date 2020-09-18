@@ -3,21 +3,13 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lChrAvgKind(APIRequests):
+class LStatementKind(APIRequests):
 
-    path = URL_BASE + "/api/l-chr-avg-kinds"
+    path = URL_BASE + "/api/l-statement-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
-
-    @property
-    def averageMethod(self):
-        return self._averageMethod
-
-    @averageMethod.setter
-    def averageMethod(self, value):
-        self._averageMethod = value
 
     @property
     def description(self):
@@ -34,4 +26,12 @@ class lChrAvgKind(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 

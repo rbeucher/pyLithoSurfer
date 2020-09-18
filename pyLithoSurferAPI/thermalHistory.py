@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class thermalHistory(APIRequests):
+class ThermalHistory(APIRequests):
 
     path = URL_BASE + "/api/thermal-histories"
 

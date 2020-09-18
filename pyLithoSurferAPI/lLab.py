@@ -3,7 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class lLab(object):
+class LLab(object):
 
     path = URL_BASE + "/api/l-labs"
 
