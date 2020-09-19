@@ -221,6 +221,22 @@ class Literature(APIRequests):
     @pages.setter
     def pages(self, value):
         self._pages = value
+    
+    @property
+    def issn(self):
+        return self._issn
+    
+    @issn.setter
+    def issn(self, value):
+        self._issn = value
+    
+    @property
+    def url(self):
+        return self._url
+    
+    @url.setter
+    def url(self, value):
+        self._url = value
 
     def get_from_doi(self, doi):
         import requests
