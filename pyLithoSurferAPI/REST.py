@@ -11,6 +11,12 @@ class APIRequests(ABC):
         response = session.get(cls.path, data={"size":222222})
         records = response.json()
         return pd.DataFrame.from_records(records)
+    
+    # GET N ENTRIES
+    def get_entries(self, nentries=1):
+        response = session.get(self.path, data={"size": nentries})
+        records = response.json()
+        return pd.DataFrame.from_records(records)
 
     # POST
     def new(self):
