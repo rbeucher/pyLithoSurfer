@@ -18,7 +18,63 @@ class Sample(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+    
+    @property
+    def name(self):
+        return self._name
 
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+    @property
+    def archiveId(self):
+        return self._archiveId
+
+    @archiveId.setter
+    def archiveId(self, value):
+        self._archiveId = value
+    
+    @property
+    def sourceId(self):
+        return self._sourceId
+
+    @sourceId.setter
+    def sourceId(self, value):
+        self._sourceId = value
+    
+    @property
+    def tectonicUnitId(self):
+        return self._tectonicUnitId
+
+    @tectonicUnitId.setter
+    def tectonicUnitId(self, value):
+        self._tectonicUnitId = value
+    
+    @property
+    def archiveName(self):
+        return self._archiveName
+
+    @archiveName.setter
+    def archiveName(self, value):
+        self._archiveName = value
+    
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value
+
+    @property
+    def igsn(self):
+        return self._igsn
+
+    @igsn.setter
+    def igsn(self, value):
+        self._igsn = value
+    
     @property
     def relativeElevation(self):
         return self._relativeElevation
@@ -66,3 +122,67 @@ class Sample(APIRequests):
     @referenceElevationSource.setter
     def referenceElevationSource(self, value):
         self._referenceElevationSource = value
+    
+    @property
+    def lithologyKindId(self):
+        return self._lithologyKindId
+
+    @lithologyKindId.setter
+    def lithologyKindId(self, value):
+        self._lithologyKindId = value
+    
+    @property
+    def lithologyKindName(self):
+        return self._lithologyKindName
+
+    @lithologyKindName.setter
+    def lithologyKindName(self, value):
+        self._lithologyKindName = value
+    
+    @property
+    def locationId(self):
+        return self._locationId
+
+    @locationId.setter
+    def locationId(self, value):
+        self._locationId = value
+    
+    @property
+    def LocationName(self):
+        return self._LocationName
+
+    @LocationName.setter
+    def LocationName(self, value):
+        self._LocationName = value
+
+    @property
+    def sampleMethodId(self):
+        return self._sampleMethodId
+
+    @sampleMethodId.setter
+    def sampleMethodId(self, value):
+        self._sampleMethodId = value
+    
+    @property
+    def sampleMethodName(self):
+        return self._sampleMethodName
+
+    @sampleMethodName.setter
+    def sampleMethodName(self, value):
+        self._sampleMethodName = value
+    
+    @property
+    def sampleTypeId(self):
+        return self._sampleTypeId
+
+    @sampleTypeId.setter
+    def sampleTypeId(self, value):
+        self._sampleTypeId = value
+    
+    @property
+    def sampleTypeName(self):
+        return self._sampleTypeName
+
+    @sampleTypeName.setter
+    def sampleTypeName(self, value):
+        self._sampleTypeName = value
