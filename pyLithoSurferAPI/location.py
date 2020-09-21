@@ -36,52 +36,12 @@ class Location(APIRequests):
         self._lat = value
 
     @property
-    def locCaptureId(self):
-        return self._locCaptureId
-
-    @locCaptureId.setter
-    def locCaptureId(self, value):
-        self._locCaptureId = value
-
-    @property
-    def locCaptureMethod(self):
-        return self._locCaptureMethod
-
-    @locCaptureMethod.setter
-    def locCaptureMethod(self, value):
-        self._locCaptureMethod = value
-
-    @property
     def name(self):
         return self._name
 
     @name.setter
     def name(self, value):
         self._name = value
-
-    @property
-    def locPredefinedId(self):
-        return self._locPredefinedId
-
-    @locPredefinedId.setter
-    def locPredefinedId(self, value):
-        self._locPredefinedId = value
-
-    @property
-    def locPredefinedName(self):
-        return self._locPredefinedName
-
-    @locPredefinedName.setter
-    def locPredefinedName(self, value):
-        self._locPredefinedName = value
-
-    @property
-    def lockKindId(self):
-        return self._lockKindId
-
-    @lockKindId.setter
-    def lockKindId(self, value):
-        self._lockKindId = value
 
     @property
     def lon(self):
@@ -100,33 +60,9 @@ class Location(APIRequests):
         self._latLonPrecision = value
 
     @property
-    def trueVerticalDepthMin(self):
-        return self._trueVerticalDepthMin
+    def celestial(self):
+        return self._celestial
 
-    @trueVerticalDepthMin.setter
-    def trueVerticalDepthMin(self, value):
-        self._trueVerticalDepthMin = value
-
-    @property
-    def trueVerticalDepthMax(self):
-        return self._trueVerticalDepthMax
-
-    @trueVerticalDepthMax.setter
-    def trueVerticalDepthMax(self, value):
-        self._trueVerticalDepthMax = value
-
-    @property
-    def groundLevelDataSource(self):
-        return self._groundLevelDataSource
-
-    @groundLevelDataSource.setter
-    def groundLevelDataSource(self, value):
-        self._groundLevelDataSource = value
-
-    @property
-    def groundLevelElevation(self):
-        return self._groundLevelElevation
-
-    @groundLevelElevation.setter
-    def groundLevelElevation(self, value):
-        self._groundLevelElevation = value
+    @celestial.setter
+    def celestial(self, value):
+        self._celestial = value
