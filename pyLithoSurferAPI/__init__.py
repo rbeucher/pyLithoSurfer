@@ -77,4 +77,6 @@ from .lSampleType import LSampleType
 from .lSpecimenKind import LSpecimenKind
 from .lStatementKind import LStatementKind
 from .lVerticalDatumKind import LVerticalDatumKind
+from .lShrimp_age_average_kind import LSHRIMPAgeAverageKinds
+from .lShrimp_age_kind_process import LSHRIMPAgeKindProcesses
 
