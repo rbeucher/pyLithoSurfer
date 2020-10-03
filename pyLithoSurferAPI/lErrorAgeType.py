@@ -3,9 +3,9 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class LErrorType(APIRequests):
+class LErrorAgeType(APIRequests):
 
-    path = URL_BASE + "/api/l-error-types"
+    path = URL_BASE + "/api/l-error-age-types"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

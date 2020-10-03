@@ -42,7 +42,7 @@ from .tempGradient import TempGradient
 from .helium import Helium
 from .institution import Institution
 from .kArgon import KArgon
-from .lErrorType import LErrorType
+from .lErrorAgeType import LErrorAgeType
 from .lithoRequest import LithoRequest
 from .lithoUser import LithoUser
 from .lLab import LLab
