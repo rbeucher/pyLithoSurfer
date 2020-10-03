@@ -148,6 +148,22 @@ class Sample(APIRequests):
         self._locationId = value
     
     @property
+    def locationKindId(self):
+        return self._locationKindId
+
+    @locationKindId.setter
+    def locationKindId(self, value):
+        self._locationKindId = value
+    
+    @property
+    def locationKindName(self):
+        return self._locationKindName
+
+    @locationKindName.setter
+    def locationKindName(self, value):
+        self._locationKindName = value
+    
+    @property
     def LocationName(self):
         return self._LocationName
 
