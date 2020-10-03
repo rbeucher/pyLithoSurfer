@@ -81,4 +81,5 @@ from .lShrimp_age_average_kind import LSHRIMPAgeAverageKinds
 from .lShrimp_age_kind_process import LSHRIMPAgeKindProcesses
 from .analyte import Analyte
 from .archive import Archive
+from .specimen import Specimen
 
