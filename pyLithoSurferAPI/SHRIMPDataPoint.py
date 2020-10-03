@@ -109,14 +109,6 @@ class SHRIMPDataPoint(APIRequests):
         self._mineralName = value
 
     @property
-    def mountId(self):
-        return self._mountId
-
-    @mountId.setter
-    def mountId(self, value):
-        self._mountId = value
-
-    @property
     def ngrains(self):
         return self._ngrains
 
@@ -147,3 +139,27 @@ class SHRIMPDataPoint(APIRequests):
     @singleGrainName.setter
     def singleGrainName(self, value):
         self._singleGrainName = value
+
+    @property
+    def mountCoating(self):
+        return self._mountCoating
+
+    @mountCoating.setter
+    def mountCoating(self, value):
+        self._mountCoating = value
+    
+    @property
+    def mountOpticalCharacterisation(self):
+        return self._mountOpticalCharacterisation
+
+    @mountOpticalCharacterisation.setter
+    def mountOpticalCharacterisation(self, value):
+        self._mountOpticalCharacterisation = value
+    
+    @property
+    def mswd(self):
+        return self._mswd
+
+    @mswd.setter
+    def mswd(self, value):
+        self._mswd = value
