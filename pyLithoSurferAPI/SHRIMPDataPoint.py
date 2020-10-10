@@ -35,6 +35,22 @@ class SHRIMPDataPoint(APIRequests):
     @ageAverageKindName.setter
     def ageAverageKindName(self, value):
         self._ageAverageKindName = value
+    
+    @property
+    def ageKindProcessId(self):
+        return self._ageKindProcessId
+
+    @ageKindProcessId.setter
+    def ageKindProcessId(self, value):
+        self._ageKindProcessId = value
+
+    @property
+    def ageKindProcessName(self):
+        return self._ageKindProcessName
+
+    @ageKindProcessName.setter
+    def ageKindProcessName(self, value):
+        self._ageKindProcessName = value
 
     @property
     def ageErrorMax(self):
