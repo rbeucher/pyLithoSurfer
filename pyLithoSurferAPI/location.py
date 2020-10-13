@@ -36,20 +36,20 @@ class Location(APIRequests):
         self._lat = value
 
     @property
-    def locCaptureId(self):
-        return self._locCaptureId
+    def captureMethodId(self):
+        return self._captureMethodId
 
-    @locCaptureId.setter
-    def locCaptureId(self, value):
-        self._locCaptureId = value
+    @captureMethodId.setter
+    def captureMethodId(self, value):
+        self._captureMethodId = value
 
     @property
-    def locCaptureMethod(self):
-        return self._locCaptureMethod
+    def captureMethodName(self):
+        return self._captureMethodName
 
-    @locCaptureMethod.setter
-    def locCaptureMethod(self, value):
-        self._locCaptureMethod = value
+    @captureMethodName.setter
+    def captureMethodName(self, value):
+        self._captureMethodName = value
 
     @property
     def name(self):
