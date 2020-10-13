@@ -187,18 +187,3 @@ class Sample(APIRequests):
     def sampleMethodName(self, value):
         self._sampleMethodName = value
     
-    @property
-    def sampleTypeId(self):
-        return self._sampleTypeId
-
-    @sampleTypeId.setter
-    def sampleTypeId(self, value):
-        self._sampleTypeId = value
-    
-    @property
-    def sampleTypeName(self):
-        return self._sampleTypeName
-
-    @sampleTypeName.setter
-    def sampleTypeName(self, value):
-        self._sampleTypeName = value
