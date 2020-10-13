@@ -76,14 +76,6 @@ class Location(APIRequests):
         self._locPredefinedName = value
 
     @property
-    def locKindId(self):
-        return self._locKindId
-
-    @locKindId.setter
-    def locKindId(self, value):
-        self._locKindId = value
-
-    @property
     def lon(self):
         return self._lon
 
