@@ -1,189 +1,253 @@
 from . import session, URL_BASE
+from typing import Union
 from pyLithoSurferAPI.REST import APIRequests
 import json
+import numpy as np
 
+url = str
+
+# Convert if data is not nan or None
+# This is to make sure that we are pushing the right type to the API.
+convert_str = lambda x: str(x) if x else None
+convert_int = lambda x: int(x) if x else None
+convert_float = lambda x: float(x) if x and not isinstance(x, np.nan) else None
 
 class Sample(APIRequests):
 
     path = URL_BASE + "/api/samples"
 
-    def __init__(self, *args, **kwargs):
-        for key, val in kwargs.items():
-            setattr(self, key, val)
+    def __init__(self,
+                name: str,
+                description: str,
+                lithologyKindId:  Union[int, np.int16, np.int32, np.int64],
+                locationId:  Union[int, np.int16, np.int32, np.int64]t,
+                locationKindId:  Union[int, np.int16, np.int32, np.int64],
+                sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
+                relativeElevation: Union[float, np.float16, np.float32, np.float64],
+                relativeElevationAccuracy: Union[float, np.float16, np.float32, np.float64] = None,
+                referenceElevation: Union[float, np.float16, np.float32, np.float64] = 0.,
+                archiveId:  Union[int, np.int16, np.int32, np.int64] = None,
+                referenceElevationKindId:  Union[int, np.int16, np.int32, np.int64] = None,
+                referenceElevationKindNote: str = None,
+                referenceElevationSource: str = "SOURCE",
+                sourceId: str = None,
+                tectonicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
+                igsn: str = None,
+                ):
+        """Sample
+
+        Args:
+            name (str): Name of the sample
+            description (str): Description of the sample
+            lithologyKindId (int): Lithology Id
+            locationId (int): Location Id
+            locationKindId (int): Kind of Location
+            sampleMethodId (int): Sampling method
+            relativeElevation (int): [description]
+            archiveId (int): Id of the archive to which the sample belongs to.
+            relativeElevationAccuracy (int, optional): [description]. Defaults to None.
+            referenceElevation (int, optional): [description]. Defaults to 0 (sea level).
+            referenceElevationKindId (int, optional): Reference Elevation Kind.
+            referenceElevationKindNote (str, optional): [description]. Defaults to None.
+            referenceElevationSource (str): Source of the reference Elevation.
+            sourceId (str, optional): [description]. Legacy ID from Sample table.
+            tectonicUnitId (int, optional): [description]. Tectonic Unit Id.
+            igsn (str, optional): [description]. IGSN reference..
+
+        Returns:
+            Sample object
+        """
+
+        self.name = convert_str(name)
+        self.description = convert_str(description)
+        self.lithologyKindId = convert_int(lithologyKindId)
+        self.locationKindId = convert_int(locationKindId)
+        self.sampleMethodId = convert_int(sampleMethodId)
+        self.relativeElevation = convert_float(relativeElevation)
+
+        self.relativeElevationAccuracy = convert_float(relativeElevationAccuracy)
+        self.relativeElevation = convert_float(relativeElevation)
+        self.archiveId = convert_int(archiveId)
+        self.referenceElevationKindId = convert_int(referenceElevationKindId)
+        self.referenceElevationKindNote = convert_str(referenceElevationKindNote)
+        self.referenceElevationKindSource = convert_str(referenceElevationKindSource)
+        self.sourceId = convert_int(sourceId)
+        self.tectonicUnitId = convert_int(tectonicUnitId)
+        self.igsn = convert_str(igsn)
 
     @property
     def id(self):
         return self._id
 
     @id.setter
-    def id(self, value):
-        self._id = value
+    def id(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._id = convet_int(value)
     
     @property
     def name(self):
         return self._name
 
     @name.setter
-    def name(self, value):
-        self._name = value
+    def name(self, value: str):
+        self._name = convert_str(value)
     
     @property
     def archiveId(self):
         return self._archiveId
 
     @archiveId.setter
-    def archiveId(self, value):
-        self._archiveId = value
+    def archiveId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._archiveId = convert_int(value)
     
     @property
     def sourceId(self):
         return self._sourceId
 
     @sourceId.setter
-    def sourceId(self, value):
-        self._sourceId = value
+    def sourceId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._sourceId = convert_int(value)
     
     @property
     def tectonicUnitId(self):
         return self._tectonicUnitId
 
     @tectonicUnitId.setter
-    def tectonicUnitId(self, value):
-        self._tectonicUnitId = value
+    def tectonicUnitId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._tectonicUnitId = convert_int(value)
     
     @property
     def archiveName(self):
         return self._archiveName
 
     @archiveName.setter
-    def archiveName(self, value):
-        self._archiveName = value
+    def archiveName(self, value: str):
+        self._archiveName = convert_str(value)
     
     @property
     def description(self):
         return self._description
 
     @description.setter
-    def description(self, value):
-        self._description = value
+    def description(self, value: str):
+        self._description = convert_str(value)
 
     @property
     def igsn(self):
         return self._igsn
 
     @igsn.setter
-    def igsn(self, value):
-        self._igsn = value
+    def igsn(self, value: str):
+        self._igsn = convert_str(value)
     
     @property
     def relativeElevation(self):
         return self._relativeElevation
 
     @relativeElevation.setter
-    def relativeElevation(self, value):
-        self._relativeElevation = value
+    def relativeElevation(self, value: Union[float, np.float16, np.float32, np.float64]):
+        self._relativeElevation = convert_float(value)
 
     @property
     def relativeElevationAccuracy(self):
         return self._relativeElevationAccuracy
 
     @relativeElevationAccuracy.setter
-    def relativeElevationAccuracy(self, value):
-        self._relativeElevationAccuracy = value
+    def relativeElevationAccuracy(self, value: Union[float, np.float16, np.float32, np.float64]):
+        self._relativeElevationAccuracy = convert_float(value)
     
     @property
-    def referenceElevationKind(self):
-        return self._referenceElevationKind
+    def referenceElevationKindId(self):
+        return self._referenceElevationKindId
 
-    @referenceElevationKind.setter
-    def referenceElevationKind(self, value):
-        self._referenceElevationKind = value
+    @referenceElevationKindId.setter
+    def referenceElevationKindId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._referenceElevationKindId = convert_int(value)
     
     @property
     def referenceElevationKindNote(self):
         return self._referenceElevationKindNote
 
     @referenceElevationKindNote.setter
-    def referenceElevationKindNote(self, value):
-        self._referenceElevationKindNote = value
+    def referenceElevationKindNote(self, value: str):
+        self._referenceElevationKindNote = convert_str(value)
     
     @property
     def referenceElevation(self):
         return self._referenceElevation
 
     @referenceElevation.setter
-    def referenceElevation(self, value):
-        self._referenceElevation = value
+    def referenceElevation(self, value: Union[float, np.float16, np.float32, np.float64]):
+        self._referenceElevation = convert_float(value)
     
     @property
     def referenceElevationSource(self):
         return self._referenceElevationSource
 
     @referenceElevationSource.setter
-    def referenceElevationSource(self, value):
-        self._referenceElevationSource = value
+    def referenceElevationSource(self, value: str):
+        self._referenceElevationSource = convert_str(value)
     
     @property
     def lithologyKindId(self):
         return self._lithologyKindId
 
     @lithologyKindId.setter
-    def lithologyKindId(self, value):
-        self._lithologyKindId = value
+    def lithologyKindId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._lithologyKindId = convert_int(value)
     
     @property
     def lithologyKindName(self):
         return self._lithologyKindName
 
     @lithologyKindName.setter
-    def lithologyKindName(self, value):
-        self._lithologyKindName = value
+    def lithologyKindName(self, value: str):
+        self._lithologyKindName = convert_str(value)
     
     @property
     def locationId(self):
         return self._locationId
 
     @locationId.setter
-    def locationId(self, value):
-        self._locationId = value
+    def locationId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._locationId = convert_int(value)
     
     @property
     def locationKindId(self):
         return self._locationKindId
 
     @locationKindId.setter
-    def locationKindId(self, value):
-        self._locationKindId = value
+    def locationKindId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._locationKindId = convert_int(value)
     
     @property
     def locationKindName(self):
         return self._locationKindName
 
     @locationKindName.setter
-    def locationKindName(self, value):
-        self._locationKindName = value
+    def locationKindName(self, value: str):
+        self._locationKindName = convert_str(value)
     
     @property
     def LocationName(self):
         return self._LocationName
 
     @LocationName.setter
-    def LocationName(self, value):
-        self._LocationName = value
+    def LocationName(self, value: str):
+        self._LocationName = convert_str(value)
 
     @property
     def sampleMethodId(self):
         return self._sampleMethodId
 
     @sampleMethodId.setter
-    def sampleMethodId(self, value):
-        self._sampleMethodId = value
+    def sampleMethodId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._sampleMethodId = convert_int(value)
     
     @property
     def sampleMethodName(self):
         return self._sampleMethodName
 
     @sampleMethodName.setter
-    def sampleMethodName(self, value):
-        self._sampleMethodName = value
+    def sampleMethodName(self, value: str):
+        self._sampleMethodName = convert_str(value)
     
