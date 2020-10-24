@@ -48,13 +48,16 @@ class APIRequests(ABC):
     # POST
     def new(self):
         data = self.to_dict()
-        data.pop("id")
+        if data["id"]:
+            data.pop("id")
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
         response = session.post(self.path, data=json.dumps(data), headers=headers)
         check_response(response)
-        return response.json()
+        response = response.json()
+        self.id = response["id"]
+        return response
 
     # PUT
     def update(self):
@@ -91,6 +94,14 @@ class APIRequests(ABC):
         data = response.json()
         self.__init__(**data)
         return response.json()
+
+    def get_from_query(self, query):
+        headers = session.headers
+        headers["Accept"] = "application/json"
+        path = self.path + "?" + str(query)
+        print(path)
+        response = session.get(path)
+        return response
 
     def to_json(self):
         return json.dumps(self, default=lambda o: {key.replace("_", ""): val for key, val in o.__dict__.items()}, 
