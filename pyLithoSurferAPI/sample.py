@@ -3,14 +3,8 @@ from typing import Union
 from pyLithoSurferAPI.REST import APIRequests
 import json
 import numpy as np
+from .utilities import *
 
-url = str
-
-# Convert if data is not nan or None
-# This is to make sure that we are pushing the right type to the API.
-convert_str = lambda x: str(x) if x else None
-convert_int = lambda x: int(x) if x else None
-convert_float = lambda x: float(x) if x and not isinstance(x, np.nan) else None
 
 class Sample(APIRequests):
 
@@ -20,7 +14,7 @@ class Sample(APIRequests):
                 name: str,
                 description: str,
                 lithologyKindId:  Union[int, np.int16, np.int32, np.int64],
-                locationId:  Union[int, np.int16, np.int32, np.int64]t,
+                locationId:  Union[int, np.int16, np.int32, np.int64],
                 locationKindId:  Union[int, np.int16, np.int32, np.int64],
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
                 relativeElevation: Union[float, np.float16, np.float32, np.float64],

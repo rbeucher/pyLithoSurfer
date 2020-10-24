@@ -3,14 +3,8 @@ from typing import Union
 from pyLithoSurferAPI.REST import APIRequests
 import json
 import numpy as np
+from .utilities import *
 
-url = str
-
-# Convert if data is not nan or None
-# This is to make sure that we are pushing the right type to the API.
-convert_str = lambda x: str(x) if x else None
-convert_int = lambda x: int(x) if x else None
-convert_float = lambda x: float(x) if x and not isinstance(x, np.nan) else None
 
 class DataPoint(APIRequests):
 
@@ -28,9 +22,9 @@ class DataPoint(APIRequests):
         """DataPoint
 
         Args:
-            dataEntityId (int): Id of the Entity (e.g. Shrimp Datapoint) in the table specified by data structure.
             dataPackageId (int): Id of the package to which the datapoint belongs to.
             dataStructure (str): Type of data structure e.g. 'UPB_SHRIMP'
+            dataEntityId (int): Id of the Entity (e.g. Shrimp Datapoint) in the table specified by data structure.
             name (str, optional): Name of the Datapoint. Defaults to None.
             sourceId (int, optional): Legacy Chrono ID. Defaults to None.
             locationId (int, optional): Id of the datapoint location. Defaults to None.
@@ -40,9 +34,9 @@ class DataPoint(APIRequests):
         Returns:
             DataPoint object.
         """
-        self.dataEntityId = convert_int(dataEntityId)
         self.dataPackageId = convert_int(dataPackageId)
         self.dataStructure = str(dataStructure)
+        self.dataEntityId = convert_int(dataEntityId)
 
         self.name = convert_str(name)
         self.sourceId = convert_int(sourceId)
