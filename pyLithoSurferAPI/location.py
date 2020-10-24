@@ -10,19 +10,19 @@ class Location(APIRequests):
     path = URL_BASE + "/api/locations"
 
     def __init__(self,
-                name: str,
                 lat: Union[float, np.float16, np.float32, np.float64],
                 lon: Union[float, np.float16, np.float32, np.float64],
                 latLonPrecision: Union[float, np.float16, np.float32, np.float64],
+                name: str = "unknown",
                 captureMethodId: Union[int, np.int16, np.int32, np.int64] = 0,
                 celestialId: Union[int, np.int16, np.int32, np.int64] = 0,
                 description: str = None):
         """[summary]
 
         Args:
-            name (str): Location name
             lat (float): Latitude
             lon (float): Longitude
+            name (str): Location name
             latLonPrecision (float): Precision of the Lat / Lon
             captureMethodId (int, optional): capture Method Id. Defaults to 0 (Unknown), GPS is 6.
             celestialId (int, optional): celestial object. Defaults to 0 (Earth).
@@ -31,6 +31,9 @@ class Location(APIRequests):
         Returns:
             Location object
         """
+
+        if not name or np.isnan(name):
+            name = "unknown"
 
         self.name = str(name)
         self.lat = convert_float(lat)

@@ -11,10 +11,10 @@ class Specimen(APIRequests):
     path = URL_BASE + "/api/specimen"
 
     def __init__(self,
-                name: str,
                 specimenKindId: Union[int, np.int16, np.int32, np.int64],
                 archiveId: Union[int, np.int16, np.int32, np.int64],
                 shrimpdataPointId: Union[int, np.int16, np.int32, np.int64],
+                name: str = "unknown",
                 description: str = None,
                 igsn: str = None,
                 pictureHref: url = None):
@@ -32,6 +32,9 @@ class Specimen(APIRequests):
         Returns:
             Specimen object
         """
+
+        if not name or np.isnan(name):
+            name = "unknown"
 
         self.name = str(name)
         self.specimenKindId = convert_int(specimenKindId)

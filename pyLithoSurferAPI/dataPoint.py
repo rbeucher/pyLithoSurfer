@@ -10,11 +10,13 @@ class DataPoint(APIRequests):
 
     path = URL_BASE + "/api/data-points"
 
+    mandatory_args = ["dataStructure"]
+
     def __init__(self, 
                 dataPackageId: Union[int, np.int16, np.int32, np.int64],
                 dataStructure: str,
+                name: str = "unknown",
                 dataEntityId: Union[int, np.int16, np.int32, np.int64] = None,
-                name: str = None,
                 sourceId: Union[int, np.int16, np.int32, np.int64] = None,
                 locationId: Union[int, np.int16, np.int32, np.int64] = None,
                 externalDataHref: url = None,
@@ -34,11 +36,14 @@ class DataPoint(APIRequests):
         Returns:
             DataPoint object.
         """
+        if not name or np.isnan(name):
+            name = "unknown"
+        
+        self.name = convert_str(name)
         self.dataPackageId = convert_int(dataPackageId)
         self.dataStructure = str(dataStructure)
         self.dataEntityId = convert_int(dataEntityId)
 
-        self.name = convert_str(name)
         self.sourceId = convert_int(sourceId)
         self.locationId = convert_int(locationId)
         self.externalDataHref = convert_str(externalDataHref)

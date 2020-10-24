@@ -11,13 +11,13 @@ class Sample(APIRequests):
     path = URL_BASE + "/api/samples"
 
     def __init__(self,
-                name: str,
-                description: str,
                 lithologyKindId:  Union[int, np.int16, np.int32, np.int64],
                 locationId:  Union[int, np.int16, np.int32, np.int64],
                 locationKindId:  Union[int, np.int16, np.int32, np.int64],
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
                 relativeElevation: Union[float, np.float16, np.float32, np.float64],
+                name: str = "unknown",
+                description: str = None,
                 relativeElevationAccuracy: Union[float, np.float16, np.float32, np.float64] = None,
                 referenceElevation: Union[float, np.float16, np.float32, np.float64] = 0.,
                 archiveId:  Union[int, np.int16, np.int32, np.int64] = None,
@@ -31,13 +31,13 @@ class Sample(APIRequests):
         """Sample
 
         Args:
-            name (str): Name of the sample
-            description (str): Description of the sample
             lithologyKindId (int): Lithology Id
             locationId (int): Location Id
             locationKindId (int): Kind of Location
             sampleMethodId (int): Sampling method
             relativeElevation (int): [description]
+            name (str), optional: Name of the sample
+            description (str, optional): Description of the sample
             archiveId (int): Id of the archive to which the sample belongs to.
             relativeElevationAccuracy (int, optional): [description]. Defaults to None.
             referenceElevation (int, optional): [description]. Defaults to 0 (sea level).
@@ -51,6 +51,9 @@ class Sample(APIRequests):
         Returns:
             Sample object
         """
+
+        if not name or np.isnan(name):
+            name = "unknown"
 
         self.name = convert_str(name)
         self.description = convert_str(description)

@@ -11,8 +11,8 @@ class Analyte(APIRequests):
     path = URL_BASE + "/api/analytes"
 
     def __init__(self,    
-                name: str,
                 analyteKindId: Union[int, np.int16, np.int32, np.int64],
+                name: str = "unknown",
                 sampleId: Union[int, np.int16, np.int32, np.int64] = None,
                 specimenId: Union[int, np.int16, np.int32, np.int64] = None,
                 archiveId: Union[int, np.int16, np.int32, np.int64] = None,
@@ -23,8 +23,8 @@ class Analyte(APIRequests):
         """Analyte
 
         Args:
-            name (str): Analyte name
             analyteKindId (Union[int, np.int16, np.int32, np.int64]): Analyte Kind Id
+            name (str): Analyte name
             sampleId (Union[int, np.int16, np.int32, np.int64], optional): Sample Id
             specimenId (Union[int, np.int16, np.int32, np.int64], optional): Specimen Id
             archiveId (Union[int, np.int16, np.int32, np.int64], optional): Archive Id
@@ -35,6 +35,9 @@ class Analyte(APIRequests):
         Returns:
             Analyte object.
         """
+
+        if not name or np.isnan(name):
+            name = "unknown"
 
         self.name = convert_str(name)
         self.analyteKindId = convert_int(analyteKindId)
