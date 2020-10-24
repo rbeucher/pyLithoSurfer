@@ -12,7 +12,7 @@ class Analyte(APIRequests):
 
     def __init__(self,    
                 analyteKindId: Union[int, np.int16, np.int32, np.int64],
-                name: str = "unknown",
+                name: str = None,
                 sampleId: Union[int, np.int16, np.int32, np.int64] = None,
                 specimenId: Union[int, np.int16, np.int32, np.int64] = None,
                 archiveId: Union[int, np.int16, np.int32, np.int64] = None,
@@ -48,6 +48,7 @@ class Analyte(APIRequests):
         self.igsn = convert_str(igsn)
         self.pictureHref = convert_str(pictureHref)
 
+        self.id = None
 
     @property
     def id(self):

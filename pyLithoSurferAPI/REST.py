@@ -19,7 +19,7 @@ class NotFoundException(Exception):
 def check_response(response):
     status_code = response.status_code
     if status_code == 200:
-        return
+        return True
     elif status_code == 401:
         raise(UnauthorizedException)
     elif status_code == 403:
@@ -29,6 +29,8 @@ def check_response(response):
 
 
 class APIRequests(ABC):
+
+    check_duplicates = []
 
     # GET ALL
     @classmethod
@@ -53,6 +55,18 @@ class APIRequests(ABC):
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
+
+        if hasattr(self, "name"):
+            name = self.name.replace(" ", "%20")
+            response = self.get_from_query(f"name.in={name}")
+            
+            if check_response(response):
+                new_args = response.json()
+                if len(new_args) >= 1:
+                    self.__init__(**new_args[0])
+                    self.id = new_args["id"]
+                    return response.json()
+
         response = session.post(self.path, data=json.dumps(data), headers=headers)
         check_response(response)
         response = response.json()

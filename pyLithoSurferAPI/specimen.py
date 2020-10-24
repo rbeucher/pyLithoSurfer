@@ -14,7 +14,7 @@ class Specimen(APIRequests):
                 specimenKindId: Union[int, np.int16, np.int32, np.int64],
                 archiveId: Union[int, np.int16, np.int32, np.int64],
                 shrimpdataPointId: Union[int, np.int16, np.int32, np.int64],
-                name: str = "unknown",
+                name: str = None,
                 description: str = None,
                 igsn: str = None,
                 pictureHref: url = None):
@@ -122,6 +122,6 @@ class Specimen(APIRequests):
         return self._shrimpdataPointId
 
     @shrimpdataPointId.setter
-    def shrimpdataPointId(self, value: Union[int, np.int16, np.int32, np.int64])::
+    def shrimpdataPointId(self, value: Union[int, np.int16, np.int32, np.int64]):
         self._shrimpdataPointId = convert_int(value)
         

@@ -15,7 +15,7 @@ class DataPoint(APIRequests):
     def __init__(self, 
                 dataPackageId: Union[int, np.int16, np.int32, np.int64],
                 dataStructure: str,
-                name: str = "unknown",
+                name: str = None,
                 dataEntityId: Union[int, np.int16, np.int32, np.int64] = None,
                 sourceId: Union[int, np.int16, np.int32, np.int64] = None,
                 locationId: Union[int, np.int16, np.int32, np.int64] = None,
@@ -48,6 +48,8 @@ class DataPoint(APIRequests):
         self.locationId = convert_int(locationId)
         self.externalDataHref = convert_str(externalDataHref)
         self.description = convert_str(description)
+
+        self.id = None
 
     @property
     def dataEntityId(self):

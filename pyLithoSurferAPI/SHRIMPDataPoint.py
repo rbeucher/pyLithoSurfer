@@ -61,6 +61,8 @@ class SHRIMPDataPoint(APIRequests):
         self.ngrains = convert_int(ngrains)
         self.nspots = convert_int(nspots)
 
+        self.id = None
+
     @property
     def age(self):
         return self._age

@@ -72,6 +72,8 @@ class Sample(APIRequests):
         self.tectonicUnitId = convert_int(tectonicUnitId)
         self.igsn = convert_str(igsn)
 
+        self.id = None
+
     @property
     def id(self):
         return self._id

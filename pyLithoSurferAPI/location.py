@@ -44,6 +44,8 @@ class Location(APIRequests):
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
 
+        self.id = None
+
     @property
     def id(self):
         return self._id
