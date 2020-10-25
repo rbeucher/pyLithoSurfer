@@ -15,7 +15,9 @@ class Location(APIRequests):
                 latLonPrecision: Union[float, np.float16, np.float32, np.float64],
                 name: str = "unknown",
                 captureMethodId: Union[int, np.int16, np.int32, np.int64] = 0,
+                captureMethodName: str = None,
                 celestialId: Union[int, np.int16, np.int32, np.int64] = 0,
+                celestialName: str = None,
                 description: str = None):
         """[summary]
 
@@ -32,7 +34,10 @@ class Location(APIRequests):
             Location object
         """
 
-        if not name or np.isnan(name):
+        if not name:
+            name = "unknown"
+
+        if not isinstance(name, str) and np.isnan(name):
             name = "unknown"
 
         self.name = str(name)
@@ -44,8 +49,6 @@ class Location(APIRequests):
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
 
-        self.id = None
-
     @property
     def id(self):
         return self._id
@@ -53,6 +56,14 @@ class Location(APIRequests):
     @id.setter
     def id(self, value: Union[int, np.int16, np.int32, np.int64]):
         self._id = int(value)
+    
+    @property
+    def celestialId(self):
+        return self._celestialId
+
+    @celestialId.setter
+    def celestialId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._celestialId = int(value)
     
     @property
     def description(self):

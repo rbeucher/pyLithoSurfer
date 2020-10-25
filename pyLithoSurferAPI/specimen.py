@@ -15,6 +15,8 @@ class Specimen(APIRequests):
                 archiveId: Union[int, np.int16, np.int32, np.int64],
                 shrimpdataPointId: Union[int, np.int16, np.int32, np.int64],
                 name: str = None,
+                specimenKindName: str = None,
+                archiveName: str = None,
                 description: str = None,
                 igsn: str = None,
                 pictureHref: url = None):
@@ -33,7 +35,10 @@ class Specimen(APIRequests):
             Specimen object
         """
 
-        if not name or np.isnan(name):
+        if not name:
+            name = "unknown"
+
+        if not isinstance(name, str) and np.isnan(name):
             name = "unknown"
 
         self.name = str(name)

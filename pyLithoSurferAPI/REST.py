@@ -50,7 +50,7 @@ class APIRequests(ABC):
     # POST
     def new(self):
         data = self.to_dict()
-        if data["id"]:
+        if "id" in data.keys():
             data.pop("id")
         headers = session.headers
         headers["Accept"] = "application/json"
@@ -63,8 +63,9 @@ class APIRequests(ABC):
             if check_response(response):
                 new_args = response.json()
                 if len(new_args) >= 1:
+                    new_id = new_args[0].pop("id")
                     self.__init__(**new_args[0])
-                    self.id = new_args["id"]
+                    self.id = new_id
                     return response.json()
 
         response = session.post(self.path, data=json.dumps(data), headers=headers)

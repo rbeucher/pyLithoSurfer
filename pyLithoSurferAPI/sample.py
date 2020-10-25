@@ -27,6 +27,13 @@ class Sample(APIRequests):
                 sourceId: str = None,
                 tectonicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
                 igsn: str = None,
+                archiveName: str = None,
+                lithologyKindName: str = None,
+                locationKindName: str = None,
+                locationName: str = None,
+                referenceElevationKindName: str = None,
+                sampleMethodName: str = None,
+                tectonicUnitName: str = None
                 ):
         """Sample
 
@@ -52,7 +59,10 @@ class Sample(APIRequests):
             Sample object
         """
 
-        if not name or np.isnan(name):
+        if not name:
+            name = "unknown"
+
+        if not isinstance(name, str) and np.isnan(name):
             name = "unknown"
 
         self.name = convert_str(name)
@@ -65,9 +75,11 @@ class Sample(APIRequests):
         self.relativeElevationAccuracy = convert_float(relativeElevationAccuracy)
         self.relativeElevation = convert_float(relativeElevation)
         self.archiveId = convert_int(archiveId)
+        self.locationId = convert_int(locationId)
+        self.referenceElevation = convert_float(referenceElevation)
         self.referenceElevationKindId = convert_int(referenceElevationKindId)
         self.referenceElevationKindNote = convert_str(referenceElevationKindNote)
-        self.referenceElevationKindSource = convert_str(referenceElevationKindSource)
+        self.referenceElevationSource = convert_str(referenceElevationSource)
         self.sourceId = convert_int(sourceId)
         self.tectonicUnitId = convert_int(tectonicUnitId)
         self.igsn = convert_str(igsn)
@@ -79,8 +91,8 @@ class Sample(APIRequests):
         return self._id
 
     @id.setter
-    def id(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._id = convet_int(value)
+    def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._id = convert_int(value)
     
     @property
     def name(self):

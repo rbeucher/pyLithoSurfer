@@ -24,7 +24,12 @@ class SHRIMPDataPoint(APIRequests):
                 mountOpticalCharacterisation: str = None,
                 mswd: Union[float, np.float16, np.float32, np.float64] = None,
                 ngrains: int = None,
-                nspots: int = None
+                nspots: int = None,
+                ageAgeKindProcessName: str = None,
+                ageAverageKindName: str = None,
+                analyteName: str = None,
+                errorAgeTypeName: str = None,
+                mineralName: str = None
                 ):
         """Shrimp Data Point
 

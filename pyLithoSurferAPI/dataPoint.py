@@ -19,6 +19,10 @@ class DataPoint(APIRequests):
                 dataEntityId: Union[int, np.int16, np.int32, np.int64] = None,
                 sourceId: Union[int, np.int16, np.int32, np.int64] = None,
                 locationId: Union[int, np.int16, np.int32, np.int64] = None,
+                locationName: str = None,
+                sampleId: Union[int, np.int16, np.int32, np.int64] = None,
+                sampleName: str = None,
+                dataPackageName: str = None,
                 externalDataHref: url = None,
                 description: str = None):
         """DataPoint
@@ -30,13 +34,20 @@ class DataPoint(APIRequests):
             name (str, optional): Name of the Datapoint. Defaults to None.
             sourceId (int, optional): Legacy Chrono ID. Defaults to None.
             locationId (int, optional): Id of the datapoint location. Defaults to None.
+            locationName (str, optional): Name of the location.
+            sampleId (int, optional): Id of the datapoint sample. Defaults to None.
+            sampleName (str, optional): Name of the sample.
             externalDataHref (url, optional): [description]. Defaults to None.
             description (str, optional): [description]. Defaults to None.
 
         Returns:
             DataPoint object.
         """
-        if not name or np.isnan(name):
+        
+        if not name:
+            name = "unknown"
+
+        if not isinstance(name, str) and np.isnan(name):
             name = "unknown"
         
         self.name = convert_str(name)
@@ -46,6 +57,10 @@ class DataPoint(APIRequests):
 
         self.sourceId = convert_int(sourceId)
         self.locationId = convert_int(locationId)
+        self.locationName = convert_str(locationName)
+        self.sampleId = convert_int(sampleId)
+        self.sampleName = convert_str(sampleName)
+        self.dataPackageName = convert_str(sampleName)
         self.externalDataHref = convert_str(externalDataHref)
         self.description = convert_str(description)
 

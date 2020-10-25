@@ -19,6 +19,10 @@ class Analyte(APIRequests):
                 description: str = None,
                 igsn: str = None,
                 pictureHref: url = None,
+                analyteKindName: str = None,
+                archiveName: str = None,
+                sampleName: str = None,
+                specimenName: str = None
                 ):
         """Analyte
 
@@ -36,7 +40,10 @@ class Analyte(APIRequests):
             Analyte object.
         """
 
-        if not name or np.isnan(name):
+        if not name:
+            name = "unknown"
+
+        if not isinstance(name, str) and np.isnan(name):
             name = "unknown"
 
         self.name = convert_str(name)
