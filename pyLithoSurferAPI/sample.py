@@ -25,6 +25,7 @@ class Sample(APIRequests):
                 referenceElevationKindNote: str = None,
                 referenceElevationSource: str = "SOURCE",
                 sourceId: str = None,
+                dataPackageId: Union[int, np.int16, np.int32, np.int64] = None,
                 tectonicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
                 igsn: str = None,
                 archiveName: str = None,
@@ -82,6 +83,7 @@ class Sample(APIRequests):
         self.referenceElevationSource = convert_str(referenceElevationSource)
         self.sourceId = convert_int(sourceId)
         self.tectonicUnitId = convert_int(tectonicUnitId)
+        self.dataPackageId = convert_int(dataPackageId)
         self.igsn = convert_str(igsn)
 
         self.id = None
@@ -262,3 +264,10 @@ class Sample(APIRequests):
     def sampleMethodName(self, value: str):
         self._sampleMethodName = convert_str(value)
     
+    @property
+    def dataPackageId(self):
+        return self._dataPackageId
+
+    @dataPackageId.setter
+    def dataPackageId(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._dataPackageId = convert_int(value)
