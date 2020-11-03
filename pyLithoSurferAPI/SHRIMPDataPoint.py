@@ -19,7 +19,6 @@ class SHRIMPDataPoint(APIRequests):
                 errorAgeTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                 ageAgeKindProcessId: Union[int, np.int16, np.int32, np.int64] = None,
                 ageAverageKindId: Union[int, np.int16, np.int32, np.int64] = 0,
-                analyteId: Union[int, np.int16, np.int32, np.int64] = None,
                 mountCoating: str = None,
                 mountOpticalCharacterisation: str = None,
                 mswd: Union[float, np.float16, np.float32, np.float64] = None,
@@ -27,7 +26,6 @@ class SHRIMPDataPoint(APIRequests):
                 nspots: int = None,
                 ageAgeKindProcessName: str = None,
                 ageAverageKindName: str = None,
-                analyteName: str = None,
                 errorAgeTypeName: str = None,
                 mineralName: str = None
                 ):
@@ -41,7 +39,6 @@ class SHRIMPDataPoint(APIRequests):
             errorAgeTypeId (Union[int, np.int16, np.int32, np.int64], optional): Error Type. Defaults to 0 (unknown).
             ageAgeKindProcessId (Union[int, np.int16, np.int32, np.int64], optional): Process Kind of Age. Defaults to None.
             ageAverageKindId (Union[int, np.int16, np.int32, np.int64], optional): Average Kind of Age. Defaults to 0.
-            analyteId (Union[int, np.int16, np.int32, np.int64], optional): Id of the Analyte. Defaults to None.
             mountCoating (str, optional): Description of the mount coating. Defaults to None.
             mountOpticalCharacterisation (str, optional): Description of the mount optical characterisation. Defaults to None.
             mswd (Union[float, np.float16, np.float32, np.float64], optional): Mean Standard Weighted Deviation. Defaults to None.
@@ -123,22 +120,6 @@ class SHRIMPDataPoint(APIRequests):
     @ageErrorMin.setter
     def ageErrorMin(self, value: Union[float, np.float16, np.float32, np.float64]):
         self._ageErrorMin = convert_float(value)
-
-    @property
-    def analyteId(self):
-        return self._analyteId
-
-    @analyteId.setter
-    def analyteId(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._analyteId = convert_int(value)
-
-    @property
-    def analyteName(self):
-        return self._analyteName
-
-    @analyteName.setter
-    def analyteName(self, value: str):
-        self._analyteName = convert_str(value)
 
     @property
     def errorAgeTypeId(self):
