@@ -1,0 +1,6 @@
+*.csv
+*.ipynb
+*.xlsx
+*.xlx
+pyLithoSurferAPI.egg-info
+*.pyc
