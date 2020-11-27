@@ -56,7 +56,6 @@ class SHRIMPDataPoint(APIRequests):
         self.errorAgeTypeId = convert_int(errorAgeTypeId)
         self.ageAgeKindProcessId = convert_int(ageAgeKindProcessId)
         self.ageAverageKindId = convert_int(ageAverageKindId)
-        self.analyteId = convert_int(analyteId)
         self.mountCoating = convert_str(mountCoating)
         self.mountOpticalCharacterisation = convert_str(mountOpticalCharacterisation)
         self.mswd = convert_float(mswd)

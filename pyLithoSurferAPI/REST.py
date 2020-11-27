@@ -71,7 +71,10 @@ class APIRequests(ABC):
         response = session.post(self.path, data=json.dumps(data), headers=headers)
         check_response(response)
         response = response.json()
-        self.id = response["id"]
+        if "id" in response.keys():
+            self.id = response["id"]
+        else:
+            self.id = None
         return response
 
     # PUT

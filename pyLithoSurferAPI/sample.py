@@ -34,7 +34,8 @@ class Sample(APIRequests):
                 locationName: str = None,
                 referenceElevationKindName: str = None,
                 sampleMethodName: str = None,
-                tectonicUnitName: str = None
+                tectonicUnitName: str = None,
+                dataPackageName: str = None
                 ):
         """Sample
 
@@ -263,6 +264,14 @@ class Sample(APIRequests):
     @sampleMethodName.setter
     def sampleMethodName(self, value: str):
         self._sampleMethodName = convert_str(value)
+    
+    @property
+    def dataPackageName(self):
+        return self._dataPackageName
+
+    @dataPackageName.setter
+    def dataPackageName(self, value: str):
+        self._dataPackageName = convert_str(value)
     
     @property
     def dataPackageId(self):
