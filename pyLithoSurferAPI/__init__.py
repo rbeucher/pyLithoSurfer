@@ -82,3 +82,4 @@ from .lShrimp_age_kind_process import LSHRIMPAgeKindProcesses
 from .archive import Archive
 from .rockunit import RockUnit
 from .lab2data import Lab2Data
+from .lit2data import Lit2Data
