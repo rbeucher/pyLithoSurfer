@@ -15,13 +15,13 @@ class Person(APIRequests):
                  firstName: str = None,
                  name: str = None,
                  note: str = None,
-                 orcid: str = None,
+                 orcId: str = None,
                  title: str = None):
 
         self.firstName = convert_str(firstName)
         self.name = convert_str(name)
         self.note = convert_str(note)
-        self.orcid = convert_str(orcid)
+        self.orcId = convert_str(orcId)
         self.title = convert_str(title)
         self.calcName = convert_str(calcName)
 
@@ -58,12 +58,12 @@ class Person(APIRequests):
         self._note = convert_str(value)
     
     @property
-    def orcid(self):
-        return self._orcid
+    def orcId(self):
+        return self._orcId
 
-    @orcid.setter
-    def orcid(self, value: str):
-        self._orcid = convert_str(value)
+    @orcId.setter
+    def orcId(self, value: str):
+        self._orcId = convert_str(value)
     
     @property
     def title(self):
