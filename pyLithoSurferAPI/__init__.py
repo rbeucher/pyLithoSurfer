@@ -84,3 +84,4 @@ from .rockunit import RockUnit
 from .lab2data import Lab2Data
 from .lit2data import Lit2Data
 from .person import Person
+from .person2data import Person2Data
