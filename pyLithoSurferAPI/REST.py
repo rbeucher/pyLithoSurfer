@@ -16,6 +16,10 @@ class NotFoundException(Exception):
     pass
 
 
+class ItemNotFoundException(Exception):
+    pass
+
+
 def check_response(response):
     status_code = response.status_code
     if status_code == 200:
@@ -26,6 +30,8 @@ def check_response(response):
         raise(ForbiddenException)
     elif status_code == 404:
         raise(NotFoundException)
+    elif status_code == 500:
+        raise(ItemNotFoundException)
 
 
 class APIRequests(ABC):
@@ -73,8 +79,6 @@ class APIRequests(ABC):
         response = response.json()
         if "id" in response.keys():
             self.id = response["id"]
-        else:
-            self.id = None
         return response
 
     # PUT

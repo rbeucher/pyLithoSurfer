@@ -29,7 +29,7 @@ class Lab2Data(APIRequests):
 
     @id.setter
     def id(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._id = int(value)
+        self._id = int(value) if value is not None else None
 
     @property
     def dataPointId(self):
