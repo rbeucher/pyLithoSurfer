@@ -7,7 +7,9 @@ class DataPackage(APIRequests):
 
     path = URL_BASE + "/api/data-packages"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, distribution="PRIVATE", workflowState="IN_PROGRESS", **kwargs):
+        self.distribution = distribution
+        self.workflowState = workflowState
         for key, val in kwargs.items():
             setattr(self, key, val)
 
