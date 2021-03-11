@@ -4,6 +4,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 import numpy as np
 from .utilities import *
+from .REST import check_response
 
 class Location(APIRequests):
 
@@ -48,6 +49,21 @@ class Location(APIRequests):
         self.captureMethodId = convert_int(captureMethodId)
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
+
+    def new(self, *args, **kwargs):
+        
+        name = self.name.replace(" ", "%20")
+        response = self.get_from_query(f"name.in={name}")
+        
+        if check_response(response):
+            new_args = response.json()
+            if len(new_args) >= 1:
+                new_id = new_args[0].pop("id")
+                self.__init__(**new_args[0])
+                self.id = new_id
+                return response.json()
+        else:
+            super().new(*args, **kwargs)
 
     @property
     def id(self):

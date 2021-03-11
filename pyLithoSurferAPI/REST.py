@@ -22,7 +22,7 @@ class ItemNotFoundException(Exception):
 
 def check_response(response):
     status_code = response.status_code
-    if status_code == 200:
+    if status_code in [200, 204]:
         return True
     elif status_code == 401:
         raise(UnauthorizedException)
@@ -54,7 +54,7 @@ class APIRequests(ABC):
         return pd.DataFrame.from_records(records)
 
     # POST
-    def new(self):
+    def new(self, debug=False):
         data = self.to_dict()
         if "id" in data.keys():
             data.pop("id")
@@ -62,19 +62,9 @@ class APIRequests(ABC):
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        if hasattr(self, "name"):
-            name = self.name.replace(" ", "%20")
-            response = self.get_from_query(f"name.in={name}")
-            
-            if check_response(response):
-                new_args = response.json()
-                if len(new_args) >= 1:
-                    new_id = new_args[0].pop("id")
-                    self.__init__(**new_args[0])
-                    self.id = new_id
-                    return response.json()
-
         response = session.post(self.path, data=json.dumps(data), headers=headers)
+        if debug:
+            print(response.json())
         check_response(response)
         response = response.json()
         if "id" in response.keys():
@@ -82,13 +72,15 @@ class APIRequests(ABC):
         return response
 
     # PUT
-    def update(self):
+    def update(self, debug=False):
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
         response = session.put(self.path, data=self.to_json(), headers=headers)
+        if debug:
+            print(response.json())
         check_response(response)
-        return response.json()
+        return response
 
     # COUNT
     @classmethod
@@ -99,14 +91,14 @@ class APIRequests(ABC):
         return response.json()   
 
     # DELETE
-    def delete(self):
+    def delete(self, debug=False):
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
         path = self.path + "/" + str(self.id)
         response = session.delete(path)
         check_response(response)
-        return response.json()
+        return response
 
     # GET FROM ID
     def get_from_id(self, id_value):
@@ -115,7 +107,7 @@ class APIRequests(ABC):
         check_response(response)
         data = response.json()
         self.__init__(**data)
-        return response.json()
+        return response
 
     def get_from_query(self, query):
         headers = session.headers
