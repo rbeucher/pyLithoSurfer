@@ -5,6 +5,8 @@ import json
 import pandas as pd
 import numpy as np
 from .utilities import *
+from .dataPoint import DataPoint
+
 
 
 class SHRIMPDataPoint(APIRequests):
@@ -266,4 +268,48 @@ class SHRIMPDataPoint(APIRequests):
     def refMaterialName(self, value: str):
         self._refMaterialName = convert_str(value)
     
-        
+
+class SHRIMPDataPointCRUD(APIRequests):
+
+    path = URL_BASE+'/api/shrimp/shrimp-datapoints'
+
+    def __init__(self, dataPoint: DataPoint, dataPointID: int, shrimpDataPoint: SHRIMPDataPoint):
+
+        self.dataPoint = dataPoint
+        self.shrimpDataPoint = shrimpDataPoint
+        self.dataPointID = datapointID
+
+        self.id = None    
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._id = convert_int(value)
+    
+    @property
+    def dataPointID(self):
+        return self._dataPointID
+
+    @dataPointID.setter
+    def dataPointID(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._dataPointID = convert_int(value)
+
+    @property
+    def dataPoint(self):
+        return self._dataPoint
+
+    @dataPoint.setter
+    def dataPoint(self, value: DataPoint):
+        self._dataPoint = value
+    
+    @property
+    def shrimpDataPOint(self):
+        return self._shrimpDataPOint
+
+    @shrimpDataPOint.setter
+    def shrimpDataPOint(self, value: SHRIMPDataPoint):
+        self._shrimpDataPOint = value
+    

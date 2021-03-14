@@ -15,3 +15,19 @@ def convert_str(value):
             return value.strip()
         if np.isnan(value):
             return None
+
+
+# Python class generator using Jinja template.
+def generate_code(class_name, api_address, args, dest="./"):
+    import jinja2
+    import pkg_resources
+
+    templateLoader = jinja2.FileSystemLoader(searchpath="./")
+    templateEnv = jinja2.Environment(loader=templateLoader)
+    TEMPLATE_FILE = pkg_resources.resource_filename(__name__, "/template.jinja")
+    template = templateEnv.get_template(TEMPLATE_FILE)
+    
+    result = template.render(class_name=class_name, api_address=api_address, args=args)
+    
+    with open(class_name + ".py", "w") as f:
+        f.write(result)

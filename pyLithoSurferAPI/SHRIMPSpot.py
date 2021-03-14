@@ -29,7 +29,7 @@ class SHRIMPSpot(APIRequests):
                  i204Pb206PbErrorTypeId: Union[float, np.float16, np.float32, np.float64] = 0,
                  i204Pb206PbErrorTypeName: str = None,
                  i206Pb238207CorrAgeError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238207CorrAgeErrorTypeId:  = ,
+                 i206Pb238207CorrAgeErrorTypeId:  Union[int, np.int16, np.int32, np.int64] = 0,
                  i206Pb238207CorrAgeErrorTypeName: str = None,
                  i206Pb238U204Corr: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U204CorrAge: Union[float, np.float16, np.float32, np.float64] = 0,
@@ -37,17 +37,17 @@ class SHRIMPSpot(APIRequests):
                  i206Pb238U204CorrAgeErrorTypeId: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U204CorrAgeErrorTypeName: str = None,
                  i206Pb238U204CorrError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238U204CorrErrorTypeId:  = ,
+                 i206Pb238U204CorrErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  i206Pb238U204CorrErrorTypeName: str = None,
                  i206Pb238U207Corr: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U207CorrAge: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U207CorrError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238U207CorrErrorTypeId:  = ,
+                 i206Pb238U207CorrErrorTypeId:  Union[int, np.int16, np.int32, np.int64] = 0,
                  i206Pb238U207CorrErrorTypeName: str = None,
                  i206Pb238U208Corr: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U208CorrAge: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U208CorrAgeError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238U208CorrAgeErrorTypeId:  = ,
+                 i206Pb238U208CorrAgeErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  i206Pb238U208CorrAgeErrorTypeName: str = None,
                  i206Pb238U208CorrError: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238U208CorrErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
@@ -63,15 +63,15 @@ class SHRIMPSpot(APIRequests):
                  i207Pb206Pb204Corr: Union[float, np.float16, np.float32, np.float64] = 0,
                  i207Pb206Pb204CorrAge: Union[float, np.float16, np.float32, np.float64] = 0,
                  i207Pb206Pb204CorrAgeError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i207Pb206Pb204CorrAgeErrorTypeId:  = ,
+                 i207Pb206Pb204CorrAgeErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  i207Pb206Pb204CorrAgeErrorTypeName: str = None,
                  i207Pb206Pb204CorrError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i207Pb206Pb204CorrErrorTypeId:  = ,
+                 i207Pb206Pb204CorrErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  i207Pb206Pb204CorrErrorTypeName: str = None,
                  i207Pb206Pb208Corr: Union[float, np.float16, np.float32, np.float64] = 0,
                  i207Pb206Pb208CorrAge: Union[float, np.float16, np.float32, np.float64] = 0,
                  i207Pb206Pb208CorrAgeError: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i207Pb206Pb208CorrAgeErrorTypeId:  = ,
+                 i207Pb206Pb208CorrAgeErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  i207Pb206Pb208CorrAgeErrorTypeName: str = None,
                  i207Pb206Pb208CorrError: Union[float, np.float16, np.float32, np.float64] = 0,
                  i207Pb206Pb208CorrErrorTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
@@ -433,8 +433,8 @@ class SHRIMPSpot(APIRequests):
         return self._i206Pb238207CorrAgeErrorTypeId
 
     @i206Pb238207CorrAgeErrorTypeId.setter
-    def i206Pb238207CorrAgeErrorTypeId(self, value: ):
-        self._i206Pb238207CorrAgeErrorTypeId = convert_(value)
+    def i206Pb238207CorrAgeErrorTypeId(self, value: int):
+        self._i206Pb238207CorrAgeErrorTypeId = convert_int(value)
     
     @property
     def i206Pb238207CorrAgeErrorTypeName(self):
@@ -497,8 +497,8 @@ class SHRIMPSpot(APIRequests):
         return self._i206Pb238U204CorrErrorTypeId
 
     @i206Pb238U204CorrErrorTypeId.setter
-    def i206Pb238U204CorrErrorTypeId(self, value: ):
-        self._i206Pb238U204CorrErrorTypeId = convert_(value)
+    def i206Pb238U204CorrErrorTypeId(self, value: int):
+        self._i206Pb238U204CorrErrorTypeId = int(value)
     
     @property
     def i206Pb238U204CorrErrorTypeName(self):
@@ -537,8 +537,8 @@ class SHRIMPSpot(APIRequests):
         return self._i206Pb238U207CorrErrorTypeId
 
     @i206Pb238U207CorrErrorTypeId.setter
-    def i206Pb238U207CorrErrorTypeId(self, value: ):
-        self._i206Pb238U207CorrErrorTypeId = convert_(value)
+    def i206Pb238U207CorrErrorTypeId(self, value: int):
+        self._i206Pb238U207CorrErrorTypeId = convert_int(value)
     
     @property
     def i206Pb238U207CorrErrorTypeName(self):
@@ -577,8 +577,8 @@ class SHRIMPSpot(APIRequests):
         return self._i206Pb238U208CorrAgeErrorTypeId
 
     @i206Pb238U208CorrAgeErrorTypeId.setter
-    def i206Pb238U208CorrAgeErrorTypeId(self, value: ):
-        self._i206Pb238U208CorrAgeErrorTypeId = convert_(value)
+    def i206Pb238U208CorrAgeErrorTypeId(self, value: int):
+        self._i206Pb238U208CorrAgeErrorTypeId = int(value)
     
     @property
     def i206Pb238U208CorrAgeErrorTypeName(self):
@@ -705,8 +705,8 @@ class SHRIMPSpot(APIRequests):
         return self._i207Pb206Pb204CorrAgeErrorTypeId
 
     @i207Pb206Pb204CorrAgeErrorTypeId.setter
-    def i207Pb206Pb204CorrAgeErrorTypeId(self, value: ):
-        self._i207Pb206Pb204CorrAgeErrorTypeId = convert_(value)
+    def i207Pb206Pb204CorrAgeErrorTypeId(self, value: int):
+        self._i207Pb206Pb204CorrAgeErrorTypeId = int(value)
     
     @property
     def i207Pb206Pb204CorrAgeErrorTypeName(self):
@@ -729,8 +729,8 @@ class SHRIMPSpot(APIRequests):
         return self._i207Pb206Pb204CorrErrorTypeId
 
     @i207Pb206Pb204CorrErrorTypeId.setter
-    def i207Pb206Pb204CorrErrorTypeId(self, value: ):
-        self._i207Pb206Pb204CorrErrorTypeId = convert_(value)
+    def i207Pb206Pb204CorrErrorTypeId(self, value: int):
+        self._i207Pb206Pb204CorrErrorTypeId = int(value)
     
     @property
     def i207Pb206Pb204CorrErrorTypeName(self):
@@ -769,8 +769,8 @@ class SHRIMPSpot(APIRequests):
         return self._i207Pb206Pb208CorrAgeErrorTypeId
 
     @i207Pb206Pb208CorrAgeErrorTypeId.setter
-    def i207Pb206Pb208CorrAgeErrorTypeId(self, value: ):
-        self._i207Pb206Pb208CorrAgeErrorTypeId = convert_(value)
+    def i207Pb206Pb208CorrAgeErrorTypeId(self, value: int):
+        self._i207Pb206Pb208CorrAgeErrorTypeId = int(value)
     
     @property
     def i207Pb206Pb208CorrAgeErrorTypeName(self):
@@ -1396,4 +1396,7 @@ class SHRIMPSpot(APIRequests):
     def totalDiscordancePercent(self, value: float):
         self._totalDiscordancePercent = convert_float(value)
     
-        
+    
+    
+
+SHRIMPSpotCRUD = SHRIMPSpot

@@ -46,5 +46,8 @@ setup(
     packages=["pyLithoSurferAPI"],
     keywords='geology thermochronology fission-tracks',
     install_requires=requirements,
+    package_data={
+        'pyLithoSurferAPI': ['template.jinja'],
+    },
 
 )
