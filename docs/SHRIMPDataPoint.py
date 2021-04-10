@@ -5,8 +5,6 @@ import json
 import pandas as pd
 import numpy as np
 from .utilities import *
-from .dataPoint import DataPoint
-
 
 
 class SHRIMPDataPoint(APIRequests):
@@ -20,14 +18,14 @@ class SHRIMPDataPoint(APIRequests):
                  dataDescription: str = None,
                  dataReductionSoftwareVersion: str = None,
                  exponentType: str = None,
-                 i206Pb238UCalibrationUncIncl: bool = False,
+                 i206Pb238UCalibrationUncIncl: bool = True,
                  i206Pb238UCalibrationUncertainty: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238UReproducabilityUncertainty: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238UReproducabilityUncertaintyIncl: bool = False,
+                 i206Pb238UReproducabilityUncertaintyIncl: bool = True,
                  i235UDecayConstant: Union[float, np.float16, np.float32, np.float64] = 0,
                  i238U235U: Union[float, np.float16, np.float32, np.float64] = 0,
                  i238UDecayConstant: Union[float, np.float16, np.float32, np.float64] = 0,
-                 iMFCorrApplied: bool = False,
+                 iMFCorrApplied: bool = True,
                  id: Union[int, np.int16, np.int32, np.int64] = 0,
                  instrumentalMassFractionationIMFFactor: Union[float, np.float16, np.float32, np.float64] = 0,
                  machineId: Union[int, np.int16, np.int32, np.int64] = 0,
@@ -268,79 +266,4 @@ class SHRIMPDataPoint(APIRequests):
     def refMaterialName(self, value: str):
         self._refMaterialName = convert_str(value)
     
-
-class SHRIMPDataPointCRUD(APIRequests):
-
-    path = URL_BASE+'/api/shrimp/shrimp-datapoints'
-
-    def __init__(self, dataPoint: DataPoint, dataPointID: int, shrimpDataPoint: SHRIMPDataPoint):
-
-        self.dataPoint = dataPoint
-        self.shrimpDataPoint = shrimpDataPoint
-        self.dataPointID = datapointID
-
-        self.id = None    
-
-    @property
-    def id(self):
-        return self._id
-
-    @id.setter
-    def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
-        self._id = convert_int(value)
-    
-    @property
-    def dataPointID(self):
-        return self._dataPointID
-
-    @dataPointID.setter
-    def dataPointID(self, value: Union[int, np.int16, np.int32, np.int64, None]):
-        self._dataPointID = convert_int(value)
-
-    @property
-    def dataPoint(self):
-        return self._dataPoint
-
-    @dataPoint.setter
-    def dataPoint(self, value: DataPoint):
-        self._dataPoint = value
-    
-    @property
-    def shrimpDataPoint(self):
-        return self._shrimpDataPoint
-
-    @shrimpDataPoint.setter
-    def shrimpDataPoint(self, value: SHRIMPDataPoint):
-        self._shrimpDataPOint = value
-
-     # POST
-    def new(self, debug=False):
-        data = {}
         
-        dataPoint = self.dataPoint.to_dict()
-        if "id" in dataPoint.keys():
-            dataPoint.pop("id")
-        data["dataPoint"] = dataPoint
-        shrimpDataPoint = self.shrimpDataPoint.to_dict()
-        if "id" in shrimpDataPoint.keys():
-            shrimpDataPoint.pop("id")
-        data["shrimpDataPoint"] = shrimpDataPoint 
-
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-
-        response = session.post(self.path, data=json.dumps(data), headers=headers)
-        if debug:
-            print(response.json())
-        check_response(response)
-        response = response.json()
-        if "id" in response.keys():
-            self.id = response["id"]
-        if "dataPoint" in response.keys() and "id" in response["dataPoint"].keys():
-            self.dataPoint.id = response["dataPoint"]["id"]
-            self.dataPointID = self.dataPoint.id
-        if "shrimpDataPoint" in response.keys() and "id" in response["shrimpDataPoint"].keys():
-            self.shrimpDataPoint.id = response["shrimpDataPoint"]["id"]
-        return response   
-    
