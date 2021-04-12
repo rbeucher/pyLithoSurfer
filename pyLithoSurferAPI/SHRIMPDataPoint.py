@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 from .utilities import *
 from .dataPoint import DataPoint
+from .REST import check_response
+
 
 
 
@@ -20,25 +22,29 @@ class SHRIMPDataPoint(APIRequests):
                  dataDescription: str = None,
                  dataReductionSoftwareVersion: str = None,
                  exponentType: str = None,
-                 i206Pb238UCalibrationUncIncl: bool = False,
+                 i206Pb238UCalibrationUncIncl: bool = True,
                  i206Pb238UCalibrationUncertainty: Union[float, np.float16, np.float32, np.float64] = 0,
                  i206Pb238UReproducabilityUncertainty: Union[float, np.float16, np.float32, np.float64] = 0,
-                 i206Pb238UReproducabilityUncertaintyIncl: bool = False,
+                 i206Pb238UReproducabilityUncertaintyIncl: bool = True,
                  i235UDecayConstant: Union[float, np.float16, np.float32, np.float64] = 0,
                  i238U235U: Union[float, np.float16, np.float32, np.float64] = 0,
                  i238UDecayConstant: Union[float, np.float16, np.float32, np.float64] = 0,
-                 iMFCorrApplied: bool = False,
+                 iMFCorrApplied: bool = True,
                  id: Union[int, np.int16, np.int32, np.int64] = 0,
                  instrumentalMassFractionationIMFFactor: Union[float, np.float16, np.float32, np.float64] = 0,
                  machineId: Union[int, np.int16, np.int32, np.int64] = 0,
                  machineName: str = None,
+                 mineralOfInterestId: Union[int, np.int16, np.int32, np.int64] = 0,
+                 mineralOfInterestName: str = None,
                  mountCoating: str = None,
                  mountIGSN: str = None,
                  mountIdentifier: str = None,
                  mountImagingCharacterisation: str = None,
                  mountInfo: str = None,
-                 refMaterialId: Union[int, np.int16, np.int32, np.int64] = 0,
+                 refMaterialId: Union[int, np.int16, np.int32, np.int64, None] = 0,
                  refMaterialName: str = None,
+                 sampleFormatId: Union[int, np.int16, np.int32, np.int64, None] = 0,
+                 sampleFormatName: str = None,
                 ):
         
         self.calibrationExponent = calibrationExponent
@@ -59,6 +65,8 @@ class SHRIMPDataPoint(APIRequests):
         self.instrumentalMassFractionationIMFFactor = instrumentalMassFractionationIMFFactor
         self.machineId = machineId
         self.machineName = machineName
+        self.mineralOfInterestId = mineralOfInterestId
+        self.mineralOfInterestName = mineralOfInterestName
         self.mountCoating = mountCoating
         self.mountIGSN = mountIGSN
         self.mountIdentifier = mountIdentifier
@@ -66,6 +74,8 @@ class SHRIMPDataPoint(APIRequests):
         self.mountInfo = mountInfo
         self.refMaterialId = refMaterialId
         self.refMaterialName = refMaterialName
+        self.sampleFormatId = sampleFormatId
+        self.sampleFormatName = sampleFormatName
 
     
     @property
@@ -213,6 +223,22 @@ class SHRIMPDataPoint(APIRequests):
         self._machineName = convert_str(value)
     
     @property
+    def mineralOfInterestId(self):
+        return self._mineralOfInterestId
+
+    @mineralOfInterestId.setter
+    def mineralOfInterestId(self, value: int):
+        self._mineralOfInterestId = int(value)
+    
+    @property
+    def mineralOfInterestName(self):
+        return self._mineralOfInterestName
+
+    @mineralOfInterestName.setter
+    def mineralOfInterestName(self, value: str):
+        self._mineralOfInterestName = convert_str(value)
+    
+    @property
     def mountCoating(self):
         return self._mountCoating
 
@@ -257,8 +283,8 @@ class SHRIMPDataPoint(APIRequests):
         return self._refMaterialId
 
     @refMaterialId.setter
-    def refMaterialId(self, value: int):
-        self._refMaterialId = int(value)
+    def refMaterialId(self, value):
+        self._refMaterialId = None
     
     @property
     def refMaterialName(self):
@@ -268,16 +294,33 @@ class SHRIMPDataPoint(APIRequests):
     def refMaterialName(self, value: str):
         self._refMaterialName = convert_str(value)
     
+    @property
+    def sampleFormatId(self):
+        return self._sampleFormatId
+
+    @sampleFormatId.setter
+    def sampleFormatId(self, value: int):
+        self._sampleFormatId = int(value)
+    
+    @property
+    def sampleFormatName(self):
+        return self._sampleFormatName
+
+    @sampleFormatName.setter
+    def sampleFormatName(self, value: str):
+        self._sampleFormatName = convert_str(value)
+    
+    
 
 class SHRIMPDataPointCRUD(APIRequests):
 
     path = URL_BASE+'/api/shrimp/shrimp-datapoints'
 
-    def __init__(self, dataPoint: DataPoint, dataPointID: int, shrimpDataPoint: SHRIMPDataPoint):
+    def __init__(self, dataPoint: DataPoint, shrimpDataPoint: SHRIMPDataPoint, dataPointID=None):
 
         self.dataPoint = dataPoint
         self.shrimpDataPoint = shrimpDataPoint
-        self.dataPointID = datapointID
+        self.dataPointID = dataPointID
 
         self.id = None    
 
@@ -311,7 +354,7 @@ class SHRIMPDataPointCRUD(APIRequests):
 
     @shrimpDataPoint.setter
     def shrimpDataPoint(self, value: SHRIMPDataPoint):
-        self._shrimpDataPOint = value
+        self._shrimpDataPoint = value
 
      # POST
     def new(self, debug=False):
@@ -320,11 +363,11 @@ class SHRIMPDataPointCRUD(APIRequests):
         dataPoint = self.dataPoint.to_dict()
         if "id" in dataPoint.keys():
             dataPoint.pop("id")
-        data["dataPoint"] = dataPoint
+        data["dataPointDTO"] = dataPoint
         shrimpDataPoint = self.shrimpDataPoint.to_dict()
         if "id" in shrimpDataPoint.keys():
             shrimpDataPoint.pop("id")
-        data["shrimpDataPoint"] = shrimpDataPoint 
+        data["shrimpdataPointDTO"] = shrimpDataPoint 
 
         headers = session.headers
         headers["Accept"] = "application/json"
@@ -337,10 +380,10 @@ class SHRIMPDataPointCRUD(APIRequests):
         response = response.json()
         if "id" in response.keys():
             self.id = response["id"]
-        if "dataPoint" in response.keys() and "id" in response["dataPoint"].keys():
-            self.dataPoint.id = response["dataPoint"]["id"]
+        if "dataPointDTO" in response.keys() and "id" in response["dataPointDTO"].keys():
+            self.dataPoint.id = response["dataPointDTO"]["id"]
             self.dataPointID = self.dataPoint.id
-        if "shrimpDataPoint" in response.keys() and "id" in response["shrimpDataPoint"].keys():
-            self.shrimpDataPoint.id = response["shrimpDataPoint"]["id"]
+        if "shrimpdataPointDTO" in response.keys() and "id" in response["shrimpdataPointDTO"].keys():
+            self.shrimpDataPoint.id = response["shrimpdataPointDTO"]["id"]
         return response   
     

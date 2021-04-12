@@ -91,3 +91,5 @@ from .SHRIMPDataPoint import SHRIMPDataPoint, SHRIMPDataPointCRUD
 from .SHRIMPSpot import SHRIMPSpot, SHRIMPSpotCRUD
 from .utilities import generate_code
 from .user import User
+from .statement import Statement
+from .geoeventAtAge import GeoeventAtAge

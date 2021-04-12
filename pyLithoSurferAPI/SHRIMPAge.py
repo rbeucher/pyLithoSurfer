@@ -1,12 +1,13 @@
 from . import session, URL_BASE
 from typing import Union
 from pyLithoSurferAPI.REST import APIRequests
+from .REST import check_response
 import json
 import pandas as pd
 import numpy as np
 from .utilities import *
-from .GeoeventAtAge import GeoeventAtAge
-from .Statement import Statement
+from .geoeventAtAge import GeoeventAtAge
+from .statement import Statement
 
 
 class SHRIMPAge(APIRequests):
@@ -14,21 +15,58 @@ class SHRIMPAge(APIRequests):
     path = URL_BASE+'/api/shrimp-ages'
 
     def __init__(self,
+                 ageGroupId: Union[int, np.int16, np.int32, np.int64, None] = None,
+                 ageGroupName: str = None,
+                 ageTypeId: Union[int, np.int16, np.int32, np.int64] = 0,
+                 ageTypeName: str = None,
                  calcName: str = None,
-                 id: Union[int, np.int16, np.int32, np.int64] = 0,
                  mswd: Union[float, np.float16, np.float32, np.float64] = 0,
-                 numberAnalysesCombined: Union[int, np.int16, np.int32, np.int64] = 0,
+                 numberAnalysesCombined: Union[int, np.int16, np.int32, np.int64, None] = None,
                  rmQcTest: str = None,
-                 shrimpdataPointId: Union[int, np.int16, np.int32, np.int64] = 0,
                 ):
         
+        self.ageGroupId = ageGroupId
+        self.ageGroupName = ageGroupName
+        self.ageTypeId = ageTypeId
+        self.ageTypeName = ageTypeName
         self.calcName = calcName
-        self.id = id
         self.mswd = mswd
         self.numberAnalysesCombined = numberAnalysesCombined
         self.rmQcTest = rmQcTest
-        self.shrimpdataPointId = shrimpdataPointId
 
+        self.id = None
+    
+    @property
+    def ageGroupId(self):
+        return self._ageGroupId
+
+    @ageGroupId.setter
+    def ageGroupId(self, value):
+        self._ageGroupId = value
+    
+    @property
+    def ageGroupName(self):
+        return self._ageGroupName
+
+    @ageGroupName.setter
+    def ageGroupName(self, value: str):
+        self._ageGroupName = convert_str(value)
+    
+    @property
+    def ageTypeId(self):
+        return self._ageTypeId
+
+    @ageTypeId.setter
+    def ageTypeId(self, value: int):
+        self._ageTypeId = int(value)
+    
+    @property
+    def ageTypeName(self):
+        return self._ageTypeName
+
+    @ageTypeName.setter
+    def ageTypeName(self, value: str):
+        self._ageTypeName = convert_str(value)
     
     @property
     def calcName(self):
@@ -43,8 +81,8 @@ class SHRIMPAge(APIRequests):
         return self._id
 
     @id.setter
-    def id(self, value: int):
-        self._id = int(value)
+    def id(self, value):
+        self._id = value
     
     @property
     def mswd(self):
@@ -59,8 +97,11 @@ class SHRIMPAge(APIRequests):
         return self._numberAnalysesCombined
 
     @numberAnalysesCombined.setter
-    def numberAnalysesCombined(self, value: int):
-        self._numberAnalysesCombined = int(value)
+    def numberAnalysesCombined(self, value):
+        if value:
+            self._numberAnalysesCombined = int(value)
+        else:
+            self._numberAnalysesCombined = None
     
     @property
     def rmQcTest(self):
@@ -70,13 +111,6 @@ class SHRIMPAge(APIRequests):
     def rmQcTest(self, value: str):
         self._rmQcTest = convert_str(value)
     
-    @property
-    def shrimpdataPointId(self):
-        return self._shrimpdataPointId
-
-    @shrimpdataPointId.setter
-    def shrimpdataPointId(self, value: int):
-        self._shrimpdataPointId = int(value)
 
 
 class SHRIMPAgeCRUD(APIRequests):
@@ -85,7 +119,7 @@ class SHRIMPAgeCRUD(APIRequests):
 
     def __init__(self, geoeventAtAge: GeoeventAtAge, statement: Statement, shrimpAge: SHRIMPAge):
 
-        self.geoEventAtAge = geoeventAtAge
+        self.geoeventAtAge = geoeventAtAge
         self.statement = statement
         self.shrimpAge = shrimpAge
 
@@ -125,19 +159,19 @@ class SHRIMPAgeCRUD(APIRequests):
 
     def new(self, debug=False):
         data = {}
-        
+        data["geoEventAtAgeExtendsStatementDTO"] = {}
         geoeventAtAge = self.geoeventAtAge.to_dict()
         if "id" in geoeventAtAge.keys():
             geoeventAtAge.pop("id")
-        data["geoeventAtAge"] = geoeventAtAge
+        data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"] = geoeventAtAge
         statement = self.statement.to_dict()
         if "id" in statement.keys():
             statement.pop("id")
-        data["statement"] = statement
+        data["geoEventAtAgeExtendsStatementDTO"]["statementDTO"] = statement
         shrimpAge = self.shrimpAge.to_dict()
         if "id" in shrimpAge.keys():
             shrimpAge.pop("id")
-        data["shrimpAge"] = shrimpAge
+        data["shrimpageDTO"] = shrimpAge
 
         headers = session.headers
         headers["Accept"] = "application/json"
