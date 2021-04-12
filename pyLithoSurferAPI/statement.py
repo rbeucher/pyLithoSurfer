@@ -16,8 +16,8 @@ class Statement(APIRequests):
                  description: str = None,
                  geoEventAtAgeId: Union[int, np.int16, np.int32, np.int64] = 0,
                  id: Union[int, np.int16, np.int32, np.int64] = 0,
-                 tempAtAgeId: Union[int, np.int16, np.int32, np.int64] = 0,
-                 tempGradientId: Union[int, np.int16, np.int32, np.int64] = 0,
+                 tempAtAgeId: Union[int, np.int16, np.int32, np.int64, None] = None,
+                 tempGradientId: Union[int, np.int16, np.int32, np.int64, None] = None,
                 ):
         
         self.dataPointId = dataPointId
@@ -65,15 +65,18 @@ class Statement(APIRequests):
         return self._tempAtAgeId
 
     @tempAtAgeId.setter
-    def tempAtAgeId(self, value: int):
-        self._tempAtAgeId = int(value)
+    def tempAtAgeId(self, value):
+        if value:
+            self._tempAtAgeId = value
+        else:
+            self._tempAtAgeId = None
     
     @property
     def tempGradientId(self):
         return self._tempGradientId
 
     @tempGradientId.setter
-    def tempGradientId(self, value: int):
-        self._tempGradientId = int(value)
+    def tempGradientId(self, value):
+        self._tempGradientId = value
     
         
