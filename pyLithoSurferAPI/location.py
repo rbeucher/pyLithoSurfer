@@ -62,8 +62,8 @@ class Location(APIRequests):
                 self.__init__(**new_args[0])
                 self.id = new_id
                 return response.json()
-        else:
-            super().new(*args, **kwargs)
+                
+        super().new(*args, **kwargs)
 
     @property
     def id(self):
