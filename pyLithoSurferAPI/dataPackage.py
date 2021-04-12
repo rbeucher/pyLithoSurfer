@@ -1,6 +1,8 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 import json
+from .dataPackage2Editor import DataPackage2Editor
+from .dataPackage2Supervisor import DataPackage2Supervisor
 
 
 class DataPackage(APIRequests):
@@ -12,6 +14,36 @@ class DataPackage(APIRequests):
         self.workflowState = workflowState
         for key, val in kwargs.items():
             setattr(self, key, val)
+
+    def new(self, *args, **kwargs):
+        from . import LITHODAT_USERNAME as name
+        from . import User, LithoUser
+        A = User()
+        responseA = A.get_from_query(f"login.in={name}")
+        for item in responseA.json():
+            if item["login"] == name:
+                user_id = item["id"]
+        
+        if not user_id:
+            raise ValueError("""Cannot find user id""")
+
+        B = LithoUser()
+        response = B.get_from_query(f"userId.in={user_id}")
+        if response:
+            litho_user_id = response.json()[0]["id"]        
+        
+        if not litho_user_id:
+            raise ValueError("""Cannot find lithouser id""")
+
+        responseB = super().new(*args, **kwargs)
+        if responseB and responseB["id"]:
+            data_package_id = responseB["id"]
+            dpkg2editor = DataPackage2Editor(dataPackageId=data_package_id, lithoUserId=litho_user_id)
+            responseC = dpkg2editor.new(*args, **kwargs)
+            dpkg2supervisor = DataPackage2Supervisor(dataPackageId=data_package_id, lithoUserId=litho_user_id)
+            responseD = dpkg2supervisor.new(*args, **kwargs)
+
+        return [responseA, responseB, responseC, responseD]        
 
     @property
     def describtion(self):
