@@ -37,7 +37,13 @@ class Sample(APIRequests):
                 referenceElevationKindName: str = None,
                 sampleMethodName: str = None,
                 tectonicUnitName: str = None,
-                dataPackageName: str = None
+                dataPackageName: str = None,
+                archiveNote: str = None,
+                igsnHandleURL: str = None,
+                pickingDate: str = None,
+                pickingDateRange: str = None,
+                materialId: Union[int, np.int16, np.int32, np.int64] = None,
+                materialName: str = None
                 ):
         """Sample
 
@@ -88,6 +94,8 @@ class Sample(APIRequests):
         self.tectonicUnitId = convert_int(tectonicUnitId)
         self.dataPackageId = convert_int(dataPackageId)
         self.igsn = convert_str(igsn)
+        self.archiveNote = convert_str(archiveNote)
+        self.igsnHandleURL = convert_str(igsnHandleURL)
 
         self.id = None
 
@@ -111,8 +119,8 @@ class Sample(APIRequests):
                 self.id = new_id
                 test = self.update()
                 return response.json()
-        else:
-            super().new(*args, **kwargs)
+        
+        super().new(*args, **kwargs)
 
     @property
     def id(self):
@@ -305,3 +313,51 @@ class Sample(APIRequests):
     @dataPackageId.setter
     def dataPackageId(self, value: Union[int, np.int16, np.int32, np.int64, None]):
         self._dataPackageId = convert_int(value)
+
+    @property
+    def archiveNote(self):
+        return self._archiveNote
+
+    @archiveNote.setter
+    def archiveNote(self, value: str):
+        self._archiveNote = convert_str(value)
+    
+    @property
+    def igsnHandleURL(self):
+        return self._igsnHandleURL
+
+    @igsnHandleURL.setter
+    def igsnHandleURL(self, value: str):
+        self._igsnHandleURL = convert_str(value)
+    
+    @property
+    def pickingDate(self):
+        return self._pickingDate
+
+    @pickingDate.setter
+    def pickingDate(self, value: str):
+        self._pickingDate = convert_str(value)
+    
+    @property
+    def pickingDateRange(self):
+        return self._pickingDateRange
+
+    @pickingDateRange.setter
+    def pickingDateRange(self, value: str):
+        self._pickingDateRange = convert_str(value)
+
+    @property
+    def materialId(self):
+        return self._materialId
+
+    @materialId.setter
+    def materialId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._materialId = convert_int(value)
+    
+    @property
+    def materialName(self):
+        return self._materialName
+
+    @materialName.setter
+    def materialName(self, value: str):
+        self._materialName = convert_str(value)
