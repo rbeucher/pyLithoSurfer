@@ -4,6 +4,8 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 import numpy as np
 from .utilities import *
+from .REST import check_response
+
 
 
 class Person(APIRequests):
@@ -32,6 +34,31 @@ class Person(APIRequests):
     @id.setter
     def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
         self._id = convert_int(value)
+
+    def new(self, *args, **kwargs):
+        
+        name = self.name.replace(" ", "%20")
+        firstName = self.firstName.replace(" ","%20")
+        #response = self.get_from_query(f"firstName.in={firstName}&name.in={name}")
+        response = self.get_from_query(f"name.in={name}")
+        
+        if check_response(response):
+            old_args = response.json()
+            if len(old_args) >= 1:
+                data = self.to_dict()
+                if "id" in data.keys():
+                    data.pop("id")
+                for key, val in old_args[0].items():
+                    if key in data.keys():
+                        old_args[0][key] = data[key]
+
+                new_id = old_args[0].pop("id")
+                self.__init__(**old_args[0])
+                self.id = new_id
+                test = self.update()
+                return response.json()
+        
+        super().new(*args, **kwargs)
     
     @property
     def name(self):
