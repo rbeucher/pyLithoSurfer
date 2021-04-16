@@ -42,3 +42,15 @@ def get_elevation_from_google(lat: Union[float, np.float16, np.float32, np.float
     response = session.get(path)
     check_response(response)
     return response.json()
+
+
+def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):
+    """ Convert from crs, the default is to convert from GDA94 to WGS84 """
+    from pyproj import Transformer
+    transformer = Transformer.from_crs(epsg_in, epsg_out)
+    if isinstance(x, pd.Series):
+        x = x.values
+    if isinstance(y, pd.Series):
+        y = y.values
+    x, y = transformer.transform(x, y)
+    return {"x": x, "y": y}
