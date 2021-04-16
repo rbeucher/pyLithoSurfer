@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+from typing import Union
+
 
 url = str
 
@@ -31,3 +33,12 @@ def generate_code(class_name, api_address, args, dest="./"):
     
     with open(class_name + ".py", "w") as f:
         f.write(result)
+
+
+def get_elevation_from_google(lat: Union[float, np.float16, np.float32, np.float64] = 0., lon: Union[float, np.float16, np.float32, np.float64] = 0.):
+    from . import session, URL_BASE
+    from .REST import check_response
+    path = URL_BASE + "/api/other/elevation" + f"?lat={lat}&lon={lon}"
+    response = session.get(path)
+    check_response(response)
+    return response.json()
