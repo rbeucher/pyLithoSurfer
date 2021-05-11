@@ -4,9 +4,9 @@ import json
 from .utilities import get_id_from_list
 
 
-class LMachineType(APIRequests):
+class LGeoEvent(APIRequests):
 
-    path = URL_BASE + "/api/l-machine-types"
+    path = URL_BASE + "/api/core/l-geo-events"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -36,6 +36,6 @@ class LMachineType(APIRequests):
     def name(self, value):
         self._name = value
 
-def get_machineType_id(value: str):
-    return get_id_from_list(LMachineType, value)
+def get_geoEvent_id(value: str):
+    return get_id_from_list(LGeoEvent, value)
 

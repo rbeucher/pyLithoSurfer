@@ -1,11 +1,12 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 import json
+from .utilities import get_id_from_list
 
 
-class LSHRIMPAgeAverageKinds(APIRequests):
+class LSHRIMPAgeType(APIRequests):
 
-    path = URL_BASE + "/api/lshrimp-age-average-kinds"
+    path = URL_BASE + "/api/shrimp/lshrimp-age-types"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -34,4 +35,8 @@ class LSHRIMPAgeAverageKinds(APIRequests):
     @name.setter
     def name(self, value):
         self._name = value
+
+
+def get_SHRIMPAgeType_id(value: str):
+    return get_id_from_list(LSHRIMPAgeType, value)
 

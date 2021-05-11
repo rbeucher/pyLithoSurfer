@@ -54,3 +54,12 @@ def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):
         y = y.values
     x, y = transformer.transform(x, y)
     return {"x": x, "y": y}
+
+
+def get_id_from_list(list_class, value: str):
+    entries = list_class().get_all()
+    values = entries[entries.values == value]["id"].values
+    if len(values) > 1:
+        raise ValueError(f"Multiple ids present for {value}")
+    else:
+        return values[0]

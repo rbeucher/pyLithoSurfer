@@ -1,11 +1,12 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 import json
+from .utilities import get_id_from_list
 
 
-class LPerson2DataRole(APIRequests):
+class LLocationCapture(APIRequests):
 
-    path = URL_BASE + "/api/l-person-2-data-point-roles"
+    path = URL_BASE + "/api/l-loc-captures"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -28,10 +29,12 @@ class LPerson2DataRole(APIRequests):
         self._id = value
 
     @property
-    def name(self):
-        return self._name
+    def method(self):
+        return self._method
 
-    @name.setter
-    def name(self, value):
-        self._name = value
+    @method.setter
+    def method(self, value):
+        self._method = value
 
+def get_locationCapture_id(value: str):
+    return get_id_from_list(LLocationCapture, value)

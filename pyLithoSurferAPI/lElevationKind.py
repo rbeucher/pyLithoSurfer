@@ -1,15 +1,24 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
+from .utilities import get_id_from_list
 import json
 
 
-class LMineral(APIRequests):
+class LElevationKind(APIRequests):
 
-    path = URL_BASE + "/api/l-minerals"
+    path = URL_BASE + "/api/core/l-elevation-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
 
     @property
     def description(self):
@@ -27,19 +36,6 @@ class LMineral(APIRequests):
     def id(self, value):
         self._id = value
 
-    @property
-    def mineral(self):
-        return self._mineral
-
-    @mineral.setter
-    def mineral(self, value):
-        self._mineral = value
-
-    @property
-    def synonym(self):
-        return self._synonym
-
-    @synonym.setter
-    def synonym(self, value):
-        self._synonym = value
+def get_elevation_kind_id(value: str):
+    return get_id_from_list(LElevationKind, value)
 

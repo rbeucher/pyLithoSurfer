@@ -1,11 +1,12 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 import json
+from .utilities import get_id_from_list
 
 
 class LLocationKind(APIRequests):
 
-    path = URL_BASE + "/api/l-location-kinds"
+    path = URL_BASE + "/api/core/l-location-kinds"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -34,4 +35,8 @@ class LLocationKind(APIRequests):
     @kind.setter
     def kind(self, value):
         self._kind = value
+
+
+def get_locationKind_id(value: str):
+    return get_id_from_list(LLocationKind, value)
 

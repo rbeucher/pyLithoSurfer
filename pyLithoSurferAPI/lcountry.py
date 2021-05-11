@@ -1,11 +1,12 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
+from .utilities import get_id_from_list
 import json
 
 
 class LCountry(APIRequests):
 
-    path = URL_BASE + "/api/l-countries"
+    path = URL_BASE + "/api/core/l-countries"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -34,4 +35,7 @@ class LCountry(APIRequests):
     @id.setter
     def id(self, value):
         self._id = value
+
+def get_country_id(value: str):
+    return get_id_from_list(LCountry, value)
 

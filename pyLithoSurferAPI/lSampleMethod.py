@@ -1,11 +1,12 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 import json
+from .utilities import get_id_from_list
 
 
 class LSampleMethod(APIRequests):
 
-    path = URL_BASE + "/api/l-sample-methods"
+    path = URL_BASE + "/api/core/l-sample-methods"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -34,4 +35,8 @@ class LSampleMethod(APIRequests):
     @name.setter
     def name(self, value):
         self._name = value
+
+
+def get_sampleMethod_id(value: str):
+    return get_id_from_list(LSampleMethod, value)
 
