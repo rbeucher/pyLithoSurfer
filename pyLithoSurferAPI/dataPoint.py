@@ -8,7 +8,7 @@ from .utilities import *
 
 class DataPoint(APIRequests):
 
-    path = URL_BASE + "/api/data-points"
+    path = URL_BASE + "/api/core/data-points"
 
     mandatory_args = ["dataStructure"]
 

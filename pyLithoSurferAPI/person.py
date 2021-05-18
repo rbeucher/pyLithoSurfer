@@ -10,7 +10,7 @@ from .REST import check_response
 
 class Person(APIRequests):
 
-    path = URL_BASE + "/api/people"
+    path = URL_BASE + "/api/core/people"
 
     def __init__(self,
                  calcName: str = None,

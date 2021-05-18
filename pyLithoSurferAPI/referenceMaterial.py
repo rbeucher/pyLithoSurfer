@@ -4,9 +4,9 @@ import json
 from .utilities import get_id_from_list
 
 
-class LPerson2DataPointRole(APIRequests):
+class ReferenceMaterial(APIRequests):
 
-    path = URL_BASE + "/api/core/l-person-2-data-point-roles"
+    path = URL_BASE + "/api/core/reference-materials"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -29,14 +29,14 @@ class LPerson2DataPointRole(APIRequests):
         self._id = value
 
     @property
-    def kind(self):
-        return self._kind
+    def name(self):
+        return self._name
 
-    @kind.setter
-    def kind(self, value):
-        self._kind = value
+    @name.setter
+    def name(self, value):
+        self._name = value
 
 
-def get_person2DataPointRole_id(value: str):
-    return get_id_from_list(LPerson2DataPointRole, value)
+def get_referenceMaterial_id(value: str):
+    return get_id_from_list(ReferenceMaterial, value)
 

@@ -5,7 +5,7 @@ import json
 
 class Literature(APIRequests):
 
-    path =  URL_BASE+'/api/literature/'
+    path =  URL_BASE+'/api/core/literature/'
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

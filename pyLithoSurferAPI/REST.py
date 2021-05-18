@@ -31,7 +31,8 @@ def check_response(response):
     elif status_code == 404:
         raise(NotFoundException)
     elif status_code == 500:
-        raise(ItemNotFoundException)
+        #raise(ItemNotFoundException)
+        pass
 
 
 class APIRequests(ABC):

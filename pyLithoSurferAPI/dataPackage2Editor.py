@@ -9,7 +9,7 @@ from .utilities import *
 
 class DataPackage2Editor(APIRequests):
         
-    path = URL_BASE+'/api/data-package-2-editors'
+    path = URL_BASE+'/api/management/data-package-2-editors'
 
     def __init__(self,
                  dataPackageId: Union[int, np.int16, np.int32, np.int64] = 0,

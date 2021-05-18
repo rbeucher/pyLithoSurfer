@@ -5,7 +5,7 @@ import json
 
 class LithoUser(APIRequests):
 
-    path = URL_BASE + "/api/litho-users"
+    path = URL_BASE + "/api/management/reduced/litho-users"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():

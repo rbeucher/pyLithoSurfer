@@ -5,6 +5,7 @@ import json
 import numpy as np
 from .utilities import *
 from .REST import check_response
+from .location import Location
 
 
 
@@ -13,7 +14,7 @@ class Sample(APIRequests):
     path = URL_BASE + "/api/samples"
 
     def __init__(self,
-                lithologyKindId:  Union[int, np.int16, np.int32, np.int64],
+                materialId: Union[int, np.int16, np.int32, np.int64],
                 locationId:  Union[int, np.int16, np.int32, np.int64],
                 locationKindId:  Union[int, np.int16, np.int32, np.int64],
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
@@ -31,7 +32,6 @@ class Sample(APIRequests):
                 tectonicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
                 igsn: str = None,
                 archiveName: str = None,
-                lithologyKindName: str = None,
                 locationKindName: str = None,
                 locationName: str = None,
                 referenceElevationKindName: str = None,
@@ -42,7 +42,6 @@ class Sample(APIRequests):
                 igsnHandleURL: str = None,
                 pickingDate: str = None,
                 pickingDateRange: str = None,
-                materialId: Union[int, np.int16, np.int32, np.int64] = None,
                 materialName: str = None
                 ):
         """Sample
@@ -361,3 +360,69 @@ class Sample(APIRequests):
     @materialName.setter
     def materialName(self, value: str):
         self._materialName = convert_str(value)
+
+
+
+class SampleWithLocation(APIRequests):
+
+    path = URL_BASE+'/api/core/sample-with-locations'
+
+    def __init__(self, location: Location, sample: Sample):
+
+        self.location = Location
+        self.sample = Sample
+
+        self.id = None    
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._id = convert_int(value)
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, value: Location):
+        self._location = value
+    
+    @property
+    def sample(self):
+        return self._sample
+
+    @sample.setter
+    def sample(self, value: Sample):
+        self._sample = value
+
+    def new(self, debug=False):
+        data = {}
+        
+        location = self.location.to_dict()
+        if "id" in location.keys():
+            location.pop("id")
+        data["locationDTO"] = location
+        sample = self.sample.to_dict()
+        if "id" in sample.keys():
+            sample.pop("id")
+        data["sampleDTO"] = sample
+
+        headers = session.headers
+        headers["Accept"] = "application/json"
+        headers["Content-Type"] = "application/json"
+
+        response = session.post(self.path, data=json.dumps(data), headers=headers)
+        if debug:
+            print(response.json())
+        check_response(response)
+        response = response.json()
+        if "id" in response.keys():
+            self.id = response["id"]
+        if "locationDTO" in response.keys() and "id" in response["locationDTO"].keys():
+            self.location.id = response["locationDTO"]["id"]
+        if "sampleDTO" in response.keys() and "id" in response["sampleDTO"].keys():
+            self.sample.id = response["sampleDTO"]["id"]
+        return response   

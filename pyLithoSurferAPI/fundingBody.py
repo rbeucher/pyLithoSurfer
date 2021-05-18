@@ -3,9 +3,9 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 
 
-class Archive(APIRequests):
+class FundingBody(APIRequests):
 
-    path = URL_BASE + "/api/core/archives"
+    path = URL_BASE + "/api/core/funding-bodies"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -60,17 +60,25 @@ class Archive(APIRequests):
         self._countryName = value
     
     @property
+    def logo(self):
+        return self._logo
+
+    @logo.setter
+    def logo(self, value):
+        self._logo = value
+    
+    @property
+    def logoContentType(self):
+        return self._logoContentType
+
+    @logoContentType.setter
+    def logoContentType(self, value):
+        self._logoContentType = value
+    
+    @property
     def shortName(self):
         return self._shortName
 
     @shortName.setter
     def shortName(self, value):
         self._shortName = value
-    
-    @property
-    def url(self):
-        return self._url
-
-    @url.setter
-    def url(self, value):
-        self._url = value

@@ -7,7 +7,7 @@ from .dataPackage2Supervisor import DataPackage2Supervisor
 
 class DataPackage(APIRequests):
 
-    path = URL_BASE + "/api/data-packages"
+    path = URL_BASE + "/api/management/data-packages"
 
     def __init__(self, distribution="PRIVATE", workflowState="IN_PROGRESS", **kwargs):
         self.distribution = distribution
@@ -31,7 +31,7 @@ class DataPackage(APIRequests):
         response = B.get_from_query(f"userId.in={user_id}")
         if response:
             litho_user_id = response.json()[0]["id"]        
-        
+
         if not litho_user_id:
             raise ValueError("""Cannot find lithouser id""")
 
@@ -46,12 +46,12 @@ class DataPackage(APIRequests):
         return [responseA, responseB, responseC, responseD]        
 
     @property
-    def describtion(self):
+    def description(self):
         return self._describtion
 
-    @describtion.setter
-    def describtion(self, value):
-        self._describtion = value
+    @description.setter
+    def description(self, value):
+        self._description = value
 
     @property
     def distribution(self):

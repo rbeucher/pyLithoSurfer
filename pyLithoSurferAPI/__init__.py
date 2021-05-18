@@ -1,7 +1,8 @@
 import os
 import requests
 
-URL_BASE = 'https://testapp.lithodat.com'
+#URL_BASE = 'https://testapp.lithodat.com'
+URL_BASE = 'https://app.ausgeochem.com.au'
 
 LITHODAT_USERNAME = os.environ.get("LITHODAT_USERNAME", None)
 LITHODAT_PASSWORD = os.environ.get("LITHODAT_PASSWORD", None)
@@ -94,4 +95,10 @@ from .lPerson2SampleRole import LPerson2SampleRole
 from .lPerson2SampleRole import LPerson2SampleRole
 from .lSampleKind import LSampleKind
 from .lSHRIMPAgeGroup import LSHRIMPAgeGroup
+from .lSHRIMPAgeType import LSHRIMPAgeType
 from .lSHRIMPSampleFormat import LSHRIMPSampleFormat
+from .flag import Flag
+from .funding import Funding
+from .fundingBody import FundingBody
+from .sample import SampleWithLocation
+from .referenceMaterial import ReferenceMaterial
