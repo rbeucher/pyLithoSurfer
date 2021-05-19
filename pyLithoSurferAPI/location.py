@@ -50,6 +50,8 @@ class Location(APIRequests):
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
 
+        self.id = 0
+
     def new(self, *args, **kwargs):
         
         name = self.name.replace(" ", "%20")

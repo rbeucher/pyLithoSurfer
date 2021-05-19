@@ -1,11 +1,31 @@
 import os
 import requests
 
-#URL_BASE = 'https://testapp.lithodat.com'
-URL_BASE = 'https://app.ausgeochem.com.au'
+def set_credentials(DB_MODE="PROD"):
+    global URL_BASE
+    global LITHODAT_PASSWORD
+    global LITHODAT_USERNAME
 
-LITHODAT_USERNAME = os.environ.get("LITHODAT_USERNAME", None)
-LITHODAT_PASSWORD = os.environ.get("LITHODAT_PASSWORD", None)
+    if DB_MODE == "PROD":
+        URL_BASE = 'https://app.ausgeochem.com.au'
+        LITHODAT_USERNAME = os.environ.get("LITHODAT_PROD_USERNAME", None)
+        LITHODAT_PASSWORD = os.environ.get("LITHODAT_PROD_PASSWORD", None)
+        print("You are now using PRODUCTION")
+    elif DB_MODE == "TEST":
+        URL_BASE = 'https://testapp.lithodat.com'
+        LITHODAT_USERNAME = os.environ.get("LITHODAT_TEST_USERNAME", None)
+        LITHODAT_PASSWORD = os.environ.get("LITHODAT_TEST_PASSWORD", None)
+        print("You are now using TEST")
+    else:
+        raise ValueError("DB_MODE is incorrect")
+
+
+DB_MODE = "TEST"
+URL_BASE = None
+LITHODAT_USERNAME = None
+LITHODAT_PASSWORD = None
+
+set_credentials(DB_MODE)
 
 def get_token(username: str, password: str, remember_me=False):
     url = URL_BASE + '/api/authenticate'

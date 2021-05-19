@@ -7,7 +7,7 @@ from .utilities import *
 
 class Lit2Data(APIRequests):
 
-    path = URL_BASE + "/api/literature-2-data-points"
+    path = URL_BASE + "/api/core/literature-2-data-points"
 
     def __init__(self,
                  dataPointId: Union[int, np.int16, np.int32, np.int64],

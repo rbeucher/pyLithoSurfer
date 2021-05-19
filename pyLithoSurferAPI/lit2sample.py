@@ -7,7 +7,7 @@ from .utilities import *
 
 class Lit2Sample(APIRequests):
 
-    path = URL_BASE + "/api/literature-2-samples"
+    path = URL_BASE + "/api/core/literature-2-samples"
 
     def __init__(self,
                  sampleId: Union[int, np.int16, np.int32, np.int64],

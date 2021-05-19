@@ -18,7 +18,7 @@ class Sample(APIRequests):
                 locationId:  Union[int, np.int16, np.int32, np.int64],
                 locationKindId:  Union[int, np.int16, np.int32, np.int64],
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
-                relativeElevation: Union[float, np.float16, np.float32, np.float64],
+                sampleKindId:  Union[int, np.int16, np.int32, np.int64],
                 name: str = "unknown",
                 description: str = None,
                 relativeElevationAccuracy: Union[float, np.float16, np.float32, np.float64] = None,
@@ -36,13 +36,21 @@ class Sample(APIRequests):
                 locationName: str = None,
                 referenceElevationKindName: str = None,
                 sampleMethodName: str = None,
+                sampleKindName: str = None,
                 tectonicUnitName: str = None,
                 dataPackageName: str = None,
                 archiveNote: str = None,
                 igsnHandleURL: str = None,
-                pickingDate: str = None,
-                pickingDateRange: str = None,
-                materialName: str = None
+                materialName: str = None,
+                collectDateMax: str = None,
+                collectDateMin: str = None,
+                createdById: Union[int, np.int16, np.int32, np.int64] = None,
+                lastEditedById: Union[int, np.int16, np.int32, np.int64] = None,
+                createdTimestamp: str = None,
+                lastEditedTimestamp: str = None,
+                igsnMintingTimestamp: str = None,
+                relativeElevationMin: Union[int, np.int16, np.int32, np.int64] = None,
+                relativeElevationMax: Union[int, np.int16, np.int32, np.int64] = None,
                 ):
         """Sample
 
@@ -76,13 +84,14 @@ class Sample(APIRequests):
 
         self.name = convert_str(name)
         self.description = convert_str(description)
-        self.lithologyKindId = convert_int(lithologyKindId)
+        self.materialId = convert_int(materialId)
         self.locationKindId = convert_int(locationKindId)
         self.sampleMethodId = convert_int(sampleMethodId)
-        self.relativeElevation = convert_float(relativeElevation)
+        self.sampleKindId = convert_int(sampleKindId)
 
         self.relativeElevationAccuracy = convert_float(relativeElevationAccuracy)
-        self.relativeElevation = convert_float(relativeElevation)
+        self.relativeElevationMin = convert_float(relativeElevationMin)
+        self.relativeElevationMax = convert_float(relativeElevationMax)
         self.archiveId = convert_int(archiveId)
         self.locationId = convert_int(locationId)
         self.referenceElevation = convert_float(referenceElevation)
@@ -95,6 +104,14 @@ class Sample(APIRequests):
         self.igsn = convert_str(igsn)
         self.archiveNote = convert_str(archiveNote)
         self.igsnHandleURL = convert_str(igsnHandleURL)
+        
+        self.collectDateMax = convert_str(collectDateMax)
+        self.collectDateMin = convert_str(collectDateMin)
+        self.createdById = convert_int(createdById)
+        self.lastEditedById = convert_int(lastEditedById)
+        self.createdTimestamp = convert_str(createdTimestamp)
+        self.lastEditedTimestamp = convert_str(lastEditedTimestamp)
+        self.igsnMintingTimestamp = convert_str(igsnMintingTimestamp)
 
         self.id = None
 
@@ -186,12 +203,20 @@ class Sample(APIRequests):
         self._igsn = convert_str(value)
     
     @property
-    def relativeElevation(self):
-        return self._relativeElevation
+    def relativeElevationMin(self):
+        return self._relativeElevationMin
 
-    @relativeElevation.setter
-    def relativeElevation(self, value: Union[float, np.float16, np.float32, np.float64]):
-        self._relativeElevation = convert_float(value)
+    @relativeElevationMin.setter
+    def relativeElevationMin(self, value: Union[float, np.float16, np.float32, np.float64]):
+        self._relativeElevationMin = convert_float(value)
+    
+    @property
+    def relativeElevationMax(self):
+        return self._relativeElevationMax
+
+    @relativeElevationMax.setter
+    def relativeElevationMax(self, value: Union[float, np.float16, np.float32, np.float64]):
+        self._relativeElevationMax = convert_float(value)
 
     @property
     def relativeElevationAccuracy(self):
@@ -298,6 +323,22 @@ class Sample(APIRequests):
         self._sampleMethodName = convert_str(value)
     
     @property
+    def sampleKindId(self):
+        return self._sampleKindId
+
+    @sampleKindId.setter
+    def sampleKindId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._sampleKindId = convert_int(value)
+    
+    @property
+    def sampleKindName(self):
+        return self._sampleKindName
+
+    @sampleKindName.setter
+    def sampleKindName(self, value: str):
+        self._sampleKindName = convert_str(value)
+    
+    @property
     def dataPackageName(self):
         return self._dataPackageName
 
@@ -330,21 +371,13 @@ class Sample(APIRequests):
         self._igsnHandleURL = convert_str(value)
     
     @property
-    def pickingDate(self):
-        return self._pickingDate
+    def igsnMintingTimestamp(self):
+        return self._igsnMintingTimestamp
 
-    @pickingDate.setter
-    def pickingDate(self, value: str):
-        self._pickingDate = convert_str(value)
+    @igsnMintingTimestamp.setter
+    def igsnMintingTimestamp(self, value: str):
+        self._igsnMintingTimestamp = convert_str(value)
     
-    @property
-    def pickingDateRange(self):
-        return self._pickingDateRange
-
-    @pickingDateRange.setter
-    def pickingDateRange(self, value: str):
-        self._pickingDateRange = convert_str(value)
-
     @property
     def materialId(self):
         return self._materialId
@@ -361,7 +394,53 @@ class Sample(APIRequests):
     def materialName(self, value: str):
         self._materialName = convert_str(value)
 
+    @property
+    def collectDateMax(self):
+        return self._collectDateMax
 
+    @collectDateMax.setter
+    def collectDateMax(self, value: str):
+        self._collectDateMax = convert_str(value)
+
+    @property
+    def collectDateMin(self):
+        return self._collectDateMin
+
+    @collectDateMin.setter
+    def collectDateMin(self, value: str):
+        self._collectDateMin = convert_str(value)
+    
+    @property
+    def createdById(self):
+        return self._createdById
+
+    @createdById.setter
+    def createdById(self, value: int):
+        self._createdById = convert_int(value)
+    
+    @property
+    def lastEditedById(self):
+        return self._lastEditedById
+
+    @lastEditedById.setter
+    def lastEditedById(self, value: int):
+        self._lastEditedById = convert_int(value)
+    
+    @property
+    def createdTimestamp(self):
+        return self._createdTimestamp
+
+    @createdTimestamp.setter
+    def createdTimestamp(self, value: str):
+        self._createdTimestamp = convert_str(value)
+    
+    @property
+    def lastEditedTimestamp(self):
+        return self._lastEditedTimestamp
+
+    @lastEditedTimestamp.setter
+    def lastEditedTimestamp(self, value: str):
+        self._lastEditedTimestamp = convert_str(value)
 
 class SampleWithLocation(APIRequests):
 
@@ -369,8 +448,8 @@ class SampleWithLocation(APIRequests):
 
     def __init__(self, location: Location, sample: Sample):
 
-        self.location = Location
-        self.sample = Sample
+        self.location = location
+        self.sample = sample
 
         self.id = None    
 
@@ -401,10 +480,49 @@ class SampleWithLocation(APIRequests):
     def new(self, debug=False):
         data = {}
         
+        ## Check if location exist
+        #location_name = self.location.name.replace(" ", "%20")
+        #response = self.location.get_from_query(f"name.in={location_name}")
+        
+        #if debug:
+        #    print(response.json())
+
+        #if check_response(response):
+        #    new_args = response.json()
+        #    if len(new_args) >= 1:
+        #        new_id = new_args[0].pop("id")
+        #        self.location.__init__(**new_args[0])
+        #        self.location.id = new_id
+
         location = self.location.to_dict()
         if "id" in location.keys():
             location.pop("id")
         data["locationDTO"] = location
+
+        # Check if sample exists
+        sample_name = self.sample.name.replace(" ", "%20")
+        response = self.get_from_query(f"name.in={sample_name}")
+
+        if debug:
+            print(response.json())
+        
+        if check_response(response):
+            old_args = response.json()
+            if len(old_args) >= 1:
+                data = self.sample.to_dict()
+                if "id" in data.keys():
+                    data.pop("id")
+                for key, val in old_args[0]["sampleDTO"].items():
+                    if key in data.keys():
+                        old_args[0]["sampleDTO"][key] = data[key]
+
+                new_id = old_args[0]["sampleDTO"].pop("id")
+                self.sample.__init__(**old_args[0]["sampleDTO"])
+                self.update()
+                self.sample.id = new_id
+                self.location.id = response.json()[0]["locationDTO"]["id"]
+                return response
+
         sample = self.sample.to_dict()
         if "id" in sample.keys():
             sample.pop("id")
