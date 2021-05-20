@@ -1,6 +1,11 @@
 import os
 import requests
 
+DB_MODE = "PROD"
+URL_BASE = None
+LITHODAT_USERNAME = None
+LITHODAT_PASSWORD = None
+
 def set_credentials(DB_MODE="PROD"):
     global URL_BASE
     global LITHODAT_PASSWORD
@@ -20,11 +25,6 @@ def set_credentials(DB_MODE="PROD"):
         raise ValueError("DB_MODE is incorrect")
 
 
-DB_MODE = "TEST"
-URL_BASE = None
-LITHODAT_USERNAME = None
-LITHODAT_PASSWORD = None
-
 set_credentials(DB_MODE)
 
 def get_token(username: str, password: str, remember_me=False):
@@ -34,6 +34,7 @@ def get_token(username: str, password: str, remember_me=False):
     data = {'username': username,
             'password': password,
             'rememberMe': remember_me}
+
     return requests.post(url, json=data, headers=headers).json()['id_token']
 
 LITHOSURFER_API_KEY = get_token(LITHODAT_USERNAME, LITHODAT_PASSWORD)
@@ -99,6 +100,7 @@ from .lit2data import Lit2Data
 from .lit2sample import Lit2Sample
 from .person import Person
 from .person2data import Person2Data
+from .person2sample import Person2Sample
 from .SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
 from .SHRIMPDataPoint import SHRIMPDataPoint, SHRIMPDataPointCRUD
 from .SHRIMPSpot import SHRIMPSpot, SHRIMPSpotCRUD

@@ -5,9 +5,9 @@ import json
 import numpy as np
 from .utilities import *
 
-class Person2Data(APIRequests):
+class Person2Sample(APIRequests):
 
-    path = URL_BASE + "/api/core/person-2-data-points"
+    path = URL_BASE + "/api/core/person-2-samples"
 
     def __init__(self,
                  dataPointId: Union[int, np.int16, np.int32, np.int64],
