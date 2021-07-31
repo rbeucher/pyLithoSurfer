@@ -3,6 +3,7 @@ from pyLithoSurferAPI.REST import APIRequests
 import json
 from .dataPackage2Editor import DataPackage2Editor
 from .dataPackage2Supervisor import DataPackage2Supervisor
+from .utilities import get_id_from_list
 
 
 class DataPackage(APIRequests):
@@ -117,3 +118,10 @@ class DataPackage(APIRequests):
     def workflowState(self, value):
         self._workflowState = value
 
+    def get_id_from_name(self, name: str):
+        entries = self.get_all()
+        values = entries[entries.name == name]["id"].values
+        if len(values) > 1:
+            raise ValueError(f"Multiple ids present for {name}")
+        else:
+            return values[0]

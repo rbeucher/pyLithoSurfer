@@ -94,7 +94,7 @@ from .lSampleMethod import LSampleMethod
 from .lStatementKind import LStatementKind
 from .lVerticalDatumKind import LVerticalDatumKind
 from .archive import Archive
-from .rockunit import RockUnit
+from .stratigraphicUnit import StratigraphicUnit
 from .lab2data import Lab2Data
 from .lit2data import Lit2Data
 from .lit2sample import Lit2Sample
