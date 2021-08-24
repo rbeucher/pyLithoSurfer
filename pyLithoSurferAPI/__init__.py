@@ -1,7 +1,7 @@
 import os
 import requests
 
-DB_MODE = "PROD"
+DB_MODE = "TEST"
 URL_BASE = None
 LITHODAT_USERNAME = None
 LITHODAT_PASSWORD = None

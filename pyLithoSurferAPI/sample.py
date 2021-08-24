@@ -171,14 +171,6 @@ class Sample(APIRequests):
         self._sourceId = convert_int(value)
     
     @property
-    def tectonicUnitId(self):
-        return self._tectonicUnitId
-
-    @tectonicUnitId.setter
-    def tectonicUnitId(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._tectonicUnitId = convert_int(value)
-    
-    @property
     def archiveName(self):
         return self._archiveName
 
@@ -259,20 +251,20 @@ class Sample(APIRequests):
         self._referenceElevationSource = convert_str(value)
     
     @property
-    def lithologyKindId(self):
-        return self._lithologyKindId
+    def stratographicUnitId(self):
+        return self._stratographicUnitId
 
-    @lithologyKindId.setter
-    def lithologyKindId(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._lithologyKindId = convert_int(value)
+    @stratographicUnitId.setter
+    def stratographicUnitId(self, value: Union[int, np.int16, np.int32, np.int64]):
+        self._stratographicUnitId = convert_int(value)
     
     @property
-    def lithologyKindName(self):
-        return self._lithologyKindName
+    def stratographicUnitName(self):
+        return self._stratographicUnitName
 
-    @lithologyKindName.setter
-    def lithologyKindName(self, value: str):
-        self._lithologyKindName = convert_str(value)
+    @stratographicUnitName.setter
+    def stratographicUnitName(self, value: str):
+        self._stratographicUnitName = convert_str(value)
     
     @property
     def locationId(self):

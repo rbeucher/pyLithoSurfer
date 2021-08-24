@@ -63,3 +63,66 @@ def get_id_from_list(list_class, value: str):
         raise ValueError(f"Multiple ids present for {value}")
     else:
         return values[0]
+
+
+def get_connection_to_db():
+    from pyLithoSurferAPI import DB_MODE
+    import os
+    import psycopg2
+
+    user = os.environ.get(f"LITHODAT_{DB_MODE}_DBUSER")
+    password = os.environ.get(f"LITHODAT_{DB_MODE}_DBPASSWORD")
+    host = os.environ.get(f"LITHODAT_{DB_MODE}_DBHOST")
+    database = os.environ.get(f"LITHODAT_{DB_MODE}_DBNAME")
+
+    url = f"postgresql://{user}:{password}@{host}:5432/{database}"
+
+    connection = psycopg2.connect(user = user,
+                                 password = password,
+                                 host = host,
+                                 port = "5432",
+                                 database = database)
+
+    return connection
+
+
+def map_to_new_literature_id(source_ids):
+
+    connection = get_connection_to_db()
+    uploaded = pd.read_sql_query("SELECT * FROM literature", connection)
+
+    # This is required as some new literature entries may not have a source_id
+    uploaded = uploaded[~pd.isnull(uploaded.source_id)].copy()
+
+    source_ids.replace({np.nan:0}, inplace=True)
+
+    mapping = pd.Series(uploaded.id.values,index=uploaded.source_id.astype("int")).to_dict()
+
+    return source_ids.map(mapping)
+
+
+def migrate_lithology_to_mindat(lithologies):
+
+    import pkg_resources
+    migration_filepath = pkg_resources.resource_filename(__name__, "resources/Lithology migration table.xlsx")
+
+    connection = get_connection_to_db()
+    mindat_lithologies = pd.read_sql_query("SELECT * FROM material", connection)
+    # This is required as the Mindat material table is somewhat messed up.
+    # There are some extra lines in the table, with some random strings in the 
+    # source_id field.
+    mindat_lithologies = mindat_lithologies[mindat_lithologies.source_id.str.isnumeric()]
+    # This is required as some new entries may not have a source_id
+    mapping = pd.Series(mindat_lithologies.id.values, index=mindat_lithologies.source_id.astype("int32")).to_dict()
+    
+    lit_excel = pd.read_excel(migration_filepath, sheet_name="Mapping in new Moritz DB")
+    lit_excel = lit_excel[["Old Lithology 1.6", "NEW MINDAT DB in Moritz DB"]]
+    lit_excel["New_indices"] = lit_excel["NEW MINDAT DB in Moritz DB"].map(mapping)
+    lit_excel.replace({np.nan: 0, None: 0}, inplace=True)
+    lit_excel["New_indices"] = lit_excel["New_indices"].astype("int32")
+    
+    mapping = pd.Series(lit_excel["New_indices"].values, index=lit_excel["Old Lithology 1.6"])
+    lithologies.replace({np.nan: 0, None: 0}, inplace=True)
+    lithologies = lithologies.map(mapping).astype("int32")
+    
+    return lithologies
