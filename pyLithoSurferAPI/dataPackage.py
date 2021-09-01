@@ -4,7 +4,7 @@ import json
 from .dataPackage2Editor import DataPackage2Editor
 from .dataPackage2Supervisor import DataPackage2Supervisor
 from .utilities import get_id_from_list
-
+import urllib.parse
 
 class DataPackage(APIRequests):
 
@@ -20,7 +20,8 @@ class DataPackage(APIRequests):
         from . import LITHODAT_USERNAME as name
         from . import User, LithoUser
         A = User()
-        responseA = A.get_from_query(f"login.in={name}")
+        query={"login.in": name}
+        responseA = A.get_from_query(urllib.parse.urlencode(query))
         for item in responseA.json():
             if item["login"] == name:
                 user_id = item["id"]
@@ -29,7 +30,8 @@ class DataPackage(APIRequests):
             raise ValueError("""Cannot find user id""")
 
         B = LithoUser()
-        response = B.get_from_query(f"userId.in={user_id}")
+        query = {"userId.in": user_id}
+        response = B.get_from_query(urllib.parse.urlencode(query))
         if response:
             litho_user_id = response.json()[0]["id"]        
 

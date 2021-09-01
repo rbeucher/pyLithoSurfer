@@ -5,6 +5,7 @@ import json
 import numpy as np
 from .utilities import *
 from .REST import check_response
+import urllib.parse
 
 class Location(APIRequests):
 
@@ -15,8 +16,6 @@ class Location(APIRequests):
                 lon: Union[float, np.float16, np.float32, np.float64],
                 latLonPrecision: Union[float, np.float16, np.float32, np.float64],
                 name: str = "unknown",
-                captureMethodId: Union[int, np.int16, np.int32, np.int64] = 0,
-                captureMethodName: str = None,
                 celestialId: Union[int, np.int16, np.int32, np.int64] = 0,
                 celestialName: str = None,
                 description: str = None):
@@ -27,7 +26,6 @@ class Location(APIRequests):
             lon (float): Longitude
             name (str): Location name
             latLonPrecision (float): Precision of the Lat / Lon
-            captureMethodId (int, optional): capture Method Id. Defaults to 0 (Unknown), GPS is 6.
             celestialId (int, optional): celestial object. Defaults to 0 (Earth).
             description (str, optional): location description. Defaults to None.
 
@@ -45,8 +43,6 @@ class Location(APIRequests):
         self.lat = convert_float(lat)
         self.lon = convert_float(lon)
         self.latLonPrecision = convert_float(latLonPrecision)
-
-        self.captureMethodId = convert_int(captureMethodId)
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
 
@@ -54,8 +50,8 @@ class Location(APIRequests):
 
     def new(self, *args, **kwargs):
         
-        name = self.name.replace(" ", "%20")
-        response = self.get_from_query(f"name.in={name}")
+        query = {"name.in": self.name}
+        response = self.get_from_query(urllib.parse.urlencode(query))
         
         if check_response(response):
             new_args = response.json()
@@ -98,22 +94,6 @@ class Location(APIRequests):
     @lat.setter
     def lat(self, value: Union[float, np.float16, np.float32, np.float64]):
         self._lat = convert_float(value)
-
-    @property
-    def captureMethodId(self):
-        return self._captureMethodId
-
-    @captureMethodId.setter
-    def captureMethodId(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._captureMethodId = convert_int(value)
-
-    @property
-    def captureMethodName(self):
-        return self._captureMethodName
-
-    @captureMethodName.setter
-    def captureMethodName(self, value: str):
-        self._captureMethodName = convert_str(value)
 
     @property
     def name(self):

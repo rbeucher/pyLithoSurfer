@@ -6,7 +6,7 @@ import numpy as np
 from .utilities import *
 from .REST import check_response
 from .location import Location
-
+import urllib.parse
 
 
 class Sample(APIRequests):
@@ -15,10 +15,10 @@ class Sample(APIRequests):
 
     def __init__(self,
                 materialId: Union[int, np.int16, np.int32, np.int64],
-                locationId:  Union[int, np.int16, np.int32, np.int64],
                 locationKindId:  Union[int, np.int16, np.int32, np.int64],
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
                 sampleKindId:  Union[int, np.int16, np.int32, np.int64],
+                locationId:  Union[int, np.int16, np.int32, np.int64] = None,
                 name: str = "unknown",
                 description: str = None,
                 relativeElevationAccuracy: Union[float, np.float16, np.float32, np.float64] = None,
@@ -29,7 +29,7 @@ class Sample(APIRequests):
                 referenceElevationSource: str = "SOURCE",
                 sourceId: str = None,
                 dataPackageId: Union[int, np.int16, np.int32, np.int64] = None,
-                tectonicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
+                stratographicUnitId:  Union[int, np.int16, np.int32, np.int64] = None,
                 igsn: str = None,
                 archiveName: str = None,
                 locationKindName: str = None,
@@ -37,7 +37,7 @@ class Sample(APIRequests):
                 referenceElevationKindName: str = None,
                 sampleMethodName: str = None,
                 sampleKindName: str = None,
-                tectonicUnitName: str = None,
+                stratographicUnitName: str = None,
                 dataPackageName: str = None,
                 archiveNote: str = None,
                 igsnHandleURL: str = None,
@@ -69,7 +69,7 @@ class Sample(APIRequests):
             referenceElevationKindNote (str, optional): [description]. Defaults to None.
             referenceElevationSource (str): Source of the reference Elevation.
             sourceId (str, optional): [description]. Legacy ID from Sample table.
-            tectonicUnitId (int, optional): [description]. Tectonic Unit Id.
+            stratographicUnitId (int, optional): [description]. Stratigraphic Unit Id.
             igsn (str, optional): [description]. IGSN reference..
 
         Returns:
@@ -99,7 +99,7 @@ class Sample(APIRequests):
         self.referenceElevationKindNote = convert_str(referenceElevationKindNote)
         self.referenceElevationSource = convert_str(referenceElevationSource)
         self.sourceId = convert_int(sourceId)
-        self.tectonicUnitId = convert_int(tectonicUnitId)
+        self.stratographicUnitId = convert_int(stratographicUnitId)
         self.dataPackageId = convert_int(dataPackageId)
         self.igsn = convert_str(igsn)
         self.archiveNote = convert_str(archiveNote)
@@ -117,8 +117,8 @@ class Sample(APIRequests):
 
     def new(self, *args, **kwargs):
         
-        name = self.name.replace(" ", "%20")
-        response = self.get_from_query(f"name.in={name}")
+        query = {"name.in": self.name}
+        response = self.get_from_query(urllib.parse.urlencode(query))
         
         if check_response(response):
             old_args = response.json()
@@ -473,8 +473,8 @@ class SampleWithLocation(APIRequests):
         data = {}
         
         ## Check if location exist
-        #location_name = self.location.name.replace(" ", "%20")
-        #response = self.location.get_from_query(f"name.in={location_name}")
+        #query = {"name.in": self.location.name}
+        #response = self.location.get_from_query(urllib.parse.urlencode(query))
         
         #if debug:
         #    print(response.json())
@@ -492,8 +492,8 @@ class SampleWithLocation(APIRequests):
         data["locationDTO"] = location
 
         # Check if sample exists
-        sample_name = self.sample.name.replace(" ", "%20")
-        response = self.get_from_query(f"name.in={sample_name}")
+        query = {"name.contains": self.sample.name}
+        response = self.get_from_query(urllib.parse.urlencode(query))
 
         if debug:
             print(response.json())
@@ -502,15 +502,17 @@ class SampleWithLocation(APIRequests):
             old_args = response.json()
             if len(old_args) >= 1:
                 data = self.sample.to_dict()
-                if "id" in data.keys():
+                if data.get('id'):
                     data.pop("id")
-                for key, val in old_args[0]["sampleDTO"].items():
-                    if key in data.keys():
-                        old_args[0]["sampleDTO"][key] = data[key]
-
+                # Only keep the entries that are not None.
+                # They will be used to update the sample.
+                data = {k: v for k, v in data.items() if v is not None}
+                old_copy = old_args[0]["sampleDTO"].copy()
+                old_args[0]["sampleDTO"].update(data)
                 new_id = old_args[0]["sampleDTO"].pop("id")
                 self.sample.__init__(**old_args[0]["sampleDTO"])
-                self.update()
+                if old_copy != old_args[0]["sampleDTO"]:
+                    self.update()
                 self.sample.id = new_id
                 self.location.id = response.json()[0]["locationDTO"]["id"]
                 return response

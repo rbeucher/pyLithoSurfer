@@ -18,7 +18,6 @@ class GeoeventAtAge(APIRequests):
                  errorTypeName: str = None,
                  geoEventId: Union[int, np.int16, np.int32, np.int64] = 0,
                  geoEventName: str = None,
-                 id: Union[int, np.int16, np.int32, np.int64] = 0,
                  shrimpageId: Union[int, np.int16, np.int32, np.int64] = 0,
                 ):
         
@@ -28,7 +27,7 @@ class GeoeventAtAge(APIRequests):
         self.errorTypeName = errorTypeName
         self.geoEventId = geoEventId
         self.geoEventName = geoEventName
-        self.id = id
+        self.id = 0
         self.shrimpageId = shrimpageId
 
     

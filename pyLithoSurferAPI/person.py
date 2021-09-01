@@ -5,7 +5,7 @@ import json
 import numpy as np
 from .utilities import *
 from .REST import check_response
-
+import urllib.parse
 
 
 class Person(APIRequests):
@@ -37,10 +37,8 @@ class Person(APIRequests):
 
     def new(self, *args, **kwargs):
         
-        name = self.name.replace(" ", "%20")
-        firstName = self.firstName.replace(" ","%20")
-        #response = self.get_from_query(f"firstName.in={firstName}&name.in={name}")
-        response = self.get_from_query(f"name.in={name}")
+        query = {"name.in": self.name}
+        response = self.get_from_query(urllib.parse.urlencode(query))
         
         if check_response(response):
             old_args = response.json()

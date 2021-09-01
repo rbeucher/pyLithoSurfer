@@ -31,9 +31,7 @@ def check_response(response):
     elif status_code == 404:
         raise(NotFoundException)
     elif status_code == 500:
-        #raise(ItemNotFoundException)
-        pass
-
+        raise(ItemNotFoundException)
 
 class APIRequests(ABC):
 
@@ -114,7 +112,6 @@ class APIRequests(ABC):
         headers = session.headers
         headers["Accept"] = "application/json"
         path = self.path + "?" + str(query)
-        print(path)
         response = session.get(path)
         return response
 
