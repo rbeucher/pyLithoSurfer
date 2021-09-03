@@ -12,6 +12,7 @@ class Location(APIRequests):
     path = URL_BASE + "/api/locations"
 
     def __init__(self,
+                id: Union[int, np.int16, np.int32, np.int64] = None,
                 lat: Union[float, np.float16, np.float32, np.float64] = None,
                 lon: Union[float, np.float16, np.float32, np.float64] = None,
                 latLonPrecision: Union[float, np.float16, np.float32, np.float64] = None,
@@ -46,15 +47,15 @@ class Location(APIRequests):
         self.celestialId = convert_int(celestialId)
         self.description = convert_str(description)
 
-        self.id = 0
+        self.id = id
 
     @property
     def id(self):
         return self._id
 
     @id.setter
-    def id(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._id = int(value)
+    def id(self, value: Union[int, np.int16, np.int32, np.int64, None]):
+        self._id = value
     
     @property
     def celestialId(self):
@@ -62,7 +63,7 @@ class Location(APIRequests):
 
     @celestialId.setter
     def celestialId(self, value: Union[int, np.int16, np.int32, np.int64]):
-        self._celestialId = int(value)
+        self._celestialId = value
     
     @property
     def description(self):

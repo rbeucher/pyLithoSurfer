@@ -11,8 +11,6 @@ class SampleSchema(pa.SchemaModel):
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
-    createdById: Optional[Series[pa.Int64]]
-    createdTimestamp: Optional[Series[pa.DateTime]]
     dataPackageId: Optional[Series[pa.Int64]]
     dataPackageName: Optional[Series[pa.String]]
     description: Optional[Series[pa.String]]
@@ -20,8 +18,6 @@ class SampleSchema(pa.SchemaModel):
     igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnHandleURL: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnMintingTimestamp: Optional[Series[pa.DateTime]]
-    lastEditedById: Optional[Series[pa.Int64]]
-    lastEditedTimestamp: Optional[Series[pa.DateTime]]
     locationId: Optional[Series[pa.Int64]]
     locationKindId: Optional[Series[pa.Int64]]
     locationKindName: Optional[Series[pa.String]]
@@ -63,8 +59,6 @@ class LocationSchema(pa.SchemaModel):
 
 class DataPointSchema(pa.SchemaModel):
 
-    createdById: Optional[Series[pa.Int64]]
-    createdTimestamp: Optional[Series[pa.DateTime]]
     dataEntityId: Optional[Series[pa.Int64]]
     dataPackageId: Series[pa.Int64]
     dataPackageName: Optional[Series[pa.String]]
@@ -72,8 +66,6 @@ class DataPointSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]]
     externalDataHref: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Int64]]
-    lastEditedById: Optional[Series[pa.Int64]]
-    lastEditedTimestamp: Optional[Series[pa.DateTime]]
     locationId: Series[pa.Int64]
     locationName: Optional[Series[pa.String]]
     name: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})

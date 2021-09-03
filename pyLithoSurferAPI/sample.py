@@ -14,6 +14,7 @@ class Sample(APIRequests):
     path = URL_BASE + "/api/samples"
 
     def __init__(self,
+                id: Union[int, np.int16, np.int32, np.int64] = None,
                 materialId: Union[int, np.int16, np.int32, np.int64] = None,
                 locationKindId:  Union[int, np.int16, np.int32, np.int64] = None,
                 sampleMethodId:  Union[int, np.int16, np.int32, np.int64] = None,
@@ -44,10 +45,6 @@ class Sample(APIRequests):
                 materialName: str = None,
                 collectDateMax: str = None,
                 collectDateMin: str = None,
-                createdById: Union[int, np.int16, np.int32, np.int64] = None,
-                lastEditedById: Union[int, np.int16, np.int32, np.int64] = None,
-                createdTimestamp: str = None,
-                lastEditedTimestamp: str = None,
                 igsnMintingTimestamp: str = None,
                 relativeElevationMin: Union[int, np.int16, np.int32, np.int64] = None,
                 relativeElevationMax: Union[int, np.int16, np.int32, np.int64] = None,
@@ -107,13 +104,9 @@ class Sample(APIRequests):
         
         self.collectDateMax = convert_str(collectDateMax)
         self.collectDateMin = convert_str(collectDateMin)
-        self.createdById = convert_int(createdById)
-        self.lastEditedById = convert_int(lastEditedById)
-        self.createdTimestamp = convert_str(createdTimestamp)
-        self.lastEditedTimestamp = convert_str(lastEditedTimestamp)
         self.igsnMintingTimestamp = convert_str(igsnMintingTimestamp)
 
-        self.id = None
+        self.id = id
 
     @property
     def id(self):
@@ -379,48 +372,17 @@ class Sample(APIRequests):
     def collectDateMin(self, value: str):
         self._collectDateMin = convert_str(value)
     
-    @property
-    def createdById(self):
-        return self._createdById
-
-    @createdById.setter
-    def createdById(self, value: int):
-        self._createdById = convert_int(value)
-    
-    @property
-    def lastEditedById(self):
-        return self._lastEditedById
-
-    @lastEditedById.setter
-    def lastEditedById(self, value: int):
-        self._lastEditedById = convert_int(value)
-    
-    @property
-    def createdTimestamp(self):
-        return self._createdTimestamp
-
-    @createdTimestamp.setter
-    def createdTimestamp(self, value: str):
-        self._createdTimestamp = convert_str(value)
-    
-    @property
-    def lastEditedTimestamp(self):
-        return self._lastEditedTimestamp
-
-    @lastEditedTimestamp.setter
-    def lastEditedTimestamp(self, value: str):
-        self._lastEditedTimestamp = convert_str(value)
 
 class SampleWithLocation(APIRequests):
 
     path = URL_BASE+'/api/core/sample-with-locations'
 
-    def __init__(self, location: Location, sample: Sample):
+    def __init__(self, location: Location, sample: Sample, id: Union[int, np.int16, np.int32, np.int64] = None):
 
         self.location = location
         self.sample = sample
 
-        self.id = None    
+        self.id = id 
 
     @property
     def id(self):
