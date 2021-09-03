@@ -13,6 +13,7 @@ class Person(APIRequests):
     path = URL_BASE + "/api/core/people"
 
     def __init__(self,
+                 id: int = None,
                  calcName: str = None,
                  firstName: str = None,
                  name: str = None,

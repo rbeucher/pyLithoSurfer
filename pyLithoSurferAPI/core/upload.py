@@ -114,9 +114,7 @@ class SampleWithLocationUploader(object):
 
             if sample_with_location_id is None: 
                
-                loc_args.pop("id")
                 location = Location(**loc_args)
-                samp_args.pop("id")
                 sample = Sample(**samp_args)    
            
                 # Create SampleWithLocation object.
@@ -198,7 +196,6 @@ class PersonUploader(object):
 
             if (person_id is None):
                 
-                args.pop("id")
                 person = Person(**args)
                 person.new(debug=debug) 
                 person_id = person.id
@@ -220,7 +217,6 @@ class PersonUploader(object):
                     old_args.update(args)
                     args = old_args
 
-                args.pop("id")
                 args = {k:v for k, v in args.items() if k in Person().to_dict().keys()}
                 person = Person(**args)
                 person.id = person_id
