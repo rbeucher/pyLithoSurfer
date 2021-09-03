@@ -1,11 +1,13 @@
 from . import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
+import urllib
 import json
+import pandas as pd
 
 
 class StratigraphicUnit(APIRequests):
 
-    path = URL_BASE + "/api/stratigraphic-units"
+    path = URL_BASE + "/api/core/stratigraphic-units"
 
     def __init__(self, *args, **kwargs):
         for key, val in kwargs.items():
@@ -122,3 +124,16 @@ class StratigraphicUnit(APIRequests):
     @thicknessMin.setter
     def thicknessMin(self, value):
         self._thicknessMin = value
+
+
+def get_id_from_stratigraphic_unit_name(name):
+    query = {"name.contains": name}
+    response = StratigraphicUnit.get_from_query(urllib.parse.urlencode(query))
+    records = response.json()
+    if len(records) > 1:
+        df = pd.DataFrame.from_records(records)
+        print(df)
+        chosen_id = input("Choose id:")
+        return chosen_id
+    else:
+        return records[0]["id"]

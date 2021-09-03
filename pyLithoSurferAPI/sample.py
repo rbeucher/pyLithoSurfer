@@ -14,10 +14,10 @@ class Sample(APIRequests):
     path = URL_BASE + "/api/samples"
 
     def __init__(self,
-                materialId: Union[int, np.int16, np.int32, np.int64],
-                locationKindId:  Union[int, np.int16, np.int32, np.int64],
-                sampleMethodId:  Union[int, np.int16, np.int32, np.int64],
-                sampleKindId:  Union[int, np.int16, np.int32, np.int64],
+                materialId: Union[int, np.int16, np.int32, np.int64] = None,
+                locationKindId:  Union[int, np.int16, np.int32, np.int64] = None,
+                sampleMethodId:  Union[int, np.int16, np.int32, np.int64] = None,
+                sampleKindId:  Union[int, np.int16, np.int32, np.int64] = None,
                 locationId:  Union[int, np.int16, np.int32, np.int64] = None,
                 name: str = "unknown",
                 description: str = None,
@@ -114,29 +114,6 @@ class Sample(APIRequests):
         self.igsnMintingTimestamp = convert_str(igsnMintingTimestamp)
 
         self.id = None
-
-    def new(self, *args, **kwargs):
-        
-        query = {"name.in": self.name}
-        response = self.get_from_query(urllib.parse.urlencode(query))
-        
-        if check_response(response):
-            old_args = response.json()
-            if len(old_args) >= 1:
-                data = self.to_dict()
-                if "id" in data.keys():
-                    data.pop("id")
-                for key, val in old_args[0].items():
-                    if key in data.keys():
-                        old_args[0][key] = data[key]
-
-                new_id = old_args[0].pop("id")
-                self.__init__(**old_args[0])
-                self.id = new_id
-                test = self.update()
-                return response.json()
-        
-        super().new(*args, **kwargs)
 
     @property
     def id(self):
@@ -472,54 +449,12 @@ class SampleWithLocation(APIRequests):
     def new(self, debug=False):
         data = {}
         
-        ## Check if location exist
-        #query = {"name.in": self.location.name}
-        #response = self.location.get_from_query(urllib.parse.urlencode(query))
-        
-        #if debug:
-        #    print(response.json())
-
-        #if check_response(response):
-        #    new_args = response.json()
-        #    if len(new_args) >= 1:
-        #        new_id = new_args[0].pop("id")
-        #        self.location.__init__(**new_args[0])
-        #        self.location.id = new_id
-
         location = self.location.to_dict()
-        if "id" in location.keys():
-            location.pop("id")
+        location.pop("id")
         data["locationDTO"] = location
 
-        # Check if sample exists
-        query = {"name.contains": self.sample.name}
-        response = self.get_from_query(urllib.parse.urlencode(query))
-
-        if debug:
-            print(response.json())
-        
-        if check_response(response):
-            old_args = response.json()
-            if len(old_args) >= 1:
-                data = self.sample.to_dict()
-                if data.get('id'):
-                    data.pop("id")
-                # Only keep the entries that are not None.
-                # They will be used to update the sample.
-                data = {k: v for k, v in data.items() if v is not None}
-                old_copy = old_args[0]["sampleDTO"].copy()
-                old_args[0]["sampleDTO"].update(data)
-                new_id = old_args[0]["sampleDTO"].pop("id")
-                self.sample.__init__(**old_args[0]["sampleDTO"])
-                if old_copy != old_args[0]["sampleDTO"]:
-                    self.update()
-                self.sample.id = new_id
-                self.location.id = response.json()[0]["locationDTO"]["id"]
-                return response
-
         sample = self.sample.to_dict()
-        if "id" in sample.keys():
-            sample.pop("id")
+        sample.pop("id")
         data["sampleDTO"] = sample
 
         headers = session.headers
@@ -530,11 +465,9 @@ class SampleWithLocation(APIRequests):
         if debug:
             print(response.json())
         check_response(response)
-        response = response.json()
-        if "id" in response.keys():
-            self.id = response["id"]
-        if "locationDTO" in response.keys() and "id" in response["locationDTO"].keys():
-            self.location.id = response["locationDTO"]["id"]
-        if "sampleDTO" in response.keys() and "id" in response["sampleDTO"].keys():
-            self.sample.id = response["sampleDTO"]["id"]
-        return response   
+
+        records = response.json()
+        self.id = records["id"]
+        self.location.id = records["locationDTO"]["id"]
+        self.sample.id = records["sampleDTO"]["id"]
+        return records   

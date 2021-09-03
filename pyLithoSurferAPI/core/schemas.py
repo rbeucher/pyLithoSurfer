@@ -107,3 +107,14 @@ class StatementSchema(pa.SchemaModel):
     relevance: Optional[Series[pa.Float]]
     tempAtAgeId: Optional[Series[pa.Int64]]
     tempGradientId: Optional[Series[pa.Int64]]
+
+
+class PersonSchema(pa.SchemaModel):
+    
+    calcName: Optional[Series[pa.String]]
+    firstName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
+    id: Optional[Series[pa.Int64]]
+    name: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
+    note: Optional[Series[pa.String]]
+    orcId: Optional[Series[pa.String]]
+    title: Optional[Series[pa.String]]

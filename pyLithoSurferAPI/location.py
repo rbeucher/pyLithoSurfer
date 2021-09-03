@@ -12,9 +12,9 @@ class Location(APIRequests):
     path = URL_BASE + "/api/locations"
 
     def __init__(self,
-                lat: Union[float, np.float16, np.float32, np.float64],
-                lon: Union[float, np.float16, np.float32, np.float64],
-                latLonPrecision: Union[float, np.float16, np.float32, np.float64],
+                lat: Union[float, np.float16, np.float32, np.float64] = None,
+                lon: Union[float, np.float16, np.float32, np.float64] = None,
+                latLonPrecision: Union[float, np.float16, np.float32, np.float64] = None,
                 name: str = "unknown",
                 celestialId: Union[int, np.int16, np.int32, np.int64] = 0,
                 celestialName: str = None,
@@ -47,21 +47,6 @@ class Location(APIRequests):
         self.description = convert_str(description)
 
         self.id = 0
-
-    def new(self, *args, **kwargs):
-        
-        query = {"name.in": self.name}
-        response = self.get_from_query(urllib.parse.urlencode(query))
-        
-        if check_response(response):
-            new_args = response.json()
-            if len(new_args) >= 1:
-                new_id = new_args[0].pop("id")
-                self.__init__(**new_args[0])
-                self.id = new_id
-                return response.json()
-                
-        super().new(*args, **kwargs)
 
     @property
     def id(self):

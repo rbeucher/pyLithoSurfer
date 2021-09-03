@@ -108,10 +108,11 @@ class APIRequests(ABC):
         self.__init__(**data)
         return response
 
-    def get_from_query(self, query):
+    @classmethod
+    def get_from_query(cls, query):
         headers = session.headers
         headers["Accept"] = "application/json"
-        path = self.path + "?" + str(query)
+        path = cls.path + "?" + str(query)
         response = session.get(path)
         return response
 

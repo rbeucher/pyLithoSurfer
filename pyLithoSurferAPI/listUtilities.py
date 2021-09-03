@@ -11,6 +11,7 @@ from pyLithoSurferAPI.lLocationCapture import get_locationCapture_id
 from pyLithoSurferAPI.lSampleKind import get_sampleKind_id
 from pyLithoSurferAPI.lPerson2DataPointRole import get_person2DataPointRole_id
 from pyLithoSurferAPI.lPerson2SampleRole import get_person2SampleRole_id
+from pyLithoSurferAPI.stratigraphicUnit import get_id_from_stratigraphic_unit_name
 import pandas as pd
 import numpy as np
 

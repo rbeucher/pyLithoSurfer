@@ -36,26 +36,6 @@ class Person(APIRequests):
         self._id = convert_int(value)
 
     def new(self, *args, **kwargs):
-        
-        query = {"name.in": self.name}
-        response = self.get_from_query(urllib.parse.urlencode(query))
-        
-        if check_response(response):
-            old_args = response.json()
-            if len(old_args) >= 1:
-                data = self.to_dict()
-                if "id" in data.keys():
-                    data.pop("id")
-                for key, val in old_args[0].items():
-                    if key in data.keys():
-                        old_args[0][key] = data[key]
-
-                new_id = old_args[0].pop("id")
-                self.__init__(**old_args[0])
-                self.id = new_id
-                test = self.update()
-                return response.json()
-        
         super().new(*args, **kwargs)
     
     @property
@@ -105,3 +85,25 @@ class Person(APIRequests):
     @calcName.setter
     def calcName(self, value: str):
         self._calcName = convert_str(value)
+
+
+def get_person_id(firstName=None, name=None):
+    firstNameQuery = {}
+    if firstName:
+        firstNameQuery = {"firstName.contains": firstName}
+    nameQuery = {}
+    if name:
+        nameQuery = {"name.contains": name}
+    query = {**firstNameQuery, **nameQuery}
+    response = Person.get_from_query(urllib.parse.urlencode(query))
+    records = response.json()
+    if len(records) > 1:
+        df = pd.DataFrame.from_records(records)
+        print(df)
+        chosen_id = input("Choose id:")
+        return chosen_id
+    elif records:
+        return records[0]["id"]
+    else:
+        print(f"{firstName} {name} was not found")
+        return
