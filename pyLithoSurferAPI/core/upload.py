@@ -89,6 +89,7 @@ class SampleWithLocationUploader(object):
         self.samples_df["locationId"] = None
         self.samples_df["id"] = None
         self.locations_df["id"] = None
+        self.errors_df = pd.DataFrame(columns=["sample.name", "exception"])
 
         for index in tqdm(self.samples_df.index):
 
@@ -119,9 +120,12 @@ class SampleWithLocationUploader(object):
                 location = Location(**loc_args)
                 sample = Sample(**samp_args)    
            
+                try:
                 # Create SampleWithLocation object.
-                SampWLocation = SampleWithLocation(location=location, sample=sample)
-                SampWLocation.new(debug=True)
+                    SampWLocation = SampleWithLocation(location=location, sample=sample)
+                    SampWLocation.new(debug=True)
+                except Exception as e:
+                    self.errors_df.loc[index] = [sample.name, str(type(e))]
 
             elif update:
 
@@ -157,10 +161,14 @@ class SampleWithLocationUploader(object):
                 # Create Sample
                 sample = Sample(**samp_args)    
                 sample.id = sample_id
-                # Create SampleWithLocation
-                SampWLocation = SampleWithLocation(location=location, sample=sample)
-                SampWLocation.id = sample_with_location_id
-                SampWLocation.update()
+
+                try:
+                    # Create SampleWithLocation
+                    SampWLocation = SampleWithLocation(location=location, sample=sample)
+                    SampWLocation.id = sample_with_location_id
+                    SampWLocation.update()
+                except Exception as e:
+                    self.errors_df.loc[index] = [sample.name, str(type(e))]
 
             else:
                 raise ValueError("Sample with location exist and you have chosen not to update")
@@ -171,7 +179,8 @@ class SampleWithLocationUploader(object):
 
         with pd.ExcelWriter('output.xlsx') as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
-            self.locations_df.to_excel(writer, sheet_name='Locations')   
+            self.locations_df.to_excel(writer, sheet_name='Locations')
+            self.errors_df.to_excel(writer, sheet_name="Errors")   
 
 
 class PersonUploader(object):
