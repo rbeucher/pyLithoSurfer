@@ -1,7 +1,7 @@
 import pandera as pa
 from pandera.typing import Index, DataFrame, Series
 from typing import Optional
-from pyLithoSurferAPI import LElevationKind
+from pyLithoSurferAPI.core.lists import LElevationKind
 
 
 class SHRIMPDataPointSchema(pa.SchemaModel):

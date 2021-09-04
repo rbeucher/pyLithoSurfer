@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 from os import path
 
 MAJOR = 0
-MINOR = 1
+MINOR = 2
 MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
@@ -34,20 +34,11 @@ setup(
 
         'License :: OSI Approved :: MIT License',
 
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     packages=["pyLithoSurferAPI"],
     keywords='geology thermochronology fission-tracks',
     install_requires=requirements,
-    package_data={
-        'pyLithoSurferAPI': ['template.jinja'],
-    },
-
 )

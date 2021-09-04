@@ -1,3 +1,0 @@
-
-class NameMissing(Exception):
-    pass

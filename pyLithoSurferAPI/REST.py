@@ -2,7 +2,7 @@ from . import session, URL_BASE
 from abc import ABC
 import json
 import pandas as pd
-
+import urllib
 
 class ForbiddenException(Exception):
     pass
@@ -36,6 +36,10 @@ def check_response(response):
 class APIRequests(ABC):
 
     check_duplicates = []
+
+    def __init__(self, **kwargs):
+        for key, val in kwargs.items():
+            setattr(self, key, val)
 
     # GET ALL
     @classmethod
@@ -110,6 +114,7 @@ class APIRequests(ABC):
 
     @classmethod
     def get_from_query(cls, query):
+        query = urllib.parse.urlencode(query)
         headers = session.headers
         headers["Accept"] = "application/json"
         path = cls.path + "?" + str(query)
@@ -122,3 +127,18 @@ class APIRequests(ABC):
 
     def to_dict(self):
         return {key.replace("_", ""): val for key, val in self.__dict__.items()}
+
+    @classmethod
+    def get_id_from_name(cls, name):
+       
+        if (name is None):
+            return None
+
+        query = {"name.equals": name}
+        response = cls.get_from_query(query)
+        records = response.json()
+        
+        if not records:
+            raise ValueError(f"Cannot find {name} in list")
+        
+        return records[0]["id"]

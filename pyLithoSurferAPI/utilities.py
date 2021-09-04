@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from typing import Union
+import json
 
 
 url = str
@@ -54,15 +55,6 @@ def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):
         y = y.values
     x, y = transformer.transform(x, y)
     return {"x": x, "y": y}
-
-
-def get_id_from_list(list_class, value: str):
-    entries = list_class().get_all()
-    values = entries[entries.values == value]["id"].values
-    if len(values) > 1:
-        raise ValueError(f"Multiple ids present for {value}")
-    else:
-        return values[0]
 
 
 def get_connection_to_db():
@@ -126,3 +118,30 @@ def migrate_lithology_to_mindat(lithologies):
     lithologies = lithologies.map(mapping).astype("int32")
     
     return lithologies
+
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Custom encoder for numpy data types """
+    def default(self, obj):
+        if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+                            np.int16, np.int32, np.int64, np.uint8,
+                            np.uint16, np.uint32, np.uint64)):
+
+            return int(obj)
+
+        elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+            return float(obj)
+
+        elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
+            return {'real': obj.real, 'imag': obj.imag}
+
+        elif isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+
+        elif isinstance(obj, (np.bool_)):
+            return bool(obj)
+
+        elif isinstance(obj, (np.void)): 
+            return None
+
+        return json.JSONEncoder.default(self, obj)

@@ -1,10 +1,10 @@
-from pyLithoSurferAPI import Location
-from pyLithoSurferAPI import Sample
-from pyLithoSurferAPI import SampleWithLocation
-from pyLithoSurferAPI.listUtilities import * 
+from pyLithoSurferAPI.core.tables import Location
+from pyLithoSurferAPI.core.sample import Sample
+from pyLithoSurferAPI.core.sample import SampleWithLocation
+from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
 from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema
+import pandas as pd
 import numpy as np
-import urllib
 from tqdm import tqdm
 
 
@@ -23,40 +23,41 @@ class SampleWithLocationUploader(object):
         
         if "sampleMethodId" not in self.samples_df.columns:
             if "sampleMethodName" in self.samples_df.columns:
-                self.samples_df["sampleMethodId"] = map_string_to_list_indices(self.samples_df.sampleMethodName, get_sampleMethod_id)
+                self.samples_df["sampleMethodId"] = self.samples_df.sampleMethodName.apply(LSampleMethod.get_id_from_name)
             else:
-                self.samples_df["sampleMethodId"] = get_sampleMethod_id("Unknown")
+                self.samples_df["sampleMethodId"] = LSampleMethod.get_id_from_name("Unknown")
                 self.samples_df["sampleMethodName"] = "Unknown"
 
         if "sampleKindId" not in self.samples_df.columns:
             if "sampleKindName" in self.samples_df.columns:
-                self.samples_df["sampleKindId"] = map_string_to_list_indices(self.samples_df.sampleKindName, get_sampleKind_id)
+                self.samples_df["sampleKindId"] = self.samples_df.sampleKindName.apply(LSampleKind.get_id_from_name)
             else:
-                self.samples_df["sampleKindId"] = get_sampleKind_id("Unknown")
+                self.samples_df["sampleKindId"] = LSampleKind.get_id_from_name("Unknown")
                 self.samples_df["sampleKindName"] = "Unknown"
         
         if "locationKindId" not in self.samples_df.columns:
             if "locationKindName" in self.samples_df.columns:
-                self.samples_df["locationKindId"] = map_string_to_list_indices(self.samples_df.locationKindName, get_locationKind_id)
+                self.samples_df["locationKindId"] = self.samples_df.locationKindName.apply(LLocationKind.get_id_from_name)
             else:
-                self.samples_df["locationKindId"] = get_locationKind_id("Unknown")
+                self.samples_df["locationKindId"] = LLocationKind.get_id_from_name("Unknown")
                 self.samples_df["locationKindName"] = "Unknown"
         
         if "referenceElevationSource" not in self.samples_df.columns:
             self.samples_df["referenceElevationSource"] = "API_LOOKUP"
-            self.samples_df["referenceElevationKindId"] = get_elevation_kind_id("Ground level")
+            self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Ground level")
             self.samples_df["referenceElevationKindName"] = "Ground level"
         
         if "referenceElevationKindId" not in self.samples_df.columns:
             if "referenceElevationKindName" in self.samples_df.columns:
-                self.samples_df["referenceElevationKindId"] = map_string_to_list_indices(self.samples_df.referenceElevationKindName, get_elevation_kind_id)
+                self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.apply(LElevationKind.get_id_from_name)
             else:
-                self.samples_df["referenceElevationKindId"] = get_elevation_kind_id("Unknown")
+                self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Unknown")
                 self.samples_df["referenceElevationKindName"] = "Unknown"
         
         self.samples_df["dataPackageId"] = self.datapackageId
         self.samples_df = self.samples_df.replace({np.nan: None})
         self.samples_df = SampleSchema.validate(self.samples_df)
+        self.samples_df = self.samples_df.replace({np.nan: None})
         
         # Validate Location
         self.locations_df = LocationSchema.validate(self.locations_df)
@@ -66,13 +67,14 @@ class SampleWithLocationUploader(object):
 
         if "celestialId" not in self.locations_df.columns:
             if "celestialName" in self.locations_df.columns:
-                self.locations_df["celestialId"] = map_string_to_list_indices(self.locations_df.celestialName, get_celestial_id)
+                self.locations_df["celestialId"] = self.locations_df.celestialName.apply(LCelestial.get_id_from_name)
             else:
-                self.locations_df["celestialId"] = get_celestial_id("Earth")
+                self.locations_df["celestialId"] = LCelestial.get_id_from_name("Earth")
                 self.locations_df["celestialName"] = "Earth"
 
         self.locations_df = self.locations_df.replace({np.nan: None})
         self.locations_df = LocationSchema.validate(self.locations_df)
+        self.locations_df = self.locations_df.replace({np.nan: None})
 
         self.validated = True
         return
@@ -104,7 +106,7 @@ class SampleWithLocationUploader(object):
                      "locationCriteria.lat.lessThan": lat + 0.001,
                      "name.equals": name}
 
-            response = SampleWithLocation.get_from_query(urllib.parse.urlencode(query))
+            response = SampleWithLocation.get_from_query(query)
             records = response.json() 
 
             if records:
@@ -119,7 +121,7 @@ class SampleWithLocationUploader(object):
            
                 # Create SampleWithLocation object.
                 SampWLocation = SampleWithLocation(location=location, sample=sample)
-                SampWLocation.new(debug=False)
+                SampWLocation.new(debug=True)
 
             elif update:
 
@@ -184,7 +186,7 @@ class PersonUploader(object):
         return self.persons_df
 
     def upload(self, update=False, update_strategy="merge_keep", debug=False):
-        from pyLithoSurferAPI.person import get_person_id, Person
+        from pyLithoSurferAPI.core.person import get_person_id, Person
 
         self.persons_df["id"] = None
 
@@ -206,7 +208,7 @@ class PersonUploader(object):
                     raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
                     
                 query = {"id.equals": person_id}
-                response = Person.get_from_query(urllib.parse.urlencode(query))
+                response = Person.get_from_query(query)
 
                 if update_strategy == "merge_keep":
                     old_args = response.json()[0]

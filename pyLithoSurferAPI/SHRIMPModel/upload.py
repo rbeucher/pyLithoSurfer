@@ -1,9 +1,11 @@
 from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.SHRIMPModel.schemas import SHRIMPDataPointSchema
-from pyLithoSurferAPI import DataPoint, Statement, GeoeventAtAge
-from pyLithoSurferAPI import SHRIMPDataPoint, SHRIMPDataPointCRUD, SHRIMPAge, SHRIMPAgeCRUD
-from pyLithoSurferAPI.listUtilities import * 
+from pyLithoSurferAPI.core.tables import DataPoint, Statement, GeoeventAtAge
+from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import SHRIMPDataPoint, SHRIMPDataPointCRUD
+from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
+from pyLithoSurferAPI.core.lists import LSHRIMPSampleFormat, LErrorType, LGeoEvent, LSHRIMPAgeType
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 
@@ -25,9 +27,9 @@ class SHRIMPDataPointUploader(SampleWithLocationUploader):
 
         if "sampleFormatId" not in self.shrimp_datapoints_df.columns:
             if "sampleFormatName" in self.shrimp_datapoints_df.columns:
-                self.shrimp_datapoints_df["sampleFormatId"] = map_string_to_list_indices(self.shrimp_datapoints_df.sampleFormatName, get_SHRIMPsampleFormat_id)
+                self.shrimp_datapoints_df["sampleFormatId"] = self.shrimp_datapoints_df.sampleFormatName.apply(LSHRIMPSampleFormat.get_id_from_name)
             else:
-                self.shrimp_datapoints_df["sampleFormatId"] = get_SHRIMPsampleFormat_id("Unknown")
+                self.shrimp_datapoints_df["sampleFormatId"] = LSHRIMPSampleFormat.get_id_from_name("Unknown")
                 self.shrimp_datapoints_df["sampleFormatName"] = "Unknown"
 
         self.shrimp_datapoints_df = self.shrimp_datapoints_df.replace({np.nan: None})
@@ -85,23 +87,23 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
 
         if "errorTypeId" not in self.shrimp_ages_df.columns:
             if "errorTypeName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["errorTypeId"] = map_string_to_list_indices(self.shrimp_ages_df.errorTypeName, get_error_type_id)
+                self.shrimp_ages_df["errorTypeId"] = self.shrimp_ages_df.errorTypeName.apply(LErrorType.get_id_from_name)
             else:
-                self.shrimp_ages_df["errorTypeId"] = get_error_type_id("Unknown")
+                self.shrimp_ages_df["errorTypeId"] = LErrorType.get_id_from_name("Unknown")
                 self.shrimp_ages_df["errorTypeName"] = "Unknown"
         
         if "geoEventId" not in self.shrimp_ages_df.columns:
             if "geoEventName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["geoEventId"] = map_string_to_list_indices(self.shrimp_ages_df.geoEventName, get_geoEvent_id)
+                self.shrimp_ages_df["geoEventId"] = self.shrimp_ages_df.geoEventName.apply(LGeoEvent.get_id_from_name)
             else:
-                self.shrimp_ages_df["geoEventId"] = get_geoEvent_id("Unknown")
+                self.shrimp_ages_df["geoEventId"] = LGeoEvent.get_id_from_name("Unknown")
                 self.shrimp_ages_df["geoEventName"] = "Unknown"
         
         if "ageTypeId" not in self.shrimp_ages_df.columns:
             if "ageTypeName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["ageTypeId"] = map_string_to_list_indices(self.shrimp_ages_df.ageTypeName, get_SHRIMPAgeType_id)
+                self.shrimp_ages_df["ageTypeId"] = self.shrimp_ages_df.ageTypeName.apply(LSHRIMPAgeType.get_id_from_name)
             else:
-                self.shrimp_ages_df["ageTypeId"] = get_SHRIMPAgeType_id("Unknown")
+                self.shrimp_ages_df["ageTypeId"] = LSHRIMPAgeType.get_id_from_name("Unknown")
                 self.shrimp_ages_df["ageTypeName"] = "Unknown"
 
         self.shrimp_ages_df = self.shrimp_ages_df.replace({np.nan: None})
