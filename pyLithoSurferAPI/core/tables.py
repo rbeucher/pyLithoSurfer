@@ -102,7 +102,7 @@ class StratigraphicUnit(APIRequests):
         import pandas as pd
         
         query = {"name.contains": name}
-        response = cls.get_from_query(query)
+        response = cls.query(query)
         records = response.json()
         if len(records) > 1:
             df = pd.DataFrame.from_records(records)

@@ -20,7 +20,7 @@ def get_person_id(firstName=None, name=None):
     if name:
         nameQuery = {"name.contains": name}
     query = {**firstNameQuery, **nameQuery}
-    response = Person.get_from_query(query)
+    response = Person.query(query)
     records = response.json()
     if len(records) > 1:
         df = pd.DataFrame.from_records(records)

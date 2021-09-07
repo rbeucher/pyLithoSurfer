@@ -35,8 +35,6 @@ def check_response(response):
 
 class APIRequests(ABC):
 
-    check_duplicates = []
-
     def __init__(self, **kwargs):
         for key, val in kwargs.items():
             setattr(self, key, val)
@@ -113,13 +111,22 @@ class APIRequests(ABC):
         return response
 
     @classmethod
-    def get_from_query(cls, query):
+    def query(cls, query):
         query = urllib.parse.urlencode(query)
         headers = session.headers
         headers["Accept"] = "application/json"
         path = cls.path + "?" + str(query)
         response = session.get(path)
         return response
+
+    @classmethod
+    def get_from_query(cls, query):
+        response = cls.query(query)
+        records = response.json()
+        objects_list = []
+        for record in records:
+            objects_list.append(cls(**record))
+        return objects_list
 
     def to_json(self):
         return json.dumps(self, default=lambda o: {key.replace("_", ""): val for key, val in o.__dict__.items()}, 
@@ -135,7 +142,7 @@ class APIRequests(ABC):
             return None
 
         query = {"name.equals": name}
-        response = cls.get_from_query(query)
+        response = cls.query(query)
         records = response.json()
         
         if not records:

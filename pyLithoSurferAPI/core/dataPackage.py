@@ -29,7 +29,7 @@ class DataPackage(APIRequests):
         from . import User, LithoUser
         A = User()
         query={"login.in": name}
-        responseA = A.get_from_query(urllib.parse.urlencode(query))
+        responseA = A.query(urllib.parse.urlencode(query))
         for item in responseA.json():
             if item["login"] == name:
                 user_id = item["id"]
@@ -39,7 +39,7 @@ class DataPackage(APIRequests):
 
         B = LithoUser()
         query = {"userId.in": user_id}
-        response = B.get_from_query(urllib.parse.urlencode(query))
+        response = B.query(urllib.parse.urlencode(query))
         if response:
             litho_user_id = response.json()[0]["id"]        
 

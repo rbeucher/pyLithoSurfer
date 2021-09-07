@@ -109,7 +109,7 @@ class SampleWithLocationUploader(object):
                      "locationCriteria.lat.lessThan": lat + 0.001,
                      "name.equals": name}
 
-            response = SampleWithLocation.get_from_query(query)
+            response = SampleWithLocation.query(query)
             records = response.json() 
 
             if records:
@@ -219,7 +219,7 @@ class PersonUploader(object):
                     raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
                     
                 query = {"id.equals": person_id}
-                response = Person.get_from_query(query)
+                response = Person.query(query)
 
                 if update_strategy == "merge_keep":
                     old_args = response.json()[0]
