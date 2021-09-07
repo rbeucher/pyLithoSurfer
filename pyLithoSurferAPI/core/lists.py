@@ -106,6 +106,11 @@ class ReferenceMaterial(APIRequests):
     path = URL_BASE + "/api/core/reference-materials"
 
 
+def get_list_name_to_id_mapping(ListClass):
+    df = ListClass.get_all()
+    return pd.Series(df.id.values, index=df.name).to_dict()
+
+
 
 
 

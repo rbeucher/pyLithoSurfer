@@ -3,6 +3,8 @@ from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
 from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema
+from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -23,21 +25,21 @@ class SampleWithLocationUploader(object):
         
         if "sampleMethodId" not in self.samples_df.columns:
             if "sampleMethodName" in self.samples_df.columns:
-                self.samples_df["sampleMethodId"] = self.samples_df.sampleMethodName.apply(LSampleMethod.get_id_from_name)
+                self.samples_df["sampleMethodId"] = self.samples_df.sampleMethodName.map(get_id(LSampleMethod))
             else:
                 self.samples_df["sampleMethodId"] = LSampleMethod.get_id_from_name("Unknown")
                 self.samples_df["sampleMethodName"] = "Unknown"
 
         if "sampleKindId" not in self.samples_df.columns:
             if "sampleKindName" in self.samples_df.columns:
-                self.samples_df["sampleKindId"] = self.samples_df.sampleKindName.apply(LSampleKind.get_id_from_name)
+                self.samples_df["sampleKindId"] = self.samples_df.sampleKindName.map(get_id(LSampleKind))
             else:
                 self.samples_df["sampleKindId"] = LSampleKind.get_id_from_name("Unknown")
                 self.samples_df["sampleKindName"] = "Unknown"
         
         if "locationKindId" not in self.samples_df.columns:
             if "locationKindName" in self.samples_df.columns:
-                self.samples_df["locationKindId"] = self.samples_df.locationKindName.apply(LLocationKind.get_id_from_name)
+                self.samples_df["locationKindId"] = self.samples_df.locationKindName.map(get_id(LLocationKind))
             else:
                 self.samples_df["locationKindId"] = LLocationKind.get_id_from_name("Unknown")
                 self.samples_df["locationKindName"] = "Unknown"
@@ -49,7 +51,7 @@ class SampleWithLocationUploader(object):
         
         if "referenceElevationKindId" not in self.samples_df.columns:
             if "referenceElevationKindName" in self.samples_df.columns:
-                self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.apply(LElevationKind.get_id_from_name)
+                self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.map(get_id(LElevationKind))
             else:
                 self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Unknown")
                 self.samples_df["referenceElevationKindName"] = "Unknown"
@@ -67,7 +69,7 @@ class SampleWithLocationUploader(object):
 
         if "celestialId" not in self.locations_df.columns:
             if "celestialName" in self.locations_df.columns:
-                self.locations_df["celestialId"] = self.locations_df.celestialName.apply(LCelestial.get_id_from_name)
+                self.locations_df["celestialId"] = self.locations_df.celestialName.map(get_id(LCelestial))
             else:
                 self.locations_df["celestialId"] = LCelestial.get_id_from_name("Earth")
                 self.locations_df["celestialName"] = "Earth"
