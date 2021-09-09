@@ -21,6 +21,11 @@ def set_credentials(DB_MODE="PROD"):
         LITHODAT_USERNAME = os.environ.get("LITHODAT_TEST_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_TEST_PASSWORD", None)
         print("You are now using TEST")
+    elif DB_MODE == "DEV":
+        URL_BASE = 'https://devapp.lithodat.com'
+        LITHODAT_USERNAME = os.environ.get("LITHODAT_DEV_USERNAME", None)
+        LITHODAT_PASSWORD = os.environ.get("LITHODAT_DEV_PASSWORD", None)
+        print("You are now using DEV")
     else:
         raise ValueError("DB_MODE is incorrect")
 

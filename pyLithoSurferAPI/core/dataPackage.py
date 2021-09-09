@@ -55,11 +55,3 @@ class DataPackage(APIRequests):
             responseD = dpkg2supervisor.new(*args, **kwargs)
 
         return [responseA, responseB, responseC, responseD]        
-
-    def get_id_from_name(self, name: str):
-        entries = self.get_all()
-        values = entries[entries.name == name]["id"].values
-        if len(values) > 1:
-            raise ValueError(f"Multiple ids present for {name}")
-        else:
-            return values[0]

@@ -40,9 +40,12 @@ def get_elevation_from_google(lat: Union[float, np.float16, np.float32, np.float
     from . import session, URL_BASE
     from .REST import check_response
     path = URL_BASE + "/api/other/elevation" + f"?lat={lat}&lon={lon}"
-    response = session.get(path)
-    check_response(response)
-    return response.json()
+    try:
+        response = session.get(path)
+        check_response(response)
+        return response.json()
+    except:
+        return None
 
 
 def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):
