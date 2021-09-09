@@ -44,11 +44,6 @@ class SampleWithLocationUploader(object):
                 self.samples_df["locationKindId"] = LLocationKind.get_id_from_name("Unknown")
                 self.samples_df["locationKindName"] = "Unknown"
         
-        if "referenceElevationSource" not in self.samples_df.columns:
-            self.samples_df["referenceElevationSource"] = "API_LOOKUP"
-            self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Ground level")
-            self.samples_df["referenceElevationKindName"] = "Ground level"
-        
         if "referenceElevationKindId" not in self.samples_df.columns:
             if "referenceElevationKindName" in self.samples_df.columns:
                 self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.map(get_id(LElevationKind))
@@ -125,7 +120,7 @@ class SampleWithLocationUploader(object):
                 try:
                 # Create SampleWithLocation object.
                     SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.new(debug=True)
+                    SampWLocation.new(debug=debug)
                 except Exception as e:
                     self.errors_df.loc[index] = [sample.name, str(type(e))]
 
@@ -173,7 +168,7 @@ class SampleWithLocationUploader(object):
                     self.errors_df.loc[index] = [sample.name, str(type(e))]
 
             else:
-                raise ValueError("Sample with location exist and you have chosen not to update")
+                continue
            
             self.locations_df.loc[index, "id"] = SampWLocation.location.id
             self.samples_df.loc[index, "id"] = SampWLocation.sample.id

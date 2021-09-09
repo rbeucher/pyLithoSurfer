@@ -1,5 +1,6 @@
 from pyLithoSurferAPI import URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
+import pandas as pd
 
 class LCelestial(APIRequests):
 
@@ -109,8 +110,3 @@ class ReferenceMaterial(APIRequests):
 def get_list_name_to_id_mapping(ListClass):
     df = ListClass.get_all()
     return pd.Series(df.id.values, index=df.name).to_dict()
-
-
-
-
-

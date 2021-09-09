@@ -13,7 +13,7 @@ class SampleSchema(pa.SchemaModel):
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     dataPackageId: Optional[Series[pa.Int64]]
     dataPackageName: Optional[Series[pa.String]]
-    description: Optional[Series[pa.String]]
+    description: Optional[Series[pa.String]] = pa.Field(nullable=True)
     id: Optional[Series[pa.Int64]]
     igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnHandleURL: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -29,10 +29,10 @@ class SampleSchema(pa.SchemaModel):
     referenceElevationKindId: Optional[Series[pa.Int64]]
     referenceElevationKindName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=LElevationKind.get_all()["name"].to_list())
     referenceElevationKindNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    referenceElevationSource: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    relativeElevationAccuracy: Optional[Series[pa.Float]]
-    relativeElevationMax: Optional[Series[pa.Float]]
-    relativeElevationMin: Optional[Series[pa.Float]]
+    referenceElevationSource: Series[pa.String]
+    relativeElevationAccuracy: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
     sampleKindId: Optional[Series[pa.Int64]]
     sampleKindName: Optional[Series[pa.String]]
     sampleMethodId: Optional[Series[pa.Int64]]
