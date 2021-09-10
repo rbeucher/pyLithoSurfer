@@ -146,6 +146,7 @@ class APIRequests(ABC):
         records = response.json()
         
         if not records:
-            raise ValueError(f"Cannot find {name} in list")
+            print(f"Cannot find {name} in list")
+            return None
         
         return records[0]["id"]

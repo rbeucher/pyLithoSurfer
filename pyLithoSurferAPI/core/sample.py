@@ -9,11 +9,6 @@ class Sample(APIRequests):
 
     path = URL_BASE + "/api/samples"
 
-    def __init__(self, *args, **kwargs):
-        for key, val in kwargs.items():
-            setattr(self, key, val)
-
-
 class SampleWithLocation(APIRequests):
 
     path = URL_BASE+'/api/core/sample-with-locations'
@@ -22,41 +17,24 @@ class SampleWithLocation(APIRequests):
 
         self.location = location
         self.sample = sample
-
         self.id = id 
 
-    @property
-    def location(self):
-        return self._location
-
-    @location.setter
-    def location(self, value: Location):
-        self._location = value
-    
-    @property
-    def sample(self):
-        return self._sample
-
-    @sample.setter
-    def sample(self, value: Sample):
-        self._sample = value
-
-    def new(self, debug=False):
+    def _send_payload(self, func, debug=False):
         data = {}
         
         location = self.location.to_dict()
-        location.pop("id")
         data["locationDTO"] = location
 
         sample = self.sample.to_dict()
-        sample.pop("id")
         data["sampleDTO"] = sample
+        data["id"] = self.sample.id
 
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = session.post(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        
         if debug:
             print(response.json())
         check_response(response)
@@ -66,3 +44,9 @@ class SampleWithLocation(APIRequests):
         self.location.id = records["locationDTO"]["id"]
         self.sample.id = records["sampleDTO"]["id"]
         return records   
+    
+    def new(self, debug=False):
+        self._send_payload(session.post, debug)
+    
+    def update(self, debug=False):
+        self._send_payload(session.put, debug)

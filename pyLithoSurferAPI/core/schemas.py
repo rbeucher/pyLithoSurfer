@@ -23,7 +23,7 @@ class SampleSchema(pa.SchemaModel):
     locationKindName: Optional[Series[pa.String]]
     locationName: Optional[Series[pa.String]]
     materialId: Optional[Series[pa.Float]] = pa.Field(coerce=True, nullable=True)
-    materialName: Optional[Series[pa.String]]
+    materialName: Optional[Series[pa.String]]  = pa.Field(coerce=True, nullable=True)
     name: Series[pa.String] = pa.Field(nullable=False, coerce=True, str_length={"min_value": 0, "max_value": 255})
     referenceElevation: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
     referenceElevationKindId: Optional[Series[pa.Int64]]

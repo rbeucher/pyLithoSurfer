@@ -117,3 +117,7 @@ class Statement(APIRequests):
         
     path = URL_BASE+'/api/statements'
 
+
+class Material(APIRequests):
+
+    path = URL_BASE+'/api/core/materials'

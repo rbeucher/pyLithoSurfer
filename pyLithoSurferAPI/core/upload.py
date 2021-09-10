@@ -1,4 +1,5 @@
 from pyLithoSurferAPI.core.tables import Location
+from pyLithoSurferAPI.core.tables import Material
 from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
@@ -22,6 +23,17 @@ class SampleWithLocationUploader(object):
 
         # Validate Samples
         self.samples_df = SampleSchema.validate(self.samples_df)
+        
+        if "materialId" not in self.samples_df.columns:
+            if "materialName" in self.samples_df.columns:
+                materials = self.samples_df.materialName.unique()
+                mapping = {}
+                for material in materials:
+                    mapping[material] = Material.get_id_from_name(material)
+                self.samples_df["materialId"] = self.samples_df.materialName.map(mapping)
+            #else:
+            #    self.samples_df["materialId"] = Material.get_id_from_name("Unknown")
+            #    self.samples_df["materialName"] = "Unknown"
         
         if "sampleMethodId" not in self.samples_df.columns:
             if "sampleMethodName" in self.samples_df.columns:
@@ -146,24 +158,16 @@ class SampleWithLocationUploader(object):
                     loc_args["id"] = old_loc_args["id"]
                     samp_args["id"] = old_samp_args["id"]
 
-                args = records[0]
-                args.pop("id")
-                location_id = loc_args.pop("id")
-                sample_id = samp_args.pop("id")
-                loc_args = {k:v for k, v in loc_args.items() if k in Location().to_dict().keys()}
-                samp_args = {k:v for k, v in samp_args.items() if k in Sample().to_dict().keys()}
                 # Create Location
                 location = Location(**loc_args)
-                location.id = location_id
                 # Create Sample
                 sample = Sample(**samp_args)    
-                sample.id = sample_id
 
                 try:
                     # Create SampleWithLocation
                     SampWLocation = SampleWithLocation(location=location, sample=sample)
                     SampWLocation.id = sample_with_location_id
-                    SampWLocation.update()
+                    SampWLocation.update(debug=debug)
                 except Exception as e:
                     self.errors_df.loc[index] = [sample.name, str(type(e))]
 
