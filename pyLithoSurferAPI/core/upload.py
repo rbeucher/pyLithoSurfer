@@ -105,6 +105,12 @@ class SampleWithLocationUploader(object):
             # Check for existing samples at location
             loc_args = self.locations_df.loc[index].to_dict()
             samp_args = self.samples_df.loc[index].to_dict()
+            loc_args = {k:v for k,v in loc_args.items() if v is not None}
+            samp_args = {k:v for k,v in samp_args.items() if v is not None}
+            if "id" not in loc_args.keys():
+                loc_args["id"] = None
+            if "id" not in samp_args.keys():
+                samp_args["id"] = None
             
             lat = loc_args.get("lat")
             lon = loc_args.get("lon")
@@ -143,6 +149,8 @@ class SampleWithLocationUploader(object):
                     
                 old_loc_args = records[0]["locationDTO"]
                 old_samp_args = records[0]["sampleDTO"]
+                old_loc_args = {k:v for k,v in old_loc_args.items() if v is not None}
+                old_samp_args = {k:v for k,v in old_samp_args.items() if v is not None}
                 
                 if update_strategy == "merge_keep":
                     loc_args.update(old_loc_args)
@@ -155,13 +163,21 @@ class SampleWithLocationUploader(object):
                     loc_args = old_loc_args
 
                 if update_strategy == "replace":
-                    loc_args["id"] = old_loc_args["id"]
-                    samp_args["id"] = old_samp_args["id"]
+                    for key, val in old_loc_args.items():
+                        if key not in loc_args.keys():
+                            loc_args[key] = None
+                    for key, val in old_samp_args.items():
+                        if key not in samp_args.keys():
+                            samp_args[key] = None                            
+
+                loc_args["id"] = old_loc_args["id"]
+                samp_args["id"] = old_samp_args["id"]
 
                 # Create Location
                 location = Location(**loc_args)
                 # Create Sample
                 sample = Sample(**samp_args)    
+                sample.locationId = location.id
 
                 try:
                     # Create SampleWithLocation

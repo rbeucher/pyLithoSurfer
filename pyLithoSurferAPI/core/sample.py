@@ -27,7 +27,7 @@ class SampleWithLocation(APIRequests):
 
         sample = self.sample.to_dict()
         data["sampleDTO"] = sample
-        data["id"] = self.sample.id
+        data["id"] = self.id
 
         headers = session.headers
         headers["Accept"] = "application/json"

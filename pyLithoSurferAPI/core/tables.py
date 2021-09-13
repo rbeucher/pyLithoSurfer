@@ -109,8 +109,10 @@ class StratigraphicUnit(APIRequests):
             print(df)
             chosen_id = input("Choose id:")
             return chosen_id
-        else:
+        elif len(records):
             return records[0]["id"]
+        else:
+            raise ValueError(f"cannot find {name}")
 
 
 class Statement(APIRequests):

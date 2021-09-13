@@ -29,7 +29,7 @@ class SampleSchema(pa.SchemaModel):
     referenceElevationKindId: Optional[Series[pa.Int64]]
     referenceElevationKindName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=LElevationKind.get_all()["name"].to_list())
     referenceElevationKindNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    referenceElevationSource: Series[pa.String]
+    referenceElevationSource:  Optional[Series[pa.String]]
     relativeElevationAccuracy: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
@@ -38,7 +38,7 @@ class SampleSchema(pa.SchemaModel):
     sampleMethodId: Optional[Series[pa.Int64]]
     sampleMethodName: Optional[Series[pa.String]]
     sourceId: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    stratographicUnitId: Optional[Series[pa.Int64]]
+    stratographicUnitId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     stratographicUnitName: Optional[Series[pa.String]]
 
 
@@ -110,3 +110,33 @@ class PersonSchema(pa.SchemaModel):
     note: Optional[Series[pa.String]]
     orcId: Optional[Series[pa.String]]
     title: Optional[Series[pa.String]]
+
+
+class LiteratureSchema(pa.SchemaModel):
+    abstr: Optional[Series[pa.String]] = pa.Field( nullable=True)
+    author: Series[pa.String]
+    booktitle: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    chapter: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    doi: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    editor: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    howpublished: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    institution: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    issn: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    journal: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    keywords: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    language: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    litNumber: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    litOrganization: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    litType: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    note: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    otherId: Optional[Series[pa.Int]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    pages: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    pubMonth: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    pubYear: Series[pa.Int] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    publisher: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    school: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    series: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    sourceId: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    title: Series[pa.String]
+    url: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    volume: Optional[Series[pa.Int]] = pa.Field(nullable=True, str_length={"max_value": 255})
