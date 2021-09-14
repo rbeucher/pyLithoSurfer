@@ -24,7 +24,11 @@ def check_response(response):
     status_code = response.status_code
     if status_code in [200, 204]:
         return True
-    elif status_code == 401:
+    else:
+        f = open("errors.log", "a")
+        f.write(str(response.json())+"\n\n")
+        f.close()
+        if status_code == 401:
         raise(UnauthorizedException)
     elif status_code == 403:
         raise(ForbiddenException)

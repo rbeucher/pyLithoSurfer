@@ -46,7 +46,7 @@ class SampleWithLocation(APIRequests):
         return records   
     
     def new(self, debug=False):
-        self._send_payload(session.post, debug)
+        return self._send_payload(session.post, debug)
     
     def update(self, debug=False):
-        self._send_payload(session.put, debug)
+        return self._send_payload(session.put, debug)

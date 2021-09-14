@@ -115,11 +115,13 @@ class SampleWithLocationUploader(object):
             lat = loc_args.get("lat")
             lon = loc_args.get("lon")
             name = samp_args.get("name") 
+            igsn = samp_args.get("igsn", None) 
             
             query = {"locationCriteria.lon.greaterThan": lon - 0.001,
                      "locationCriteria.lon.lessThan": lon + 0.001,
                      "locationCriteria.lat.greaterThan": lat - 0.001,
                      "locationCriteria.lat.lessThan": lat + 0.001,
+                     "igsn.equals": igsn, 
                      "name.equals": name}
 
             response = SampleWithLocation.query(query)
