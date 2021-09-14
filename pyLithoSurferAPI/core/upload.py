@@ -22,6 +22,7 @@ class SampleWithLocationUploader(object):
     def validate(self):
 
         # Validate Samples
+        self.samples_df = self.samples_df.drop_duplicates(subset=["name"])
         self.samples_df = SampleSchema.validate(self.samples_df)
         
         if "materialId" not in self.samples_df.columns:
@@ -114,8 +115,7 @@ class SampleWithLocationUploader(object):
             name = samp_args.get("name") 
             igsn = samp_args.get("igsn", None) 
             
-            query = {#"igsn.equals": igsn, 
-                     "dataPackageId.equals": self.datapackageId,
+            query = {"dataPackageId.equals": self.datapackageId,
                      "name.equals": name}
 
             response = SampleWithLocation.query(query)

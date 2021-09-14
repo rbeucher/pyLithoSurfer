@@ -29,13 +29,13 @@ def check_response(response):
         f.write(str(response.json())+"\n\n")
         f.close()
         if status_code == 401:
-        raise(UnauthorizedException)
-    elif status_code == 403:
-        raise(ForbiddenException)
-    elif status_code == 404:
-        raise(NotFoundException)
-    elif status_code == 500:
-        raise(ItemNotFoundException)
+            raise(UnauthorizedException)
+        elif status_code == 403:
+            raise(ForbiddenException)
+        elif status_code == 404:
+            raise(NotFoundException)
+        elif status_code == 500:
+            raise(ItemNotFoundException)
 
 class APIRequests(ABC):
 
