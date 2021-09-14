@@ -71,9 +71,6 @@ class SampleWithLocationUploader(object):
         # Validate Location
         self.locations_df = LocationSchema.validate(self.locations_df)
 
-        if "name" not in self.locations_df.columns:
-            self.locations_df["name"] = self.samples_df.reindex(self.locations_df.index).copy()["name"]
-
         if "celestialId" not in self.locations_df.columns:
             if "celestialName" in self.locations_df.columns:
                 self.locations_df["celestialId"] = self.locations_df.celestialName.map(get_id(LCelestial))
@@ -117,11 +114,8 @@ class SampleWithLocationUploader(object):
             name = samp_args.get("name") 
             igsn = samp_args.get("igsn", None) 
             
-            query = {"locationCriteria.lon.greaterThan": lon - 0.001,
-                     "locationCriteria.lon.lessThan": lon + 0.001,
-                     "locationCriteria.lat.greaterThan": lat - 0.001,
-                     "locationCriteria.lat.lessThan": lat + 0.001,
-                     "igsn.equals": igsn, 
+            query = {#"igsn.equals": igsn, 
+                     "dataPackageId.equals": self.datapackageId,
                      "name.equals": name}
 
             response = SampleWithLocation.query(query)
@@ -138,7 +132,7 @@ class SampleWithLocationUploader(object):
                 sample = Sample(**samp_args)    
            
                 try:
-                # Create SampleWithLocation object.
+                    # Create SampleWithLocation object.
                     SampWLocation = SampleWithLocation(location=location, sample=sample)
                     SampWLocation.new(debug=debug)
                 except Exception as e:
