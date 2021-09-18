@@ -3,6 +3,7 @@ from abc import ABC
 import json
 import pandas as pd
 import urllib
+from pyLithoSurferAPI.utilities import NumpyEncoder
 
 class ForbiddenException(Exception):
     pass

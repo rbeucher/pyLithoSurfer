@@ -27,9 +27,9 @@ class LGeoEvent(APIRequests):
     path = URL_BASE + "/api/core/l-geo-events"
 
 
-class LLab(object):
+class LLab(APIRequests):
 
-    path = URL_BASE + "/api/l-labs"
+    path = URL_BASE + "/api/core/labs"
 
 
 class LLithologyKind(object):

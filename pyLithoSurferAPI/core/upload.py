@@ -190,7 +190,7 @@ class SampleWithLocationUploader(object):
             self.samples_df.loc[index, "id"] = SampWLocation.sample.id
             self.samples_df.loc[index, "locationId"] = SampWLocation.location.id
 
-        with pd.ExcelWriter('output.xlsx') as writer:  
+        with pd.ExcelWriter('output.xlsx', mode='a') as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
             self.errors_df.to_excel(writer, sheet_name="Errors")   
@@ -241,11 +241,14 @@ class PersonUploader(object):
                     old_args.update(args)
                     args = old_args
 
-                args = {k:v for k, v in args.items() if k in Person().to_dict().keys()}
+                if update_strategy == "replace":
+                    for key, val in old_args.items():
+                        if key not in args.keys():
+                            args[key] = None
+
                 person = Person(**args)
                 person.id = person_id
                 person.update()
-
 
             self.persons_df.loc[index, "id"] = person_id
 

@@ -10,7 +10,6 @@ class Archive(APIRequests):
 class DataPoint(APIRequests):
 
     path = URL_BASE + "/api/core/data-points"
-    mandatory_args = ["dataStructure"]
 
 
 class Flag(APIRequests):

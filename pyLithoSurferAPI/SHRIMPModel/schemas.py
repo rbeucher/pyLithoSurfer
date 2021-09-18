@@ -24,7 +24,7 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     instrumentalMassFractionationIMFFactor: Optional[Series[pa.Float]]
     machineId: Optional[Series[pa.Int64]]
     machineName: Optional[Series[pa.String]]
-    mineralOfInterestId: Optional[Series[pa.Int64]]
+    mineralOfInterestId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     mineralOfInterestName: Optional[Series[pa.String]]
     mountCoating: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     mountIGSN: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -35,6 +35,8 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     refMaterialName: Optional[Series[pa.String]]
     sampleFormatId: Optional[Series[pa.Int64]]
     sampleFormatName: Optional[Series[pa.String]]
+    locationId: Series[pa.Int64] 
+    sampleId: Series[pa.Int64]
 
 
 class SHRIMPAgeSchema(pa.SchemaModel):

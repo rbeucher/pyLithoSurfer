@@ -20,37 +20,45 @@ class SHRIMPDataPointCRUD(APIRequests):
         self.dataPoint = dataPoint
         self.shrimpDataPoint = shrimpDataPoint
         self.dataPointID = dataPointID
-
         self.id = id 
 
-     # POST
-    def new(self, debug=False):
+    def _send_payload(self, func, debug=False):
         data = {}
         
         dataPoint = self.dataPoint.to_dict()
-        if "id" in dataPoint.keys():
-            dataPoint.pop("id")
         data["dataPointDTO"] = dataPoint
         shrimpDataPoint = self.shrimpDataPoint.to_dict()
-        if "id" in shrimpDataPoint.keys():
-            shrimpDataPoint.pop("id")
         data["shrimpdataPointDTO"] = shrimpDataPoint 
+        data["dataPointId"] = self.dataPointID
+        data["dataPointDTO"]["shrimpdataPointId"] = self.id
+        data["id"] = self.id
 
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = session.post(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        
         if debug:
             print(response.json())
         check_response(response)
+        
         response = response.json()
+        
         if "id" in response.keys():
             self.id = response["id"]
+        
         if "dataPointDTO" in response.keys() and "id" in response["dataPointDTO"].keys():
             self.dataPoint.id = response["dataPointDTO"]["id"]
             self.dataPointID = self.dataPoint.id
+        
         if "shrimpdataPointDTO" in response.keys() and "id" in response["shrimpdataPointDTO"].keys():
             self.shrimpDataPoint.id = response["shrimpdataPointDTO"]["id"]
-        return response   
+        return response
+
+    def new(self, debug=False):
+        return self._send_payload(session.post, debug)
+    
+    def update(self, debug=False):
+        return self._send_payload(session.put, debug)
     
