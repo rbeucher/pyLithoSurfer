@@ -150,35 +150,44 @@ class SHRIMPDataPointUploader(object):
 
 class SHRIMPAgeUploader(SHRIMPDataPointUploader):
 
-    def __init__(self, datapackageId, locations_df, samples_df, shrimp_datapoints_df, shrimp_ages_df):
-        
-        super().__init__(datapackageId, locations_df, samples_df, shrimp_datapoints_df)
+    shrimp_age_keys = ["ageGroupId", "ageGroupName", "ageTypeId",
+     "ageTypeName", "calcName", "id", "mswd",
+     "numberAnalysesCombined", "rmQcTest"]
+
+    statement_keys = ["calculatedConfidence", "dataPointId", "description",
+     "geoEventAtAgeId", "humanConfidence", "statementId",
+     "relevance", "tempAtAgeId", "tempGradientId"] 
+
+    geoEvent_keys = ["age", "ageError", "errorTypeId", "errorTypeName",
+    "geoEventId", "geoEventName"]
+    
+    def __init__(self, datapackageId, shrimp_ages_df):
+
+        self.datapackageId = datapackageId 
         self.shrimp_ages_df = shrimp_ages_df
         self.validated = False
 
     def validate(self):
-        super().validate()
-
 
         self.shrimp_ages_df = SHRIMPDataPointSchema.validate(self.shrimp_ages_df)
 
         if "errorTypeId" not in self.shrimp_ages_df.columns:
             if "errorTypeName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["errorTypeId"] = self.shrimp_ages_df.errorTypeName.apply(LErrorType.get_id_from_name)
+                self.shrimp_ages_df["errorTypeId"] = self.shrimp_ages_df.errorTypeName.map(get_id(LErrorType))
             else:
                 self.shrimp_ages_df["errorTypeId"] = LErrorType.get_id_from_name("Unknown")
                 self.shrimp_ages_df["errorTypeName"] = "Unknown"
         
         if "geoEventId" not in self.shrimp_ages_df.columns:
             if "geoEventName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["geoEventId"] = self.shrimp_ages_df.geoEventName.apply(LGeoEvent.get_id_from_name)
+                self.shrimp_ages_df["geoEventId"] = self.shrimp_ages_df.geoEventName.map(get_id(LGeoEvent))
             else:
                 self.shrimp_ages_df["geoEventId"] = LGeoEvent.get_id_from_name("Unknown")
                 self.shrimp_ages_df["geoEventName"] = "Unknown"
         
         if "ageTypeId" not in self.shrimp_ages_df.columns:
             if "ageTypeName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["ageTypeId"] = self.shrimp_ages_df.ageTypeName.apply(LSHRIMPAgeType.get_id_from_name)
+                self.shrimp_ages_df["ageTypeId"] = self.shrimp_ages_df.ageTypeName.map(get_id(LSHRIMPAgeType))
             else:
                 self.shrimp_ages_df["ageTypeId"] = LSHRIMPAgeType.get_id_from_name("Unknown")
                 self.shrimp_ages_df["ageTypeName"] = "Unknown"
@@ -186,33 +195,114 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
         self.shrimp_ages_df = self.shrimp_ages_df.replace({np.nan: None})
         self.shrimp_ages_df = SHRIMPDataPointSchema.validate(self.shrimp_ages_df)
 
-    def upload(self):
-        super().upload()
+    def upload(self, update=False, update_strategy="merge_keep", debug=False):
         
         self.shrimp_ages_df["id"] = None
-        
+        self.errors_df = pd.DataFrame(columns=["id", "exception"])
+       
         print("Upload SHRIMPAges")
 
-        for index in tqdm(self.samples_df.index):
-            
-            # Create a Statement
-            statement = Statement()
-            statement.dataPointId = self.shrimp_datapoints_df.loc[index, "id"]
-            
-            # Create a geoEvent
+        for index in tqdm(self.shrimp_ages_df.index):
+
             args = self.shrimp_ages_df.loc[index].to_dict()
-            ageTypeId = args.pop("ageTypeId")
-            ageTypeName = args.pop("ageTypeName")
-            args.pop("id")
-            geo_event = GeoeventAtAge(**args)
+            stat_args = {k:v for k,v in args if k in self.statement_keys}
+            event_args = {k:v for k,v in args if k in self.geoEvent_keys}
+            shrimp_age_args = {k:v for k,v in args if k in self.shrimp_age_keys}
+
+            query = {"geoEventAtAgeLithoCriteria.age.equals": args["age"],
+                     "geoEventAtAgeLithoCriteria.statementCriteria.dataPointId.equals": args["dataPointId"]}
+        
+            response = SHRIMPAgeCRUD.query(query)
+            records = response.json()
             
-            # Create a SHRIMPAge
-            shrimp_age = SHRIMPAge(ageTypeId=ageTypeId)        
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+            elif len(records) > 1:
+                existing_id = records[0]["id"]
+            else:
+                existing_id = None
+
+            if existing_id is None:
+
+                # Create a Statement
+                statement = Statement()
+                statement.dataPointId = self.shrimp_datapoints_df.loc[index, "id"]
             
-            # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
-            # the GeoEvent
-            shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
-            shrimp_age_crud.new(debug=False)
+                # Create a geoEvent
+                ageTypeId = args.pop("ageTypeId")
+                ageTypeName = args.pop("ageTypeName")
+                geo_event = GeoeventAtAge(**args)
+            
+                # Create a SHRIMPAge
+                shrimp_age = SHRIMPAge(ageTypeId=ageTypeId)        
+            
+                # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
+                # the GeoEvent
+                shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
+                shrimp_age_crud.new(debug=False)
+                self.shrimp_ages_df.loc[index, "id"] = shrimp_age.id
+
+            elif update:
+
+                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
+                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
+                
+                old_stat_args = records[0]["statementDTO"]
+                old_event_args = records[0]["geoEventAtAgeDTO"]
+                old_shrimp_age_args = records[0]["shrimpageDTO"]
+                
+                old_stat_args = {k:v for k,v in old_stat_args.items() if v is not None}
+                old_event_args = {k:v for k,v in old_event_args.items() if v is not None}
+                old_shrimp_age_args = {k:v for k,v in old_shrimp_age_args.items() if v is not None}
+
+                if update_strategy == "merge_keep":
+                    stat_args.update(old_stat_args)
+                    event_args.update(old_event_args)
+                    shrimp_age_args.update(old_shrimp_age_args)
+                
+                if update_strategy == "merge_replace":
+                    old_stat_args.update(stat_args)
+                    old_event_args.update(event_args)
+                    old_shrimp_age_args.update(shrimp_age_args)
+                    stat_args = old_stat_args
+                    shrimp_dpts = old_event_args
+                    shrimp_age = shrimp_age_args
+
+                if update_strategy == "replace":
+                    for key, val in old_stat_args.items():
+                        if key not in stat_args.keys():
+                            stat_args[key] = None
+                    for key, val in old_event_args.items():
+                        if key not in event_args.keys():
+                            event_args[key] = None   
+                    for key, val in old_shrimp_age_args.items():
+                        if key not in shrimp_age_args.keys():
+                            shrimp_age_args[key] = None   
+
+                stat_args["id"] = old_stat_args["id"]
+                event_args["id"] = old_event_args["id"]
+                shrimp_age_args["id"] = old_shrimp_age_args["id"]
+
+                try:
+
+                    # Create a Statement
+                    statement = Statement(**stat_args)
+            
+                    # Create a geoEvent
+                    geo_event = GeoeventAtAge(**event_args)
+            
+                    # Create a SHRIMPAge
+                    shrimp_age = SHRIMPAge(**shrimp_age_args)        
+            
+                    # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
+                    # the GeoEvent
+                    shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
+                    shrimp_age_crud.id = shrimp_age.id
+                    shrimp_age_crud.update(debug=False)
+                    self.shrimp_ages_df.loc[index, "id"] = shrimp_age.id
+
+                except Exception as e:
+                    self.errors_df.loc[index] = [self.id, str(type(e))]
 
         with pd.ExcelWriter('output.xlsx', mode='a') as writer:  
             self.shrimp_ages_df.to_excel(writer, sheet_name='SHRIMPAge')

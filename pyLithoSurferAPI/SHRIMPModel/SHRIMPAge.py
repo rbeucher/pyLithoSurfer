@@ -23,20 +23,18 @@ class SHRIMPAgeCRUD(APIRequests):
         self.shrimpAge = shrimpAge
         self.id = id 
 
-    def new(self, debug=False):
+    def _send_payload(self, func, debug=False):
+
         data = {}
         data["geoEventAtAgeExtendsStatementDTO"] = {}
+
         geoeventAtAge = self.geoeventAtAge.to_dict()
-        if "id" in geoeventAtAge.keys():
-            geoeventAtAge.pop("id")
         data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"] = geoeventAtAge
+         
         statement = self.statement.to_dict()
-        if "id" in statement.keys():
-            statement.pop("id")
         data["geoEventAtAgeExtendsStatementDTO"]["statementDTO"] = statement
+        
         shrimpAge = self.shrimpAge.to_dict()
-        if "id" in shrimpAge.keys():
-            shrimpAge.pop("id")
         data["shrimpageDTO"] = shrimpAge
 
         headers = session.headers
@@ -44,17 +42,29 @@ class SHRIMPAgeCRUD(APIRequests):
         headers["Content-Type"] = "application/json"
 
         response = session.post(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        
         if debug:
             print(response.json())
         check_response(response)
         response = response.json()
+        
         if "id" in response.keys():
             self.id = response["id"]
+        
         if "geoeventAtAge" in response.keys() and "id" in response["geoeventAtAge"].keys():
             self.geoeventAtAge.id = response["geoeventAtAge"]["id"]
             self.geoeventAtAgeID = self.geoeventAtAge.id
+        
         if "statement" in response.keys() and "id" in response["statement"].keys():
             self.statement.id = response["statement"]["id"]
+        
         if "shrimpAge" in response.keys() and "id" in response["shrimpAge"].keys():
             self.shrimpAge.id = response["shrimpAge"]["id"]
-        return response   
+        
+        return response  
+
+    def new(self, debug=False):
+        return self._send_payload(session.post, debug)
+    
+    def update(self, debug=False):
+        return self._send_payload(session.put, debug) 

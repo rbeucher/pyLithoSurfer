@@ -51,3 +51,21 @@ class SHRIMPAgeSchema(pa.SchemaModel):
     numberAnalysesCombined: Optional[Series[pa.Int64]]
     rmQcTest: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
 
+    # GeoEvent
+    age: Optional[Series[pa.Float]]
+    ageError: Optional[Series[pa.Float]]
+    errorTypeId: Optional[Series[pa.Int64]]
+    errorTypeName: Optional[Series[pa.String]]
+    geoEventId:  Optional[Series[pa.Int64]]
+    geoEventName: Optional[Series[pa.String]]
+
+    # Statement
+    calculatedConfidence: Optional[Series[pa.Float]]
+    dataPointId: Series[pa.Int64]
+    description: Optional[Series[pa.String]]
+    geoEventAtAgeId: Optional[Series[pa.Int64]]
+    humanConfidence: Optional[Series[pa.Float]]
+    statementId: Optional[Series[pa.Int64]]
+    relevance: Optional[Series[pa.Float]]
+    tempAtAgeId: Optional[Series[pa.Int64]]
+    tempGradientId: Optional[Series[pa.Int64]]
