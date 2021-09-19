@@ -32,16 +32,6 @@ class LLab(APIRequests):
     path = URL_BASE + "/api/core/labs"
 
 
-class LLithologyKind(object):
-
-    path = URL_BASE + "/api/l-lithology-kinds"
-
-
-class LLocationCapture(APIRequests):
-
-    path = URL_BASE + "/api/l-loc-captures"
-
-
 class LLocationKind(APIRequests):
 
     path = URL_BASE + "/api/core/l-location-kinds"

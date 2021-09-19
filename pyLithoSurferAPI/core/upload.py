@@ -9,6 +9,7 @@ from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+import os
 
 
 class SampleWithLocationUploader(object):
@@ -22,7 +23,6 @@ class SampleWithLocationUploader(object):
     def validate(self):
 
         # Validate Samples
-        self.samples_df = self.samples_df.drop_duplicates(subset=["name"])
         self.samples_df = SampleSchema.validate(self.samples_df)
         
         if "materialId" not in self.samples_df.columns:
@@ -190,7 +190,12 @@ class SampleWithLocationUploader(object):
             self.samples_df.loc[index, "id"] = SampWLocation.sample.id
             self.samples_df.loc[index, "locationId"] = SampWLocation.location.id
 
-        with pd.ExcelWriter('output.xlsx', mode='a') as writer:  
+        if os.path.isfile("output.xlsx"):
+            mode = "a"
+        else:
+            mode = "w"
+
+        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
             self.errors_df.to_excel(writer, sheet_name="Errors")   

@@ -47,14 +47,12 @@ class APIRequests(ABC):
     # GET ALL
     @classmethod
     def get_all(cls):
-        response = session.get(cls.path, data={"size":222222})
-        check_response(response)
-        records = response.json()
-        return pd.DataFrame.from_records(records)
+        return cls.get_entries(cls.count())
     
     # GET N ENTRIES
-    def get_entries(self, nentries=1):
-        response = session.get(self.path, data={"size": nentries})
+    @classmethod
+    def get_entries(cls, nentries=1):
+        response = session.get(cls.path, data={"size": nentries})
         check_response(response)
         records = response.json()
         return pd.DataFrame.from_records(records)
