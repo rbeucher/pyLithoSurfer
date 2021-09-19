@@ -41,7 +41,6 @@ class SHRIMPAgeCRUD(APIRequests):
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        print(data)
         response = session.post(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         
         if debug:

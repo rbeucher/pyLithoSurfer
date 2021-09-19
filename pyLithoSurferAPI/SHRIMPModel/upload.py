@@ -193,7 +193,11 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
         
         if "geoEventId" not in self.shrimp_ages_df.columns:
             if "geoEventName" in self.shrimp_ages_df.columns:
-                self.shrimp_ages_df["geoEventId"] = self.shrimp_ages_df.geoEventName.map(get_id(LGeoEvent))
+                events = self.shrimp_ages_df.geoEventName.unique()
+                mapping = {}
+                for event in events:
+                    mapping[event] = LGeoEvent.get_id_from_name(event)
+                self.shrimp_ages_df["geoEventId"] = self.shrimp_ages_df.geoEventName.map(mapping)
             else:
                 self.shrimp_ages_df["geoEventId"] = LGeoEvent.get_id_from_name("Unknown")
                 self.shrimp_ages_df["geoEventName"] = "Unknown"
@@ -239,7 +243,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
 
                 # Create a Statement
                 statement = Statement()
-                statement.dataPointId = self.shrimp_ages_df.loc[index, "id"]
+                statement.dataPointId = self.shrimp_ages_df.loc[index, "dataPointId"]
             
                 # Create a geoEvent
                 ageTypeId = args.pop("ageTypeId")
