@@ -326,12 +326,11 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                     geo_event = GeoeventAtAge(**event_args)
             
                     # Create a SHRIMPAge
-                    shrimp_age = SHRIMPAge(**shrimp_age_args)        
+                    shrimp_age = SHRIMPAge(**shrimp_age_args)     
             
                     # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
                     # the GeoEvent
                     shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
-                    shrimp_age_crud.id = shrimp_age.id
                     shrimp_age_crud.update()
                     self.shrimp_ages_df.loc[index, "id"] = shrimp_age_crud.id
 

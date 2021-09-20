@@ -33,9 +33,14 @@ class SHRIMPAgeCRUD(APIRequests):
          
         statement = self.statement.to_dict()
         data["geoEventAtAgeExtendsStatementDTO"]["statementDTO"] = statement
-        
+        data["geoEventAtAgeExtendsStatementDTO"]["statementDTO"]["geoEventAtAgeId"] = geoeventAtAge["id"] 
+
         shrimpAge = self.shrimpAge.to_dict()
         data["shrimpageDTO"] = shrimpAge
+
+        data["geoEventAtAgeExtendsStatementDTO"]["id"] = shrimpAge["id"]
+        data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["id"] = geoeventAtAge["id"]
+        data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["shrimpageId"] = shrimpAge["id"]
 
         headers = session.headers
         headers["Accept"] = "application/json"
@@ -48,16 +53,6 @@ class SHRIMPAgeCRUD(APIRequests):
         
         if "id" in response.keys():
             self.id = response["id"]
-        
-        if "geoeventAtAge" in response.keys() and "id" in response["geoeventAtAge"].keys():
-            self.geoeventAtAge.id = response["geoeventAtAge"]["id"]
-            self.geoeventAtAgeID = self.geoeventAtAge.id
-        
-        if "statement" in response.keys() and "id" in response["statement"].keys():
-            self.statement.id = response["statement"]["id"]
-        
-        if "shrimpAge" in response.keys() and "id" in response["shrimpAge"].keys():
-            self.shrimpAge.id = response["shrimpAge"]["id"]
         
         return response  
 
