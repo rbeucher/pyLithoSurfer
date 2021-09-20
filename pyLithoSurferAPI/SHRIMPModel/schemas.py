@@ -35,8 +35,8 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     refMaterialName: Optional[Series[pa.String]]
     sampleFormatId: Optional[Series[pa.Int64]]
     sampleFormatName: Optional[Series[pa.String]]
-    locationId: Series[pa.Int64] 
-    sampleId: Series[pa.Int64]
+    locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
+    sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
 
 
 class SHRIMPAgeSchema(pa.SchemaModel):
@@ -61,7 +61,7 @@ class SHRIMPAgeSchema(pa.SchemaModel):
 
     # Statement
     calculatedConfidence: Optional[Series[pa.Float]]
-    dataPointId: Series[pa.Int64]
+    dataPointId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
     description: Optional[Series[pa.String]]
     geoEventAtAgeId: Optional[Series[pa.Int64]]
     humanConfidence: Optional[Series[pa.Float]]

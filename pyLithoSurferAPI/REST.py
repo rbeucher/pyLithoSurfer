@@ -29,6 +29,7 @@ def check_response(response):
         f = open("errors.log", "a")
         f.write(str(response.json())+"\n\n")
         f.close()
+        print(response.json())
         if status_code == 401:
             raise(UnauthorizedException)
         elif status_code == 403:
@@ -58,7 +59,7 @@ class APIRequests(ABC):
         return pd.DataFrame.from_records(records)
 
     # POST
-    def new(self, debug=False):
+    def new(self):
         data = self.to_dict()
         if "id" in data.keys():
             data.pop("id")
@@ -67,8 +68,6 @@ class APIRequests(ABC):
         headers["Content-Type"] = "application/json"
 
         response = session.post(self.path, data=json.dumps(data), headers=headers)
-        if debug:
-            print(response.json())
         check_response(response)
         response = response.json()
         if "id" in response.keys():
@@ -76,13 +75,11 @@ class APIRequests(ABC):
         return response
 
     # PUT
-    def update(self, debug=False):
+    def update(self):
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
         response = session.put(self.path, data=self.to_json(), headers=headers)
-        if debug:
-            print(response.json())
         check_response(response)
         return response
 
@@ -95,7 +92,7 @@ class APIRequests(ABC):
         return response.json()   
 
     # DELETE
-    def delete(self, debug=False):
+    def delete(self):
         headers = session.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"

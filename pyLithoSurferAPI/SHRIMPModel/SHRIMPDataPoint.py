@@ -22,7 +22,7 @@ class SHRIMPDataPointCRUD(APIRequests):
         self.dataPointID = dataPointID
         self.id = id 
 
-    def _send_payload(self, func, debug=False):
+    def _send_payload(self, func):
         data = {}
         
         dataPoint = self.dataPoint.to_dict()
@@ -38,9 +38,6 @@ class SHRIMPDataPointCRUD(APIRequests):
         headers["Content-Type"] = "application/json"
 
         response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
-        
-        if debug:
-            print(response.json())
         check_response(response)
         
         response = response.json()
@@ -56,9 +53,9 @@ class SHRIMPDataPointCRUD(APIRequests):
             self.shrimpDataPoint.id = response["shrimpdataPointDTO"]["id"]
         return response
 
-    def new(self, debug=False):
-        return self._send_payload(session.post, debug)
+    def new(self):
+        return self._send_payload(session.post)
     
-    def update(self, debug=False):
-        return self._send_payload(session.put, debug)
+    def update(self):
+        return self._send_payload(session.put)
     

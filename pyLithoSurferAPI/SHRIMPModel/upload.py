@@ -1,6 +1,6 @@
 from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.SHRIMPModel.schemas import SHRIMPDataPointSchema, SHRIMPAgeSchema
-from pyLithoSurferAPI.core.tables import DataPoint, Statement, GeoeventAtAge
+from pyLithoSurferAPI.core.tables import DataPoint, Statement, GeoeventAtAge, Material
 from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import SHRIMPDataPoint, SHRIMPDataPointCRUD
 from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
 from pyLithoSurferAPI.core.lists import LSHRIMPSampleFormat, LErrorType, LGeoEvent, LSHRIMPAgeType
@@ -24,7 +24,13 @@ class SHRIMPDataPointUploader(object):
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
 
         if "mineralOfInterestId" not in self.shrimp_datapoints_df.columns:
-            raise ValueError("Mineral Name lookup not implemented")
+            if "mineralOfInterestName" in self.shrimp_datapoints_df.columns:
+                materials = self.shrimp_datapoints_df.mineralOfInterestName.unique()
+                mapping = {}
+                for material in materials:
+                    mapping[material] = Material.get_id_from_name(material)
+                mapping["Unknown"] = None
+                self.shrimp_datapoints_df["mineralOfInterestId"] = self.shrimp_datapoints_df.mineralOfInterestName.map(mapping)
 
         if "sampleFormatId" not in self.shrimp_datapoints_df.columns:
             if "sampleFormatName" in self.shrimp_datapoints_df.columns:
@@ -37,7 +43,7 @@ class SHRIMPDataPointUploader(object):
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
         self.validated = True
 
-    def upload(self, update=False, update_strategy="merge_keep", debug=False):
+    def upload(self, update=False, update_strategy="merge_keep"):
         
         print("Upload SHRIMPDataPoints")
 
@@ -53,9 +59,12 @@ class SHRIMPDataPointUploader(object):
             shrimp_args = self.shrimp_datapoints_df.loc[index].to_dict()
             sampleId = shrimp_args.pop("sampleId")
             locationId = shrimp_args.pop("locationId")
+            if shrimp_args.get("dataPointId"):
+                shrimp_args.pop("dataPointId")
 
             dpts_args = {"dataPackageId": self.datapackageId,
                          "dataStructure": "UPB_SHRIMP",
+                         "dataEntityId": None,
                          "name": None,
                          "locationId": locationId,
                          "sampleId": sampleId}
@@ -78,7 +87,7 @@ class SHRIMPDataPointUploader(object):
             else:
                 existing_id = None
 
-            if existing_id is None: 
+            if existing_id is None:
 
                 # Create DataPoint
                 datapoint = DataPoint(**dpts_args)
@@ -86,17 +95,18 @@ class SHRIMPDataPointUploader(object):
                 # Create SHRIMPDataPoint
                 shrimp_datapoint = SHRIMPDataPoint(**shrimp_args)
 
-                # Use SHRIMPDataPointCRUD to create the Datapoint and
-                # the SHRIMPDatapoint
-                SHRIMPDataptsCRUD = SHRIMPDataPointCRUD(datapoint, shrimp_datapoint) 
-                _ = SHRIMPDataptsCRUD.new(debug=debug) 
-
-                # Recover Datapoint
-                datapoint = SHRIMPDataptsCRUD.dataPoint
-                shrimp_datapoint = SHRIMPDataptsCRUD.shrimpDataPoint
-                self.shrimp_datapoints_df.loc[index, "id"] = SHRIMPDataptsCRUD.id
-                self.shrimp_datapoints_df.loc[index, "dataPointId"] = datapoint.id
+                try:
+                    # Use SHRIMPDataPointCRUD to create the Datapoint and
+                    # the SHRIMPDatapoint
+                    SHRIMPDataptsCRUD = SHRIMPDataPointCRUD(datapoint, shrimp_datapoint) 
+                    SHRIMPDataptsCRUD.new() 
                 
+                    # Recover Datapoint
+                    self.shrimp_datapoints_df.loc[index, "id"] = SHRIMPDataptsCRUD.id
+                    self.shrimp_datapoints_df.loc[index, "dataPointId"] = SHRIMPDataptsCRUD.dataPoint.id
+
+                except Exception as e:
+                    self.errors_df.loc[index] = [datapoint.id, str(type(e))]                
 
             elif update:
 
@@ -141,7 +151,9 @@ class SHRIMPDataPointUploader(object):
                     SHRIMPDataptsCRUD = SHRIMPDataPointCRUD(datapoint, shrimp_datapoint) 
                     SHRIMPDataptsCRUD.id = shrimp_datapoint.id
                     SHRIMPDataptsCRUD.dataPointId = datapoint.id
-                    SHRIMPDataptsCRUD.update(debug=debug)
+                    SHRIMPDataptsCRUD.dataPoint.dataEntityId = shrimp_datapoint.id
+                    SHRIMPDataptsCRUD.dataPoint.shrimp_datapoint_id = shrimp_datapoint.id
+                    SHRIMPDataptsCRUD.update()
                     self.shrimp_datapoints_df.loc[index, "id"] = SHRIMPDataptsCRUD.id
                     self.shrimp_datapoints_df.loc[index, "dataPointId"] = datapoint.id
 
@@ -212,7 +224,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
         self.shrimp_ages_df = self.shrimp_ages_df.replace({np.nan: None})
         self.shrimp_ages_df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
 
-    def upload(self, update=False, update_strategy="merge_keep", debug=False):
+    def upload(self, update=False, update_strategy="merge_keep"):
         
         self.shrimp_ages_df["id"] = None
         self.errors_df = pd.DataFrame(columns=["id", "exception"])
@@ -222,6 +234,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
         for index in tqdm(self.shrimp_ages_df.index):
 
             args = self.shrimp_ages_df.loc[index].to_dict()
+            args.pop("id")
             stat_args = {k:v for k,v in args.items() if k in self.statement_keys}
             event_args = {k:v for k,v in args.items() if k in self.geoEvent_keys}
             shrimp_age_args = {k:v for k,v in args.items() if k in self.shrimp_age_keys}
@@ -257,7 +270,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                     # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
                     # the GeoEvent
                     shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
-                    shrimp_age_crud.new(debug=debug)
+                    shrimp_age_crud.new()
                     self.shrimp_ages_df.loc[index, "id"] = shrimp_age_crud.id
 
                 except Exception as e:
@@ -319,11 +332,11 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                     # the GeoEvent
                     shrimp_age_crud = SHRIMPAgeCRUD(geo_event, statement, shrimp_age)
                     shrimp_age_crud.id = shrimp_age.id
-                    shrimp_age_crud.update(debug=debug)
+                    shrimp_age_crud.update()
                     self.shrimp_ages_df.loc[index, "id"] = shrimp_age_crud.id
 
                 except Exception as e:
-                    self.errors_df.loc[index] = [self.id, str(type(e))]
+                    self.errors_df.loc[index] = [index, str(type(e))]
 
         if os.path.isfile("output.xlsx"):
             mode = "a"

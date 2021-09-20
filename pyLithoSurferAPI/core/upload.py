@@ -86,7 +86,7 @@ class SampleWithLocationUploader(object):
         self.validated = True
         return
 
-    def upload(self, update=False, update_strategy="merge_keep", debug=False):
+    def upload(self, update=False, update_strategy="merge_keep"):
 
         print("Upload Samples and Locations")
 
@@ -134,7 +134,7 @@ class SampleWithLocationUploader(object):
                 try:
                     # Create SampleWithLocation object.
                     SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.new(debug=debug)
+                    SampWLocation.new()
                 except Exception as e:
                     self.errors_df.loc[index] = [sample.name, str(type(e))]
 
@@ -179,7 +179,7 @@ class SampleWithLocationUploader(object):
                     # Create SampleWithLocation
                     SampWLocation = SampleWithLocation(location=location, sample=sample)
                     SampWLocation.id = sample_with_location_id
-                    SampWLocation.update(debug=debug)
+                    SampWLocation.update()
                 except Exception as e:
                     self.errors_df.loc[index] = [sample.name, str(type(e))]
 
@@ -212,7 +212,7 @@ class PersonUploader(object):
         self.persons_df = PersonSchema.validate(self.persons_df)
         return self.persons_df
 
-    def upload(self, update=False, update_strategy="merge_keep", debug=False):
+    def upload(self, update=False, update_strategy="merge_keep"):
         from pyLithoSurferAPI.core.person import get_person_id, Person
 
         self.persons_df["id"] = None
@@ -226,7 +226,7 @@ class PersonUploader(object):
             if (person_id is None):
                 
                 person = Person(**args)
-                person.new(debug=debug) 
+                person.new() 
                 person_id = person.id
 
             elif update:
