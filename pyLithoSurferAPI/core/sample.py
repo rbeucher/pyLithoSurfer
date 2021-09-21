@@ -1,6 +1,5 @@
 from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
-from pyLithoSurferAPI.REST import check_response
 from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.utilities import NumpyEncoder
 import json
@@ -34,7 +33,7 @@ class SampleWithLocation(APIRequests):
         headers["Content-Type"] = "application/json"
 
         response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
-        check_response(response)
+        response.raise_for_status()
 
         records = response.json()
         self.id = records["id"]

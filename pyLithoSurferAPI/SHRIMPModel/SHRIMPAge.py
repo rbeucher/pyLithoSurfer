@@ -1,6 +1,5 @@
 from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
-from pyLithoSurferAPI.REST import check_response
 from pyLithoSurferAPI.utilities import NumpyEncoder
 from pyLithoSurferAPI.core.tables import GeoeventAtAge
 from pyLithoSurferAPI.core.tables import Statement
@@ -47,8 +46,7 @@ class SHRIMPAgeCRUD(APIRequests):
         headers["Content-Type"] = "application/json"
 
         response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
-        
-        check_response(response)
+        response.raise_for_status() 
         response = response.json()
         
         if "id" in response.keys():

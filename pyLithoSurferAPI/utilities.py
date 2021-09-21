@@ -38,14 +38,10 @@ def generate_code(class_name, api_address, args, dest="./"):
 
 def get_elevation_from_google(lat: Union[float, np.float16, np.float32, np.float64] = 0., lon: Union[float, np.float16, np.float32, np.float64] = 0.):
     from . import session, URL_BASE
-    from .REST import check_response
     path = URL_BASE + "/api/other/elevation" + f"?lat={lat}&lon={lon}"
-    try:
-        response = session.get(path)
-        check_response(response)
-        return response.json()
-    except:
-        return None
+    response = session.get(path)
+    response.raise_for_status()
+    return response.json()
 
 
 def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):

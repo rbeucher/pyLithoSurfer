@@ -5,38 +5,6 @@ import pandas as pd
 import urllib
 from pyLithoSurferAPI.utilities import NumpyEncoder
 
-class ForbiddenException(Exception):
-    pass
-
-
-class UnauthorizedException(Exception):
-    pass
-
-
-class NotFoundException(Exception):
-    pass
-
-
-class ItemNotFoundException(Exception):
-    pass
-
-
-def check_response(response):
-    status_code = response.status_code
-    if status_code in [200, 201, 204]:
-        return True
-    else:
-        print(response.json())
-        if status_code == 401:
-            raise(UnauthorizedException)
-        elif status_code == 403:
-            raise(ForbiddenException)
-        elif status_code == 404:
-            raise(NotFoundException)
-        elif status_code == 500:
-            raise(ItemNotFoundException)
-        else:
-            raise(ValueError)
 
 class APIRequests(ABC):
 
@@ -54,7 +22,7 @@ class APIRequests(ABC):
     @classmethod
     def get_entries(cls, nentries=1):
         response = session.get(cls.path, data={"size": nentries})
-        check_response(response)
+        response.raise_for_status()
         records = response.json()
         return pd.DataFrame.from_records(records)
 
@@ -68,7 +36,7 @@ class APIRequests(ABC):
         headers["Content-Type"] = "application/json"
 
         response = session.post(self.path, data=json.dumps(data), headers=headers)
-        check_response(response)
+        response.raise_for_status()
         response = response.json()
         if "id" in response.keys():
             self.id = response["id"]
@@ -80,7 +48,7 @@ class APIRequests(ABC):
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
         response = session.put(self.path, data=self.to_json(), headers=headers)
-        check_response(response)
+        response.raise_for_status()
         return response
 
     # COUNT
@@ -88,7 +56,7 @@ class APIRequests(ABC):
     def count(cls):
         path = cls.path + "/" + "count"
         response = session.get(path)
-        check_response(response)
+        response.raise_for_status()
         return response.json()   
 
     # DELETE
@@ -98,14 +66,14 @@ class APIRequests(ABC):
         headers["Content-Type"] = "application/json"
         path = self.path + "/" + str(self.id)
         response = session.delete(path)
-        check_response(response)
+        response.raise_for_status()
         return response
 
     # GET FROM ID
     def get_from_id(self, id_value):
         path = self.path + "/" + str(id_value)
         response = session.get(path)
-        check_response(response)
+        response.raise_for_status()
         data = response.json()
         self.__init__(**data)
         return response
@@ -117,6 +85,7 @@ class APIRequests(ABC):
         headers["Accept"] = "application/json"
         path = cls.path + "?" + str(query)
         response = session.get(path)
+        response.raise_for_status()
         return response
 
     @classmethod
