@@ -23,12 +23,9 @@ class ItemNotFoundException(Exception):
 
 def check_response(response):
     status_code = response.status_code
-    if status_code in [200, 204]:
+    if status_code in [200, 201, 204]:
         return True
     else:
-        f = open("errors.log", "a")
-        f.write(str(response.json())+"\n\n")
-        f.close()
         print(response.json())
         if status_code == 401:
             raise(UnauthorizedException)
@@ -38,10 +35,13 @@ def check_response(response):
             raise(NotFoundException)
         elif status_code == 500:
             raise(ItemNotFoundException)
+        else:
+            raise(ValueError)
 
 class APIRequests(ABC):
 
     def __init__(self, **kwargs):
+        self.id = kwargs.pop("id") if "id" in kwargs.keys() else None
         for key, val in kwargs.items():
             setattr(self, key, val)
 
