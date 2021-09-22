@@ -65,9 +65,7 @@ class SampleWithLocationUploader(object):
                 self.samples_df["referenceElevationKindName"] = "Unknown"
         
         self.samples_df["dataPackageId"] = self.datapackageId
-        self.samples_df = self.samples_df.replace({np.nan: None})
         self.samples_df = SampleSchema.validate(self.samples_df)
-        self.samples_df = self.samples_df.replace({np.nan: None})
         
         # Validate Location
         self.locations_df = LocationSchema.validate(self.locations_df)
@@ -79,10 +77,7 @@ class SampleWithLocationUploader(object):
                 self.locations_df["celestialId"] = LCelestial.get_id_from_name("Earth")
                 self.locations_df["celestialName"] = "Earth"
 
-        self.locations_df = self.locations_df.replace({np.nan: None})
         self.locations_df = LocationSchema.validate(self.locations_df)
-        self.locations_df = self.locations_df.replace({np.nan: None})
-
         self.validated = True
         return
 
@@ -121,10 +116,38 @@ class SampleWithLocationUploader(object):
             response = SampleWithLocation.query(query)
             records = response.json() 
 
-            if records:
+            if len(records) == 1:
                 sample_with_location_id = records[0]["id"]
+
+            elif len(records) > 1:
+                
+                # Sometimes the same sample has been assigned different
+                # IGSN number...
+                # Lets take care of this
+                if "igsn" in samp_args.key():
+
+                    # Extract IGSN numbers
+                    igsn_dict = {}
+                    for record in records:
+                        sampDTO = record["sampleDTO"]
+                        if sampDTO.get("igsn"):
+                            igsn = sampDTO.pop("igsn")
+                            igsn_dict[igsn] = record
+
+                    if samp_args["igsn"] not in igsn_dict.keys():
+                        sample_with_location_id = None
+                    else:
+                        record_index = igsn_dict[samp_args["igsn"]]
+                        record = records[record_index]
+                        sample_with_location_id = record["id"]
+
+                else:
+                    print("Sample Already Exist")
+                    continue
+                
             else:
                 sample_with_location_id = None
+
 
             if sample_with_location_id is None: 
                
