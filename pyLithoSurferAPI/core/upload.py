@@ -1,5 +1,7 @@
 from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.core.tables import Material
+from pyLithoSurferAPI.core.tables import Archive
+from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
@@ -24,6 +26,14 @@ class SampleWithLocationUploader(object):
 
         # Validate Samples
         self.samples_df = SampleSchema.validate(self.samples_df)
+
+        if "archiveId" not in self.samples_df.columns:
+            if "archiveName" in self.samples_df.columns:
+                self.samples_df["archiveId"] = self.samples_df.archiveName.map(get_id(Archive))
+        
+        if "dataPackageId" not in self.samples_df.columns:
+            if "dataPackageName" in self.samples_df.columns:
+                self.samples_df["dataPackageId"] = self.samples_df.dataPackageName.map(get_id(DataPackage))
         
         if "materialId" not in self.samples_df.columns:
             if "materialName" in self.samples_df.columns:
@@ -32,9 +42,6 @@ class SampleWithLocationUploader(object):
                 for material in materials:
                     mapping[material] = Material.get_id_from_name(material)
                 self.samples_df["materialId"] = self.samples_df.materialName.map(mapping)
-            #else:
-            #    self.samples_df["materialId"] = Material.get_id_from_name("Unknown")
-            #    self.samples_df["materialName"] = "Unknown"
         
         if "sampleMethodId" not in self.samples_df.columns:
             if "sampleMethodName" in self.samples_df.columns:

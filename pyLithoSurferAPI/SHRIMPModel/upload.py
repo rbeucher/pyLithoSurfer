@@ -28,6 +28,10 @@ class SHRIMPDataPointUploader(object):
 
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
 
+        if "dataPackageId" not in self.samples_df.columns:
+            if "dataPackageName" in self.samples_df.columns:
+                self.samples_df["dataPackageId"] = self.samples_df.dataPackageName.map(get_id(DataPackage))
+        
         if "mineralOfInterestId" not in self.shrimp_datapoints_df.columns:
             if "mineralOfInterestName" in self.shrimp_datapoints_df.columns:
                 materials = self.shrimp_datapoints_df.mineralOfInterestName.unique()

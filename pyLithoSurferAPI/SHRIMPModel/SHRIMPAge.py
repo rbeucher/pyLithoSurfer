@@ -49,18 +49,11 @@ class SHRIMPAgeCRUD(APIRequests):
         response.raise_for_status() 
         response = response.json()
         
-        if "id" in response.keys():
-            self.id = response["id"]
-        
-        if "geoeventAtAge" in response.keys() and "id" in response["geoeventAtAge"].keys():
-            self.geoeventAtAge.id = response["geoeventAtAge"]["id"]
-            self.geoeventAtAgeID = self.geoeventAtAge.id
-        
-        if "statement" in response.keys() and "id" in response["statement"].keys():
-            self.statement.id = response["statement"]["id"]
-        
-        if "shrimpAge" in response.keys() and "id" in response["shrimpAge"].keys():
-            self.shrimpAge.id = response["shrimpAge"]["id"]
+        self.id = response["id"]
+        self.geoeventAtAge.id = response["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["id"]
+        self.geoeventAtAgeId = self.geoeventAtAge.id
+        self.statement.id = response["geoEventAtAgeExtendsStatementDTO"]["statementDTO"]["id"]
+        self.shrimpAge.id = response["shrimpAgeDTO"]["id"]
         
         return response  
 

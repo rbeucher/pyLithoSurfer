@@ -40,15 +40,12 @@ class SHRIMPDataPointCRUD(APIRequests):
         response.raise_for_status() 
         response = response.json()
         
-        if "id" in response.keys():
-            self.id = response["id"]
+        self.id = response["id"]
         
-        if "dataPointDTO" in response.keys() and "id" in response["dataPointDTO"].keys():
-            self.dataPoint.id = response["dataPointDTO"]["id"]
-            self.dataPointID = self.dataPoint.id
+        self.dataPoint.id = response["dataPointDTO"]["id"]
+        self.dataPointID = self.dataPoint.id
+        self.shrimpDataPoint.id = response["shrimpdataPointDTO"]["id"]
         
-        if "shrimpdataPointDTO" in response.keys() and "id" in response["shrimpdataPointDTO"].keys():
-            self.shrimpDataPoint.id = response["shrimpdataPointDTO"]["id"]
         return response
 
     def new(self):
