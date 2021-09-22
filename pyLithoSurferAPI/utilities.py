@@ -97,8 +97,8 @@ def migrate_lithology_to_mindat(lithologies):
     lit_excel["New_indices"] = lit_excel["New_indices"].astype("int32")
     
     mapping = pd.Series(lit_excel["New_indices"].values, index=lit_excel["Old Lithology 1.6"])
-    lithologies.replace({np.nan: 0, None: 0}, inplace=True)
-    lithologies = lithologies.map(mapping).astype("int32")
+    #lithologies.replace({np.nan: 0, None: 0}, inplace=True)
+    lithologies = lithologies.map(mapping)#.astype("int32")
     
     return lithologies
 

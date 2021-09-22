@@ -1,10 +1,14 @@
 import pandera as pa
 from pandera.typing import Index, DataFrame, Series
 from typing import Optional
-from pyLithoSurferAPI.core.lists import LElevationKind
+from pyLithoSurferAPI.core.lists import LElevationKind, LMachineType, LSHRIMPSampleFormat, LSHRIMPAgeGroup, LSHRIMPAgeType, LErrorType
 
 
 class SHRIMPDataPointSchema(pa.SchemaModel):
+
+    class Config:
+        name = "SHRIMPDataPointSchema"
+        strict = True
 
     calibrationExponent: Optional[Series[pa.Int64]]
     commonPbModel: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -23,7 +27,7 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     id: Optional[Series[pa.Int64]]
     instrumentalMassFractionationIMFFactor: Optional[Series[pa.Float]]
     machineId: Optional[Series[pa.Int64]]
-    machineName: Optional[Series[pa.String]]
+    machineName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LMachineType.get_all()["name"].to_list())
     mineralOfInterestId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     mineralOfInterestName: Optional[Series[pa.String]]
     mountCoating: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -34,17 +38,21 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     refMaterialId: Optional[Series[pa.Int64]]
     refMaterialName: Optional[Series[pa.String]]
     sampleFormatId: Optional[Series[pa.Int64]]
-    sampleFormatName: Optional[Series[pa.String]]
+    sampleFormatName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LSHRIMPSampleFormat.get_all()["name"].to_list())
     locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
 
 
 class SHRIMPAgeSchema(pa.SchemaModel):
 
+    class Config:
+        name = "SHRIMAgeSchema"
+        strict = True
+
     ageGroupId: Optional[Series[pa.Int64]]
-    ageGroupName: Optional[Series[pa.String]]
+    ageGroupName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LSHRIMPAgeGroup.get_all()["name"].to_list())
     ageTypeId: Optional[Series[pa.Int64]]
-    ageTypeName: Optional[Series[pa.String]]
+    ageTypeName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LSHRIMPAgeType.get_all()["name"].to_list())
     calcName: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Int64]]
     mswd: Optional[Series[pa.Float]]
@@ -55,7 +63,7 @@ class SHRIMPAgeSchema(pa.SchemaModel):
     age: Optional[Series[pa.Float]] = pa.Field( nullable=False, coerce=True)
     ageError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeId: Optional[Series[pa.Int64]] = pa.Field( nullable=True, coerce=True)
-    errorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    errorTypeName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LErrorType.get_all()["name"].to_list())
     geoEventId:  Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     geoEventName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 

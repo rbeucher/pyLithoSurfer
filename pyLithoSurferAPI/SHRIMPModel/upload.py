@@ -1,14 +1,19 @@
-from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
-from pyLithoSurferAPI.SHRIMPModel.schemas import SHRIMPDataPointSchema, SHRIMPAgeSchema
-from pyLithoSurferAPI.core.tables import DataPoint, Statement, GeoeventAtAge, Material
-from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import SHRIMPDataPoint, SHRIMPDataPointCRUD
-from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
-from pyLithoSurferAPI.core.lists import LSHRIMPSampleFormat, LErrorType, LGeoEvent, LSHRIMPAgeType
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+import os
+
 import numpy as np
 import pandas as pd
+from pyLithoSurferAPI.core.lists import (LErrorType, LGeoEvent, LSHRIMPAgeType,
+                                         LSHRIMPSampleFormat)
+from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
+                                          Statement)
+from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
+from pyLithoSurferAPI.SHRIMPModel.schemas import (SHRIMPAgeSchema,
+                                                  SHRIMPDataPointSchema)
+from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
+from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import (SHRIMPDataPoint,
+                                                          SHRIMPDataPointCRUD)
 from tqdm import tqdm
-import os
 
 
 class SHRIMPDataPointUploader(object):
@@ -221,7 +226,6 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                 self.shrimp_ages_df["ageTypeId"] = LSHRIMPAgeType.get_id_from_name("Unknown date")
                 self.shrimp_ages_df["ageTypeName"] = "Unknown date"
 
-        self.shrimp_ages_df = self.shrimp_ages_df.replace({np.nan: None})
         self.shrimp_ages_df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
 
     def upload(self, update=False, update_strategy="merge_keep"):

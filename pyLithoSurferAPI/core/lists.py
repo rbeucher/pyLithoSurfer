@@ -44,7 +44,7 @@ class LMachine2DataPointRole(APIRequests):
 
 class LMachineType(APIRequests):
 
-    path = URL_BASE + "/api/l-machine-types"
+    path = URL_BASE + "/api/core/l-machine-types"
 
 
 class LSampleKind(APIRequests):

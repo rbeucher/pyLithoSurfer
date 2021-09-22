@@ -1,18 +1,23 @@
 import pandera as pa
 from pandera.typing import Index, DataFrame, Series
 from typing import Optional
-from pyLithoSurferAPI.core.lists import LElevationKind
-
+from pyLithoSurferAPI.core.lists import LElevationKind, LLocationKind, LSampleKind, LSampleMethod, LCelestial, LErrorType, LGeoEvent
+from pyLithoSurferAPI.core.tables import Archive
+from pyLithoSurferAPI.core.dataPackage import DataPackage
 
 class SampleSchema(pa.SchemaModel):
+
+    class Config:
+        name = "SampleSchema"
+        strict = True
     
     archiveId: Optional[Series[pa.Int64]]
-    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=Archive.get_all()["name"].to_list())
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     dataPackageId: Optional[Series[pa.Int64]]
-    dataPackageName: Optional[Series[pa.String]]
+    dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
     description: Optional[Series[pa.String]] = pa.Field(nullable=True)
     id: Optional[Series[pa.Int64]]
     igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -20,7 +25,7 @@ class SampleSchema(pa.SchemaModel):
     igsnMintingTimestamp: Optional[Series[pa.DateTime]]
     locationId: Optional[Series[pa.Int64]]
     locationKindId: Optional[Series[pa.Int64]]
-    locationKindName: Optional[Series[pa.String]]
+    locationKindName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=LLocationKind.get_all()["name"].to_list())
     locationName: Optional[Series[pa.String]]
     materialId: Optional[Series[pa.Float]] = pa.Field(coerce=True, nullable=True)
     materialName: Optional[Series[pa.String]]  = pa.Field(coerce=True, nullable=True)
@@ -34,21 +39,25 @@ class SampleSchema(pa.SchemaModel):
     relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
     sampleKindId: Optional[Series[pa.Int64]]
-    sampleKindName: Optional[Series[pa.String]]
+    sampleKindName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LSampleKind.get_all()["name"].to_list())
     sampleMethodId: Optional[Series[pa.Int64]]
-    sampleMethodName: Optional[Series[pa.String]]
+    sampleMethodName: Optional[Series[pa.String]]= pa.Field(nullable=True, isin=LSampleMethod.get_all()["name"].to_list())
     sourceId: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     stratographicUnitId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     stratographicUnitName: Optional[Series[pa.String]]
 
 
 class LocationSchema(pa.SchemaModel):
+
+    class Config:
+        name = "LocationSchema"
+        strict = True
     
     calcName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     captureMethodId: Optional[Series[pa.Int64]]
     captureMethodName: Optional[Series[pa.String]]
     celestialId: Optional[Series[pa.Int64]]
-    celestialName: Optional[Series[pa.String]]
+    celestialName: Optional[Series[pa.String]] = pa.Field( nullable=False, isin=LCelestial.get_all()["name"].to_list())
     description: Optional[Series[pa.String]] = pa.Field( nullable=True)
     id: Optional[Series[pa.Int64]]
     lat: Series[pa.Float] = pa.Field( nullable=False, coerce=True, ge=-90, le=90)
@@ -59,9 +68,13 @@ class LocationSchema(pa.SchemaModel):
 
 class DataPointSchema(pa.SchemaModel):
 
+    class Config:
+        name = "DataPointSchema"
+        strict = True
+
     dataEntityId: Optional[Series[pa.Int64]]
     dataPackageId: Series[pa.Int64]
-    dataPackageName: Optional[Series[pa.String]]
+    dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
     dataStructure: Series[pa.String] = pa.Field()
     description: Optional[Series[pa.String]]
     externalDataHref: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -77,18 +90,26 @@ class DataPointSchema(pa.SchemaModel):
 
 
 class GeoEventAtAgeSchema(pa.SchemaModel):
-    
+
+    class Config:
+        name = "GeoEventAtAgeSchema"
+        strict = True
+
     age: Series[pa.Float]
     ageError: Optional[Series[pa.Float]]
     errorTypeId: Optional[Series[pa.Int64]]
-    errorTypeName: Optional[Series[pa.String]]
+    errorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LErrorType.get_all()["name"].to_list())
     geoEventId: Optional[Series[pa.Int64]]
-    geoEventName: Optional[Series[pa.String]]
+    geoEventName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LGeoEvent.get_all()["name"].to_list())
     id: Optional[Series[pa.Int64]]
     shrimpageId: Optional[Series[pa.Int64]]
 
 
 class StatementSchema(pa.SchemaModel):
+    
+    class Config:
+        name = "StatementSchema"
+        strict = True
 
     calculatedConfidence: Optional[Series[pa.Int32]]
     dataPointId: Optional[Series[pa.Int64]]
@@ -103,6 +124,10 @@ class StatementSchema(pa.SchemaModel):
 
 class PersonSchema(pa.SchemaModel):
     
+    class Config:
+        name = "PersonSchema"
+        strict = True
+    
     calcName: Optional[Series[pa.String]]
     firstName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
     id: Optional[Series[pa.Int64]]
@@ -113,6 +138,11 @@ class PersonSchema(pa.SchemaModel):
 
 
 class LiteratureSchema(pa.SchemaModel):
+    
+    class Config:
+        name = "LiteratureSchema"
+        strict = True
+    
     abstr: Optional[Series[pa.String]] = pa.Field( nullable=True)
     author: Series[pa.String]
     booktitle: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
