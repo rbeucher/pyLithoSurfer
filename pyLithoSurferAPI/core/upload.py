@@ -1,11 +1,12 @@
 from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.core.tables import Material
 from pyLithoSurferAPI.core.tables import Archive
+from pyLithoSurferAPI.core.tables import StratigraphicUnit
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
-from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema
+from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
@@ -68,11 +69,12 @@ class SampleWithLocationUploader(object):
             if "referenceElevationKindName" in self.samples_df.columns:
                 self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.map(get_id(LElevationKind))
             else:
-                self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Unknown")
-                self.samples_df["referenceElevationKindName"] = "Unknown"
+                self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Ground level")
+                self.samples_df["referenceElevationKindName"] = "Ground level"
         
         self.samples_df["dataPackageId"] = self.datapackageId
         self.samples_df = SampleSchema.validate(self.samples_df)
+        self.samples_df = self.samples_df.where(pd.notnull(self.samples_df), None)
         
         # Validate Location
         self.locations_df = LocationSchema.validate(self.locations_df)
@@ -85,6 +87,8 @@ class SampleWithLocationUploader(object):
                 self.locations_df["celestialName"] = "Earth"
 
         self.locations_df = LocationSchema.validate(self.locations_df)
+        self.locations_df = self.locations_df.where(pd.notnull(self.locations_df), None)
+
         self.validated = True
         return
 
@@ -240,6 +244,7 @@ class PersonUploader(object):
         self.persons_df = self.persons_df.dropna(how="any")
         self.persons_df = self.persons_df.drop_duplicates()
         self.persons_df = PersonSchema.validate(self.persons_df)
+        self.persons_df = self.persons_df.where(pd.notnull(self.persons_df), None)
         return self.persons_df
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -289,5 +294,101 @@ class PersonUploader(object):
 
         with pd.ExcelWriter('persons_output.xlsx') as writer:  
            self.persons_df.to_excel(writer, sheet_name='Persons')
+            
+
+class StratigraphicUnitUploader(object):
+    
+    def __init__(self, stratigraphic_df):
+        
+        self.stratigraphic_df = stratigraphic_df
+        self.validated = False
+        
+    def validate(self):
+        self.stratigraphic_df = StratigraphicUnitSchema.validate(self.stratigraphic_df)
+        self.stratigraphic_df = self.stratigraphic_df.where(pd.notnull(self.stratigraphic_df), None)
+        self.validated = True
+        return
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        print("Upload Stratigraphic Units")
+        self.errors_df = pd.DataFrame(columns=["Stratigraphic", "exception"])
+
+
+        if not self.validated:
+            raise ValueError("Data not validated")
+       
+        for index in tqdm(self.stratigraphic_df.index):
+
+            # Check for existing samples at location
+            args = self.stratigraphic_df.loc[index].to_dict()
+            args = {k:v for k,v in args.items() if v is not None}
+            if "id" not in args.keys():
+                args["id"] = None
+                
+            query = {"name.equals": args["name"]}
+                
+            response = StratigraphicUnit.query(query)
+            records = response.json()
+            
+            if len(records) == 1:
+                stratigraphic_unit_id = records[0]["id"]
+            elif len(records) > 1:
+                raise ValueError("Error")
+            else:
+                stratigraphic_unit_id = None
+                
+            if stratigraphic_unit_id is None: 
+               
+                try:
+                    stratigraphic_unit = StratigraphicUnit(**args)
+                    stratigraphic_unit.new()
+                    
+                except Exception as e:
+                    self.errors_df.loc[index] = [args["name"], str(e)]
+
+            elif update:
+
+                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
+                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
+                    
+                
+                old_args = records[0]
+                old_args = {k:v for k,v in old_args.items() if v is not None}
+                
+                if update_strategy == "merge_keep":
+                    args.update(old_args)
+                
+                if update_strategy == "merge_replace":
+                    old_args.update(args)
+                    args = old_args
+
+                if update_strategy == "replace":
+                    for key, val in old_args.items():
+                        if key not in args.keys():
+                            args[key] = None
+                                             
+                args["id"] = old_args["id"]
+                
+                try:
+                    stratigraphic_unit = StratigraphicUnit(**args)
+                    stratigraphic_unit.update()
+                    
+                except Exception as e:
+                    self.errors_df.loc[index] = [args["name"], str(e)]
+
+            else:
+                continue   
+                
+            self.stratigraphic_df.loc[index, "id"] = stratigraphic_unit.id
+
+        if os.path.isfile("output.xlsx"):
+            mode = "a"
+        else:
+            mode = "w"
+
+        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
+            self.stratigraphic_df.to_excel(writer, sheet_name='StratigraphicUnit')
+            self.errors_df.to_excel(writer, sheet_name="Errors")  
             
 

@@ -44,7 +44,7 @@ class SampleSchema(pa.SchemaModel):
     sampleMethodName: Optional[Series[pa.String]]= pa.Field(nullable=True, isin=LSampleMethod.get_all()["name"].to_list())
     sourceId: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     stratographicUnitId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    stratographicUnitName: Optional[Series[pa.String]]
+    stratographicUnitName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 
 class LocationSchema(pa.SchemaModel):
@@ -170,3 +170,26 @@ class LiteratureSchema(pa.SchemaModel):
     title: Series[pa.String]
     url: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
     volume: Optional[Series[pa.Int]] = pa.Field(nullable=True, str_length={"max_value": 255})
+
+
+
+class StratigraphicUnitSchema(pa.SchemaModel):
+
+    baseAge: Optional[Series[pa.Float]]
+    baseAgeName: Optional[Series[pa.String]]
+    createdById:  Optional[Series[pa.Int]]
+    createdTimestamp:  Optional[Series[pa.String]]
+    description: Optional[Series[pa.String]]
+    event: Optional[Series[pa.String]]
+    geologicalProvince: Optional[Series[pa.String]]
+    id:  Optional[Series[pa.Int]]
+    lastEditedById:  Optional[Series[pa.Int]]
+    lastEditedTimestamp: Optional[Series[pa.String]]
+    name: Optional[Series[pa.String]]
+    rank: Optional[Series[pa.String]]
+    source:  Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255}, isin=["MANUAL_ENTRY", "ASUD", "MACROSTRAT"])
+    sourceId:  Optional[Series[pa.String]]  = pa.Field( nullable=True)
+    thicknessMax: Optional[Series[pa.Float]]
+    thicknessMin: Optional[Series[pa.Float]]
+    topAge: Optional[Series[pa.Float]]
+    topAgeName: Optional[Series[pa.String]]

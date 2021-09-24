@@ -50,6 +50,7 @@ class SHRIMPDataPointUploader(object):
 
         self.shrimp_datapoints_df = self.shrimp_datapoints_df.replace({np.nan: None})
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
+        self.shrimp_datapoints_df = self.shrimp_datapoints_df.where(pd.notnull(self.shrimp_datapoints_df), None)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -231,6 +232,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                 self.shrimp_ages_df["ageTypeName"] = "Unknown date"
 
         self.shrimp_ages_df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
+        self.shrimp_ages_df = self.shrimp_ages_df.where(pd.notnull(self.shrimp_ages_df), None)
 
     def upload(self, update=False, update_strategy="merge_keep"):
         
