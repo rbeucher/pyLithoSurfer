@@ -56,8 +56,8 @@ class SampleWithLocationUploader(object):
             if "sampleKindName" in self.samples_df.columns:
                 self.samples_df["sampleKindId"] = self.samples_df.sampleKindName.map(get_id(LSampleKind))
             else:
-                self.samples_df["sampleKindId"] = LSampleKind.get_id_from_name("Unknown")
-                self.samples_df["sampleKindName"] = "Unknown"
+                self.samples_df["sampleKindId"] = LSampleKind.get_id_from_name("Rock")
+                self.samples_df["sampleKindName"] = "Rock"
         
         if "locationKindId" not in self.samples_df.columns:
             if "locationKindName" in self.samples_df.columns:
