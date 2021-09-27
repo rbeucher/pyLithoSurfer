@@ -285,16 +285,13 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
             if existing_id is None:
 
                 # Create a Statement
-                statement = Statement()
-                statement.dataPointId = self.shrimp_ages_df.loc[index, "dataPointId"]
+                statement = Statement(**stat_args)
             
                 # Create a geoEvent
-                ageTypeId = args.pop("ageTypeId")
-                ageTypeName = args.pop("ageTypeName")
-                geo_event = GeoeventAtAge(**args)
+                geo_event = GeoeventAtAge(**event_args)
             
                 # Create a SHRIMPAge
-                shrimp_age = SHRIMPAge(ageTypeId=ageTypeId)        
+                shrimp_age = SHRIMPAge(**shrimp_age_args)        
             
                 try:
                     # Use SHRIMPAgeCRUD to create the Statement and the SHRIMPAge and
