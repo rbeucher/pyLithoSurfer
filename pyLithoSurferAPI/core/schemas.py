@@ -188,7 +188,7 @@ class StratigraphicUnitSchema(pa.SchemaModel):
     name: Optional[Series[pa.String]]
     rank: Optional[Series[pa.String]]
     source:  Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255}, isin=["MANUAL_ENTRY", "ASUD", "MACROSTRAT"])
-    sourceId:  Optional[Series[pa.String]]  = pa.Field( nullable=True)
+    sourceId:  Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True)
     thicknessMax: Optional[Series[pa.Float]]
     thicknessMin: Optional[Series[pa.Float]]
     topAge: Optional[Series[pa.Float]]

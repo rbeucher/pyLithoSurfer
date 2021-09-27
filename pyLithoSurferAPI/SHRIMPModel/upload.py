@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from pyLithoSurferAPI.core.lists import (LErrorType, LGeoEvent, LSHRIMPAgeType,
-                                         LSHRIMPSampleFormat)
+                                         LSHRIMPSampleFormat, LSHRIMPAgeGroup)
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
                                           Statement)
@@ -13,6 +13,8 @@ from pyLithoSurferAPI.SHRIMPModel.schemas import (SHRIMPAgeSchema,
 from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
 from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import (SHRIMPDataPoint,
                                                           SHRIMPDataPointCRUD)
+
+from pyLithoSurferAPI.management.tables import DataPackage
 from tqdm import tqdm
 
 
@@ -28,9 +30,9 @@ class SHRIMPDataPointUploader(object):
 
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
 
-        if "dataPackageId" not in self.samples_df.columns:
-            if "dataPackageName" in self.samples_df.columns:
-                self.samples_df["dataPackageId"] = self.samples_df.dataPackageName.map(get_id(DataPackage))
+        if "dataPackageId" not in self.shrimp_datapoints_df.columns:
+            if "dataPackageName" in self.shrimp_datapoints_df.columns:
+                self.shrimp_datapoints_df["dataPackageId"] = self.shrimp_datapoints_df.dataPackageName.map(get_id(DataPackage))
         
         if "mineralOfInterestId" not in self.shrimp_datapoints_df.columns:
             if "mineralOfInterestName" in self.shrimp_datapoints_df.columns:
@@ -81,8 +83,11 @@ class SHRIMPDataPointUploader(object):
             
             query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
                      "dataPointLithoCriteria.dataStructure.equals": "UPB_SHRIMP",
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId,
-                     "mountIdentifier.equals": shrimp_args["mountIdentifier"]}
+                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+
+            if "mountIdentifier" in shrimp_args.keys():
+                query["mountIdentifier"] = shrimp_args["mountIdentifier"]
+
         
             response = SHRIMPDataPointCRUD.query(query)
             records = response.json()
@@ -230,6 +235,13 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
             else:
                 self.shrimp_ages_df["ageTypeId"] = LSHRIMPAgeType.get_id_from_name("Unknown date")
                 self.shrimp_ages_df["ageTypeName"] = "Unknown date"
+        
+        if "ageGroupId" not in self.shrimp_ages_df.columns:
+            if "ageGroupName" in self.shrimp_ages_df.columns:
+                self.shrimp_ages_df["ageGroupId"] = self.shrimp_ages_df.ageGroupName.map(get_id(LSHRIMPAgeGroup))
+            else:
+                self.shrimp_ages_df["ageGroupId"] = LSHRIMPAgeGroup.get_id_from_name("Z (undefined)")
+                self.shrimp_ages_df["ageGroupName"] = "Z (undefined)"
 
         self.shrimp_ages_df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
         self.shrimp_ages_df = self.shrimp_ages_df.where(pd.notnull(self.shrimp_ages_df), None)

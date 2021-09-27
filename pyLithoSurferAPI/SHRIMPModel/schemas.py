@@ -29,7 +29,7 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     machineId: Optional[Series[pa.Int64]]
     machineName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LMachineType.get_all()["name"].to_list())
     mineralOfInterestId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
-    mineralOfInterestName: Optional[Series[pa.String]]
+    mineralOfInterestName: Optional[Series[pa.String]] =  pa.Field( nullable=True, coerce=True)
     mountCoating: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     mountIGSN: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     mountIdentifier: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -55,25 +55,25 @@ class SHRIMPAgeSchema(pa.SchemaModel):
     ageTypeName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LSHRIMPAgeType.get_all()["name"].to_list())
     calcName: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Int64]]
-    mswd: Optional[Series[pa.Float]]
-    numberAnalysesCombined: Optional[Series[pa.Int64]]
+    mswd: Optional[Series[pa.Float]] = pa.Field( nullable=True)
+    numberAnalysesCombined: Optional[Series[pa.Float]]= pa.Field( nullable=True)
     rmQcTest: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
 
     # GeoEvent
     age: Optional[Series[pa.Float]] = pa.Field( nullable=False, coerce=True)
     ageError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    errorTypeId: Optional[Series[pa.Int64]] = pa.Field( nullable=True, coerce=True)
+    errorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LErrorType.get_all()["name"].to_list())
     geoEventId:  Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     geoEventName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
     # Statement
-    calculatedConfidence: Optional[Series[pa.Float]]
+    calculatedConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True)
     dataPointId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
-    description: Optional[Series[pa.String]]
-    geoEventAtAgeId: Optional[Series[pa.Int64]]
-    humanConfidence: Optional[Series[pa.Float]]
-    statementId: Optional[Series[pa.Int64]]
-    relevance: Optional[Series[pa.Float]]
-    tempAtAgeId: Optional[Series[pa.Int64]]
-    tempGradientId: Optional[Series[pa.Int64]]
+    description: Optional[Series[pa.String]]= pa.Field( nullable=True)
+    geoEventAtAgeId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
+    humanConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True)
+    statementId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
+    relevance: Optional[Series[pa.Float]]= pa.Field( nullable=True)
+    tempAtAgeId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
+    tempGradientId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)

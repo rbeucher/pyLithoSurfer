@@ -53,7 +53,7 @@ class SHRIMPAgeCRUD(APIRequests):
         self.geoeventAtAge.id = response["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["id"]
         self.geoeventAtAgeId = self.geoeventAtAge.id
         self.statement.id = response["geoEventAtAgeExtendsStatementDTO"]["statementDTO"]["id"]
-        self.shrimpAge.id = response["shrimpAgeDTO"]["id"]
+        self.shrimpAge.id = response["shrimpageDTO"]["id"]
         
         return response  
 

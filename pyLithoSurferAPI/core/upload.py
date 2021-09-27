@@ -2,6 +2,7 @@ from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.core.tables import Material
 from pyLithoSurferAPI.core.tables import Archive
 from pyLithoSurferAPI.core.tables import StratigraphicUnit
+from pyLithoSurferAPI.core.person import Person
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
@@ -248,7 +249,6 @@ class PersonUploader(object):
         return self.persons_df
 
     def upload(self, update=False, update_strategy="merge_keep"):
-        from pyLithoSurferAPI.core.person import get_person_id, Person
 
         self.persons_df["id"] = None
 
@@ -256,7 +256,7 @@ class PersonUploader(object):
 
             row = self.persons_df.loc[index]
             args = row.to_dict()
-            person_id = get_person_id(name=args["name"], firstName=args["firstName"])
+            person_id = Person.get_person_id(name=args["name"], firstName=args["firstName"])
 
             if (person_id is None):
                 
