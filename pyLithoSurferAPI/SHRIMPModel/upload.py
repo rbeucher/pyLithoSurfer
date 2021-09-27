@@ -3,7 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 from pyLithoSurferAPI.core.lists import (LErrorType, LGeoEvent, LSHRIMPAgeType,
-                                         LSHRIMPSampleFormat, LSHRIMPAgeGroup)
+                                         LSHRIMPSampleFormat, LSHRIMPAgeGroup,
+                                         LMachineType)
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
                                           Statement)
@@ -49,6 +50,13 @@ class SHRIMPDataPointUploader(object):
             else:
                 self.shrimp_datapoints_df["sampleFormatId"] = LSHRIMPSampleFormat.get_id_from_name("Unknown")
                 self.shrimp_datapoints_df["sampleFormatName"] = "Unknown"
+
+        if "machineId" not in self.shrimp_datapoints_df.columns:
+            if "machineName" in self.shrimp_datapoints_df.columns:
+                self.shrimp_datapoints_df["machineId"] = self.shrimp_datapoints_df.machineName.map(get_id(LMachineType))
+            else:
+                self.shrimp_datapoints_df["machineId"] = LMachineType.get_id_from_name("Unknown")
+                self.shrimp_datapoints_df["machineName"] = "Unknown"
 
         self.shrimp_datapoints_df = self.shrimp_datapoints_df.replace({np.nan: None})
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
