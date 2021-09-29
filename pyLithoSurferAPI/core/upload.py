@@ -256,7 +256,19 @@ class PersonUploader(object):
 
             row = self.persons_df.loc[index]
             args = row.to_dict()
-            person_id = Person.get_person_id(name=args["name"], firstName=args["firstName"])
+
+            query = {"name.equals": args["name"],
+                     "firstName.equals": args["firstName"]}
+            
+            response = Person.query(query)
+            records = response.json() 
+
+            if len(records) == 1:
+                person_id = records[0]["id"]
+            elif len(records) > 1:
+                raise ValueError("Error")
+            else:
+                person_id = None
 
             if (person_id is None):
                 
@@ -269,15 +281,12 @@ class PersonUploader(object):
                 if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
                     raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
                     
-                query = {"id.equals": person_id}
-                response = Person.query(query)
+                old_args = records[0]                
 
                 if update_strategy == "merge_keep":
-                    old_args = response.json()[0]
                     args.update(old_args)
                 
                 if update_strategy == "merge_replace":
-                    old_args = response.json()[0]
                     old_args.update(args)
                     args = old_args
 
