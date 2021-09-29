@@ -1,6 +1,9 @@
 requests==2.24.0
 vcrpy==4.1.0
 pytest==5.3.5
+psycopg2
+tqdm
+openpyxl
 pandas
 pandera
 jinja2
