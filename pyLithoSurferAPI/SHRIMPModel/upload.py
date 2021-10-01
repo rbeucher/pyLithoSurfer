@@ -189,7 +189,7 @@ class SHRIMPDataPointUploader(object):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
             self.shrimp_datapoints_df.to_excel(writer, sheet_name='SHRIMPDataPoint')
             self.errors_df.to_excel(writer, sheet_name="ShrimpErrors")   
 
@@ -369,7 +369,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode='a') as writer:  
+        with pd.ExcelWriter('output.xlsx', mode='a', if_sheet_exists="replace") as writer:  
             self.shrimp_ages_df.to_excel(writer, sheet_name='SHRIMPAge')
             self.errors_df.to_excel(writer, sheet_name="ShrimpAgeErrors")   
 

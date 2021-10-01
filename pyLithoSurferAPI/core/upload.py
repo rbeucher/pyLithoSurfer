@@ -230,7 +230,7 @@ class SampleWithLocationUploader(object):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
             self.errors_df.to_excel(writer, sheet_name="Errors")   
@@ -396,7 +396,7 @@ class StratigraphicUnitUploader(object):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
             self.stratigraphic_df.to_excel(writer, sheet_name='StratigraphicUnit')
             self.errors_df.to_excel(writer, sheet_name="StratigraphicUnitErrors")  
             
