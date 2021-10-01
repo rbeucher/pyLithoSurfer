@@ -60,7 +60,7 @@ class SHRIMPDataPointUploader(object):
 
         self.shrimp_datapoints_df = self.shrimp_datapoints_df.replace({np.nan: None})
         self.shrimp_datapoints_df = SHRIMPDataPointSchema.validate(self.shrimp_datapoints_df)
-        self.shrimp_datapoints_df = self.shrimp_datapoints_df.where(pd.notnull(self.shrimp_datapoints_df), None)
+        self.shrimp_datapoints_df = self.shrimp_datapoints_df.astype(object).where(pd.notnull(self.shrimp_datapoints_df), None)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -94,7 +94,7 @@ class SHRIMPDataPointUploader(object):
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
             if "mountIdentifier" in shrimp_args.keys():
-                query["mountIdentifier"] = shrimp_args["mountIdentifier"]
+                query["mountIdentifier.equals"] = shrimp_args["mountIdentifier"]
 
         
             response = SHRIMPDataPointCRUD.query(query)
@@ -252,7 +252,7 @@ class SHRIMPAgeUploader(SHRIMPDataPointUploader):
                 self.shrimp_ages_df["ageGroupName"] = "Z (undefined)"
 
         self.shrimp_ages_df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
-        self.shrimp_ages_df = self.shrimp_ages_df.where(pd.notnull(self.shrimp_ages_df), None)
+        self.shrimp_ages_df = self.shrimp_ages_df.astype(object).where(pd.notnull(self.shrimp_ages_df), None)
 
     def upload(self, update=False, update_strategy="merge_keep"):
         

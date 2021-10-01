@@ -75,7 +75,7 @@ class SampleWithLocationUploader(object):
         
         self.samples_df["dataPackageId"] = self.datapackageId
         self.samples_df = SampleSchema.validate(self.samples_df)
-        self.samples_df = self.samples_df.where(pd.notnull(self.samples_df), None)
+        self.samples_df = self.samples_df.astype(object).where(pd.notnull(self.samples_df), None)
         
         # Validate Location
         self.locations_df = LocationSchema.validate(self.locations_df)
@@ -88,7 +88,7 @@ class SampleWithLocationUploader(object):
                 self.locations_df["celestialName"] = "Earth"
 
         self.locations_df = LocationSchema.validate(self.locations_df)
-        self.locations_df = self.locations_df.where(pd.notnull(self.locations_df), None)
+        self.locations_df = self.locations_df.astype(object).where(pd.notnull(self.locations_df), None)
 
         self.validated = True
         return
@@ -245,7 +245,7 @@ class PersonUploader(object):
         self.persons_df = self.persons_df.dropna(how="any")
         self.persons_df = self.persons_df.drop_duplicates()
         self.persons_df = PersonSchema.validate(self.persons_df)
-        self.persons_df = self.persons_df.where(pd.notnull(self.persons_df), None)
+        self.persons_df = self.persons_df.astype(object).where(pd.notnull(self.persons_df), None)
         return self.persons_df
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -314,7 +314,7 @@ class StratigraphicUnitUploader(object):
         
     def validate(self):
         self.stratigraphic_df = StratigraphicUnitSchema.validate(self.stratigraphic_df)
-        self.stratigraphic_df = self.stratigraphic_df.where(pd.notnull(self.stratigraphic_df), None)
+        self.stratigraphic_df = self.stratigraphic_df.astype(object).where(pd.notnull(self.stratigraphic_df), None)
         self.validated = True
         return
     
@@ -398,6 +398,6 @@ class StratigraphicUnitUploader(object):
 
         with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
             self.stratigraphic_df.to_excel(writer, sheet_name='StratigraphicUnit')
-            self.errors_df.to_excel(writer, sheet_name="Errors")  
+            self.errors_df.to_excel(writer, sheet_name="StratigraphicUnitErrors")  
             
 

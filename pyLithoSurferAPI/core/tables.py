@@ -39,7 +39,7 @@ class Institution(APIRequests):
 
 class Lab2Data(APIRequests):
 
-    path = URL_BASE + "/api/lab-2-data-points"
+    path = URL_BASE + "/api/core/lab-2-data-points"
 
 
 class Lit2Data(APIRequests):
