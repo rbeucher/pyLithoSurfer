@@ -3,11 +3,10 @@ import os
 import numpy as np
 import pandas as pd
 from pyLithoSurferAPI.core.lists import (LErrorType, LGeoEvent, LSHRIMPAgeType,
-                                         LSHRIMPSampleFormat, LSHRIMPAgeGroup,
-                                         LMachineType)
+                                         LSHRIMPSampleFormat, LSHRIMPAgeGroup)
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
-                                          Statement)
+                                          Statement, Machine)
 from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.SHRIMPModel.schemas import (SHRIMPAgeSchema,
                                                   SHRIMPDataPointSchema)
@@ -53,9 +52,9 @@ class SHRIMPDataPointUploader(object):
 
         if "machineId" not in self.shrimp_datapoints_df.columns:
             if "machineName" in self.shrimp_datapoints_df.columns:
-                self.shrimp_datapoints_df["machineId"] = self.shrimp_datapoints_df.machineName.map(get_id(LMachineType))
+                self.shrimp_datapoints_df["machineId"] = self.shrimp_datapoints_df.machineName.map(get_id(Machine))
             else:
-                self.shrimp_datapoints_df["machineId"] = LMachineType.get_id_from_name("Unknown")
+                self.shrimp_datapoints_df["machineId"] = Machine.get_id_from_name("Unknown")
                 self.shrimp_datapoints_df["machineName"] = "Unknown"
 
         self.shrimp_datapoints_df = self.shrimp_datapoints_df.replace({np.nan: None})

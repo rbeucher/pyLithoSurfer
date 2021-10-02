@@ -122,3 +122,9 @@ class Statement(APIRequests):
 class Material(APIRequests):
 
     path = URL_BASE+'/api/core/materials'
+
+
+class Machine(APIRequests):
+
+    path = URL_BASE+'/api/core/machines'
+

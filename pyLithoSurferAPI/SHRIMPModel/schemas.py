@@ -1,8 +1,8 @@
 import pandera as pa
 from pandera.typing import Index, DataFrame, Series
 from typing import Optional
-from pyLithoSurferAPI.core.lists import LElevationKind, LMachineType, LSHRIMPSampleFormat, LSHRIMPAgeGroup, LSHRIMPAgeType, LErrorType
-
+from pyLithoSurferAPI.core.lists import LElevationKind, LSHRIMPSampleFormat, LSHRIMPAgeGroup, LSHRIMPAgeType, LErrorType
+from pyLithoSurferAPI.core.tables import Machine
 
 class SHRIMPDataPointSchema(pa.SchemaModel):
 
@@ -27,7 +27,7 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     id: Optional[Series[pa.Int64]]
     instrumentalMassFractionationIMFFactor: Optional[Series[pa.Float]]
     machineId: Optional[Series[pa.Int64]]
-    machineName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LMachineType.get_all()["name"].to_list())
+    machineName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=Machine.get_all()["name"].to_list())
     mineralOfInterestId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     mineralOfInterestName: Optional[Series[pa.String]] =  pa.Field( nullable=True, coerce=True)
     mountCoating: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})

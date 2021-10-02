@@ -242,7 +242,7 @@ class PersonUploader(object):
         self.persons_df = persons_df
 
     def validate(self):
-        self.persons_df = self.persons_df.dropna(how="any")
+        self.persons_df = self.persons_df.dropna(how="all")
         self.persons_df = self.persons_df.drop_duplicates()
         self.persons_df = PersonSchema.validate(self.persons_df)
         self.persons_df = self.persons_df.astype(object).where(pd.notnull(self.persons_df), None)
@@ -396,7 +396,7 @@ class StratigraphicUnitUploader(object):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
             self.stratigraphic_df.to_excel(writer, sheet_name='StratigraphicUnit')
             self.errors_df.to_excel(writer, sheet_name="StratigraphicUnitErrors")  
             

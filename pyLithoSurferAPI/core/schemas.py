@@ -11,14 +11,14 @@ class SampleSchema(pa.SchemaModel):
         name = "SampleSchema"
         strict = True
     
-    archiveId: Optional[Series[pa.Int64]]
+    archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True)
     archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=Archive.get_all()["name"].to_list())
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     dataPackageId: Optional[Series[pa.Int64]]
     dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
-    description: Optional[Series[pa.String]] = pa.Field(nullable=True)
+    description: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
     id: Optional[Series[pa.Int64]]
     igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnHandleURL: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -133,7 +133,7 @@ class PersonSchema(pa.SchemaModel):
     id: Optional[Series[pa.Int64]]
     name: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
     note: Optional[Series[pa.String]]
-    orcId: Optional[Series[pa.String]]
+    orcId: Optional[Series[pa.String]] = pa.Field(nullable=True)
     title: Optional[Series[pa.String]]
 
 
