@@ -1,2 +1,1 @@
-from .upload import SHRIMPDataPointUploader
-from .upload import SHRIMPAgeUploader
+from .upload import VitriniteDataPointUploader

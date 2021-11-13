@@ -10,17 +10,19 @@ class VitriniteDataPointSchema(pa.SchemaModel):
 
     groupID: Optional[Series[pa.String]]
     id: Optional[Series[pa.Int64]]
-    kerogenType: Optional[Series[pa.String]]
-    nmeasure: Optional[Series[pa.String]]
-    nomeas: Optional[Series[pa.Float]]
-    omPct: Optional[Series[pa.Float]]
-    tocPct: Optional[Series[pa.Float]]
-    vrEquivMethodId: Optional[Series[pa.Float]]
-    vrEquivMethodName: Optional[Series[pa.String]]
-    vrEquivPct: Optional[Series[pa.Float]]
-    vrEquivSourceId: Optional[Series[pa.Float]]
-    vrEquivSourceName: Optional[Series[pa.String]]
-    vrMax: Optional[Series[pa.Float]]
-    vrMeanPct: Optional[Series[pa.Float]]
-    vrMin: Optional[Series[pa.Float]]
-    vrSD: Optional[Series[pa.Float]]
+    kerogenType: Optional[Series[pa.String]] =  pa.Field( nullable=True)
+    nmeasure: Optional[Series[pa.String]] =  pa.Field( nullable=True)
+    nomeas: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    omPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    tocPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrEquivMethodId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrEquivMethodName: Optional[Series[pa.String]] =  pa.Field( nullable=True)
+    vrEquivPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrEquivSourceId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrEquivSourceName: Optional[Series[pa.String]] =  pa.Field( nullable=True)
+    vrMax: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrMeanPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrMin: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    vrSD: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
+    sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)

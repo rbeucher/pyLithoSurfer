@@ -19,7 +19,7 @@ class VitriniteDataPointUploader(object):
 
     def validate(self):
 
-        self.vitrinite_datapoints_df = VitriniteDataPointSchema.validate(self.shrimp_datapoints_df)
+        self.vitrinite_datapoints_df = VitriniteDataPointSchema.validate(self.vitrinite_datapoints_df)
 
         if "dataPackageId" not in self.vitrinite_datapoints_df.columns:
             if "dataPackageName" in self.vitrinite_datapoints_df.columns:
@@ -57,7 +57,7 @@ class VitriniteDataPointUploader(object):
                          "sampleId": sampleId}
             
             query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
-                     "dataPointLithoCriteria.dataStructure.equals": "SAMPLE",
+                     "dataPointLithoCriteria.dataStructure.equals": "SIMPLE",
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
             response = VitriniteDataPointCRUD.query(query)
@@ -146,7 +146,7 @@ class VitriniteDataPointUploader(object):
             mode = "w"
 
         with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
-            self.shrimp_datapoints_df.to_excel(writer, sheet_name='VitriniteDataPoint')
+            self.vitrinite_datapoints_df.to_excel(writer, sheet_name='VitriniteDataPoint')
             self.errors_df.to_excel(writer, sheet_name="VitriniteErrors")   
 
 

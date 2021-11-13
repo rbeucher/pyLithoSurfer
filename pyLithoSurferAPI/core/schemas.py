@@ -11,7 +11,7 @@ class SampleSchema(pa.SchemaModel):
         name = "SampleSchema"
         strict = True
     
-    archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True)
+    archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=Archive.get_all()["name"].to_list())
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
