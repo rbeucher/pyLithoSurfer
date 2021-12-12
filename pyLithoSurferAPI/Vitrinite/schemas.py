@@ -10,7 +10,6 @@ class VitriniteDataPointSchema(pa.SchemaModel):
 
     groupID: Optional[Series[pa.String]]
     id: Optional[Series[pa.Int64]]
-    groupID: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     kerogenType: Optional[Series[pa.String]] =  pa.Field( nullable=True)
     nmeasure: Optional[Series[pa.String]] =  pa.Field( nullable=True)
     nomeas: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
@@ -25,6 +24,5 @@ class VitriniteDataPointSchema(pa.SchemaModel):
     vrMeanPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrMin: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrSD: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
-    tMax: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
