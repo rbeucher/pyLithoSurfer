@@ -125,38 +125,16 @@ class SampleWithLocationUploader(object):
             query = {"dataPackageId.equals": self.datapackageId,
                      "name.equals": name}
 
+            if igsn:
+                query = {"dataPackageId.equals": self.datapackageId,
+                         "igsn.equals": igsn}
+
             response = SampleWithLocation.query(query)
             records = response.json() 
 
             if len(records) == 1:
                 sample_with_location_id = records[0]["id"]
-
-            elif len(records) > 1:
-                
-                # Sometimes the same sample has been assigned different
-                # IGSN number...
-                # Lets take care of this
-                if "igsn" in samp_args.key():
-
-                    # Extract IGSN numbers
-                    igsn_dict = {}
-                    for record in records:
-                        sampDTO = record["sampleDTO"]
-                        if sampDTO.get("igsn"):
-                            igsn = sampDTO.pop("igsn")
-                            igsn_dict[igsn] = record
-
-                    if samp_args["igsn"] not in igsn_dict.keys():
-                        sample_with_location_id = None
-                    else:
-                        record_index = igsn_dict[samp_args["igsn"]]
-                        record = records[record_index]
-                        sample_with_location_id = record["id"]
-
-                else:
-                    print("Sample Already Exist")
-                    continue
-                
+               
             else:
                 sample_with_location_id = None
 
@@ -166,12 +144,12 @@ class SampleWithLocationUploader(object):
                 location = Location(**loc_args)
                 sample = Sample(**samp_args)    
            
-                try:
+                #try:
                     # Create SampleWithLocation object.
-                    SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.new()
-                except Exception as e:
-                    self.errors_df.loc[index] = [sample.name, str(type(e))]
+                SampWLocation = SampleWithLocation(location=location, sample=sample)
+                SampWLocation.new()
+                #except Exception as e:
+                #    self.errors_df.loc[index] = [sample.name, str(type(e))]
 
             elif update:
 
@@ -210,13 +188,13 @@ class SampleWithLocationUploader(object):
                 sample = Sample(**samp_args)    
                 sample.locationId = location.id
 
-                try:
+                #try:
                     # Create SampleWithLocation
-                    SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.id = sample_with_location_id
-                    SampWLocation.update()
-                except Exception as e:
-                    self.errors_df.loc[index] = [sample.name, str(type(e))]
+                SampWLocation = SampleWithLocation(location=location, sample=sample)
+                SampWLocation.id = sample_with_location_id
+                SampWLocation.update()
+                #except Exception as e:
+                #    self.errors_df.loc[index] = [sample.name, str(type(e))]
 
             else:
                 continue
@@ -230,10 +208,11 @@ class SampleWithLocationUploader(object):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
             self.errors_df.to_excel(writer, sheet_name="Errors")   
+
 
 
 class PersonUploader(object):
@@ -242,7 +221,7 @@ class PersonUploader(object):
         self.persons_df = persons_df
 
     def validate(self):
-        self.persons_df = self.persons_df.dropna(how="all")
+        self.persons_df = self.persons_df.dropna(subset=["name", "firstName"], how="any")
         self.persons_df = self.persons_df.drop_duplicates()
         self.persons_df = PersonSchema.validate(self.persons_df)
         self.persons_df = self.persons_df.astype(object).where(pd.notnull(self.persons_df), None)
@@ -334,11 +313,13 @@ class StratigraphicUnitUploader(object):
             args = {k:v for k,v in args.items() if v is not None}
             if "id" not in args.keys():
                 args["id"] = None
-                
-            query = {"name.equals": args["name"]}
-                
-            response = StratigraphicUnit.query(query)
-            records = response.json()
+
+            if "name" in args.keys():
+                query = {"name.equals": args["name"]}
+                response = StratigraphicUnit.query(query)
+                records = response.json()
+            else:
+                records= []
             
             if len(records) == 1:
                 stratigraphic_unit_id = records[0]["id"]

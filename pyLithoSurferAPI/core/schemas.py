@@ -175,7 +175,7 @@ class LiteratureSchema(pa.SchemaModel):
 
 class StratigraphicUnitSchema(pa.SchemaModel):
 
-    baseAge: Optional[Series[pa.Float]]
+    baseAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     baseAgeName: Optional[Series[pa.String]]
     createdById:  Optional[Series[pa.Int]]
     createdTimestamp:  Optional[Series[pa.String]]
@@ -191,5 +191,5 @@ class StratigraphicUnitSchema(pa.SchemaModel):
     sourceId:  Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True)
     thicknessMax: Optional[Series[pa.Float]]
     thicknessMin: Optional[Series[pa.Float]]
-    topAge: Optional[Series[pa.Float]]
+    topAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     topAgeName: Optional[Series[pa.String]]

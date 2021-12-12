@@ -92,6 +92,11 @@ class LVerticalDatumKind(APIRequests):
     path = URL_BASE + "/api/l-vertical-data"
 
 
+class LAnalyticalMethod(APIRequests):
+
+    path = URL_BASE + "/api/core/l-analytical-methods"
+
+
 class ReferenceMaterial(APIRequests):
 
     path = URL_BASE + "/api/core/reference-materials"
