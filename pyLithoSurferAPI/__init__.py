@@ -1,7 +1,7 @@
 import os
 import requests
 
-DB_MODE = "TEST"
+DB_MODE = "DEV"
 URL_BASE = None
 LITHODAT_USERNAME = None
 LITHODAT_PASSWORD = None
@@ -12,22 +12,22 @@ def set_credentials(DB_MODE="PROD"):
     global LITHODAT_USERNAME
 
     if DB_MODE == "PROD":
-        URL_BASE = 'https://app.ausgeochem.com.au'
+        URL_BASE = 'http://app.ausgeochem.com.au'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_PROD_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_PROD_PASSWORD", None)
         print("You are now using PRODUCTION")
     elif DB_MODE == "TEST":
-        URL_BASE = 'https://testapp.lithodat.com'
+        URL_BASE = 'http://testapp.lithodat.com'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_TEST_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_TEST_PASSWORD", None)
         print("You are now using TEST")
     elif DB_MODE == "DEV":
-        URL_BASE = 'https://devapp.lithodat.com'
+        URL_BASE = 'http://devapp.lithodat.com'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_DEV_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_DEV_PASSWORD", None)
         print("You are now using DEV")
     else:
-        raise ValueError("DB_MODE is incorrect")
+        raise ValueError("DB_MODE is incorrect") 
 
 
 set_credentials(DB_MODE)
@@ -51,5 +51,6 @@ if LITHOSURFER_API_KEY is None:
     raise APIKeyMissingError("""All methods require an API key""")
 
 session = requests.Session()
-session.headers = {}
+session.headers = {'Accept': 'application/json',
+                   'Content-Type': 'application/json'}
 session.headers["Authorization"] = f"Bearer {LITHOSURFER_API_KEY}"

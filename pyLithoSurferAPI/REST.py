@@ -29,25 +29,16 @@ class APIRequests(ABC):
     # POST
     def new(self):
         data = self.to_dict()
-        if "id" in data.keys():
-            data.pop("id")
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-
-        response = session.post(self.path, data=json.dumps(data), headers=headers)
+        data.pop("id")
+        response = session.post(self.path, data=json.dumps(data), headers=session.headers)
         response.raise_for_status()
         response = response.json()
-        if "id" in response.keys():
-            self.id = response["id"]
+        self.id = response["id"]
         return response
 
     # PUT
     def update(self):
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.put(self.path, data=self.to_json(), headers=headers)
+        response = session.put(self.path, data=self.to_json(), headers=session.headers)
         response.raise_for_status()
         return response
 
@@ -61,9 +52,6 @@ class APIRequests(ABC):
 
     # DELETE
     def delete(self):
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
         path = self.path + "/" + str(self.id)
         response = session.delete(path)
         response.raise_for_status()
@@ -81,8 +69,6 @@ class APIRequests(ABC):
     @classmethod
     def query(cls, query):
         query = urllib.parse.urlencode(query)
-        headers = session.headers
-        headers["Accept"] = "application/json"
         path = cls.path + "?" + str(query)
         response = session.get(path)
         response.raise_for_status()
