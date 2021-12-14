@@ -1,4 +1,3 @@
-from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.utilities import NumpyEncoder
@@ -6,11 +5,11 @@ import json
 
 class Sample(APIRequests):
 
-    path = URL_BASE + "/api/samples"
+    API_PATH = "/api/samples"
 
 class SampleWithLocation(APIRequests):
 
-    path = URL_BASE+'/api/core/sample-with-locations'
+    API_PATH = '/api/core/sample-with-locations'
 
     def __init__(self, location: Location, sample: Sample, id = None):
 
@@ -28,11 +27,11 @@ class SampleWithLocation(APIRequests):
         data["sampleDTO"] = sample
         data["id"] = self.id
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status()
 
         records = response.json()
@@ -42,7 +41,7 @@ class SampleWithLocation(APIRequests):
         return records   
     
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put)
+        return self._send_payload(APIRequests.SESSION.put)

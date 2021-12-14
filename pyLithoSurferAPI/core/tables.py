@@ -1,60 +1,60 @@
-from pyLithoSurferAPI import URL_BASE
+
 from pyLithoSurferAPI.REST import APIRequests
 
 
 class Archive(APIRequests):
 
-    path = URL_BASE + "/api/core/archives"
+    API_PATH = "/api/core/archives"
 
 
 class DataPoint(APIRequests):
 
-    path = URL_BASE + "/api/core/data-points"
+    API_PATH = "/api/core/data-points"
 
 
 class Flag(APIRequests):
 
-    path = URL_BASE + "/api/core/flags"
+    API_PATH = "/api/core/flags"
 
 
 class Funding(APIRequests):
 
-    path = URL_BASE + "/api/core/fundings"
+    API_PATH = "/api/core/fundings"
 
 
 class FundingBody(APIRequests):
 
-    path = URL_BASE + "/api/core/funding-bodies"
+    API_PATH = "/api/core/funding-bodies"
 
 
 class GeoeventAtAge(APIRequests):
         
-    path = URL_BASE+'/api/geo-event-at-ages'
+    API_PATH = '/api/geo-event-at-ages'
 
 
 class Institution(APIRequests):
 
-    path = URL_BASE + "/api/institutionss"
+    API_PATH = "/api/institutionss"
 
 
 class Lab2Data(APIRequests):
 
-    path = URL_BASE + "/api/core/lab-2-data-points"
+    API_PATH = "/api/core/lab-2-data-points"
 
 
 class Lit2Data(APIRequests):
 
-    path = URL_BASE + "/api/core/literature-2-data-points"
+    API_PATH = "/api/core/literature-2-data-points"
 
 
 class Lit2Sample(APIRequests):
 
-    path = URL_BASE + "/api/core/literature-2-samples"
+    API_PATH = "/api/core/literature-2-samples"
 
 
 class Literature(APIRequests):
 
-    path =  URL_BASE+'/api/core/literature/'
+    API_PATH = '/api/core/literature/'
 
     @classmethod
     def get_from_doi(cls, doi):
@@ -69,32 +69,32 @@ class Literature(APIRequests):
 
 class Location(APIRequests):
 
-    path = URL_BASE + "/api/locations"
+    API_PATH = "/api/locations"
 
 
 class LPerson2DataPointRole(APIRequests):
 
-    path = URL_BASE + "/api/core/l-person-2-data-point-roles"
+    API_PATH = "/api/core/l-person-2-data-point-roles"
 
 
 class LPerson2SampleRole(APIRequests):
 
-    path = URL_BASE + "/api/core/l-person-2-sample-roles"
+    API_PATH = "/api/core/l-person-2-sample-roles"
 
 
 class Person2Data(APIRequests):
 
-    path = URL_BASE + "/api/core/person-2-data-points"
+    API_PATH = "/api/core/person-2-data-points"
 
 
 class Person2Sample(APIRequests):
 
-    path = URL_BASE + "/api/core/person-2-samples"
+    API_PATH = "/api/core/person-2-samples"
 
 
 class StratigraphicUnit(APIRequests):
 
-    path = URL_BASE + "/api/core/stratigraphic-units"
+    API_PATH = "/api/core/stratigraphic-units"
 
     @classmethod
     def get_id_from_name(cls, name):
@@ -116,15 +116,15 @@ class StratigraphicUnit(APIRequests):
 
 class Statement(APIRequests):
         
-    path = URL_BASE+'/api/statements'
+    API_PATH = '/api/statements'
 
 
 class Material(APIRequests):
 
-    path = URL_BASE+'/api/core/materials'
+    API_PATH = '/api/core/materials'
 
 
 class Machine(APIRequests):
 
-    path = URL_BASE+'/api/core/machines'
+    API_PATH = '/api/core/machines'
 

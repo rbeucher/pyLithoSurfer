@@ -1,4 +1,3 @@
-from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
 from pyLithoSurferAPI.core.tables import DataPoint
@@ -7,12 +6,12 @@ import json
 
 class SHRIMPDataPoint(APIRequests):
         
-    path = URL_BASE+'/api/shrimp-data-points'
+    API_PATH = '/api/shrimp-data-points'
 
 
 class SHRIMPDataPointCRUD(APIRequests):
 
-    path = URL_BASE+'/api/shrimp/shrimp-datapoints'
+    API_PATH = '/api/shrimp/shrimp-datapoints'
 
     def __init__(self, dataPoint: DataPoint, shrimpDataPoint: SHRIMPDataPoint, dataPointID=None, id=None):
 
@@ -32,11 +31,11 @@ class SHRIMPDataPointCRUD(APIRequests):
         data["dataPointDTO"]["shrimpdataPointId"] = self.id
         data["id"] = self.id
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()
         
@@ -49,8 +48,8 @@ class SHRIMPDataPointCRUD(APIRequests):
         return response
 
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put)
+        return self._send_payload(APIRequests.SESSION.put)
     

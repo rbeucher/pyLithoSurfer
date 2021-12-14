@@ -1,10 +1,8 @@
-from pyLithoSurferAPI import URL_BASE
-from pyLithoSurferAPI.REST import APIRequests
-import pandas as pd
 
+from pyLithoSurferAPI.REST import APIRequests
 
 class Person(APIRequests):
 
-    path = URL_BASE + "/api/core/people"
+    API_PATH = "/api/core/people"
 
 

@@ -1,62 +1,62 @@
-from pyLithoSurferAPI import URL_BASE
+
 from pyLithoSurferAPI.REST import APIRequests
 import pandas as pd
 
 class LDosimeter(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/l-dosimeter"
+    API_PATH = "/api/fissiontrack/l-dosimeter"
 
 
 class LEtchant(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/l-etchant"
+    API_PATH = "/api/fissiontrack/l-etchant"
 
 
 class LFTAgeAnalyticalTechnique(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LFTAgeAnalyticalTechnique"
+    API_PATH = "/api/fissiontrack/ft/LFTAgeAnalyticalTechnique"
 
 
 class LFTAgeEquation(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LFTAgeEquation"
+    API_PATH = "/api/fissiontrack/ft/LFTAgeEquation"
 
 
 class LFTAgeType(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LFTAgeType"
+    API_PATH = "/api/fissiontrack/ft/LFTAgeType"
 
 
 class LFTAgeEquation(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/l-ft-analytical-method"
+    API_PATH = "/api/fissiontrack/l-ft-analytical-method"
 
 
 class LFTAnalyticalSoftware(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/l-ft-analytical-software"
+    API_PATH = "/api/fissiontrack/l-ft-analytical-software"
 
 
 class LIrradiationReactor(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LIrradiationReactor"
+    API_PATH = "/api/fissiontrack/ft/LIrradiationReactor"
 
 
 class LLambda(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LLambda"
+    API_PATH = "/api/fissiontrack/ft/LLambda"
 
 
 class LLambdaF(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LLambdaF"
+    API_PATH = "/api/fissiontrack/ft/LLambdaF"
 
 
 class LRmr0Equation(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/LRmr0Equation"
+    API_PATH = "/api/fissiontrack/ft/LRmr0Equation"
 
 
 class LTrackType(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/l-track-type"
+    API_PATH = "/api/fissiontrack/l-track-type"

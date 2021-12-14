@@ -65,7 +65,7 @@ class FTDataPointUploader(object):
                      "dataPointLithoCriteria.dataStructure.equals": "FTRACK",
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
-            response = FTDataPoint.query(query)
+            response = FTDataPointCRUD.query(query)
             records = response.json()
 
             if len(records) == 1:

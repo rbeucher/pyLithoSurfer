@@ -1,4 +1,3 @@
-from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
 from pyLithoSurferAPI.core.tables import GeoeventAtAge
@@ -8,12 +7,12 @@ import json
 
 class SHRIMPAge(APIRequests):
         
-    path = URL_BASE+'/api/shrimp-ages'
+    API_PATH = '/api/shrimp-ages'
 
 
 class SHRIMPAgeCRUD(APIRequests):
 
-    path = URL_BASE+'/api/shrimp/shrimp-ages'
+    API_PATH = '/api/shrimp/shrimp-ages'
 
     def __init__(self, geoeventAtAge: GeoeventAtAge, statement: Statement, shrimpAge: SHRIMPAge, id=None):
 
@@ -41,11 +40,11 @@ class SHRIMPAgeCRUD(APIRequests):
         data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["id"] = geoeventAtAge["id"]
         data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["shrimpageId"] = shrimpAge["id"]
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()
         
@@ -58,7 +57,7 @@ class SHRIMPAgeCRUD(APIRequests):
         return response  
 
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put) 
+        return self._send_payload(APIRequests.SESSION.put) 

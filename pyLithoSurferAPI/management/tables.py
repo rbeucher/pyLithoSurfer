@@ -1,25 +1,25 @@
-from pyLithoSurferAPI import URL_BASE
+
 from pyLithoSurferAPI.REST import APIRequests
 import json
 import urllib.parse
 
 class Institution(APIRequests):
 
-    path = URL_BASE + "/api/management/institutions"
+    API_PATH = "/api/management/institutions"
 
 class DataPackage2Editor(APIRequests):
         
-    path = URL_BASE+'/api/management/data-package-2-editors'
+    API_PATH = '/api/management/data-package-2-editors'
 
 
 class DataPackage2Supervisor(APIRequests):
         
-    path = URL_BASE+'/api/management/data-package-2-supervisors'
+    API_PATH = '/api/management/data-package-2-supervisors'
 
 
 class DataPackage(APIRequests):
 
-    path = URL_BASE + "/api/management/data-packages"
+    API_PATH = "/api/management/data-packages"
 
     def __init__(self, distribution="PRIVATE", workflowState="IN_PROGRESS", **kwargs):
         self.distribution = distribution

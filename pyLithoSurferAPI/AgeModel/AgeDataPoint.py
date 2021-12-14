@@ -1,4 +1,3 @@
-from pyLithoSurferAPI import session, URL_BASE
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
 from pyLithoSurferAPI.core.tables import DataPoint
@@ -9,12 +8,12 @@ import json
 
 class AgeDataPoint(APIRequests):
         
-    path = URL_BASE+'/api/age-data-points'
+    API_PATH = '/api/age-data-points'
 
 
 class AgeDataPointCRUD(APIRequests):
 
-    path = URL_BASE+'/api/age/age-datapoints'
+    API_PATH = '/api/age/age-datapoints'
 
     def __init__(self, dataPoint: DataPoint, ageDataPoint: AgeDataPoint, geoeventAtAge: GeoeventAtAge, statement: Statement,  dataPointID=None, id=None):
 
@@ -47,11 +46,11 @@ class AgeDataPointCRUD(APIRequests):
         data["geoEventAtAgeExtendsStatementDTO"]["id"] = ageDataPoint["id"]
         data["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]["id"] = geoeventAtAge["id"]
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()
         
@@ -67,8 +66,8 @@ class AgeDataPointCRUD(APIRequests):
         return response
 
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put)
+        return self._send_payload(APIRequests.SESSION.put)
     

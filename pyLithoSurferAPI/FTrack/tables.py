@@ -1,25 +1,25 @@
-from pyLithoSurferAPI import URL_BASE
+
 from pyLithoSurferAPI.REST import APIRequests
 
 
 class FTBinnedLengthData(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/FTBinnedLengthData"
+    API_PATH = "/api/fissiontrack/ft/FTBinnedLengthData"
 
 
 class FTCountData(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft-count-data"
+    API_PATH = "/api/fissiontrack/ft-count-data"
 
 
 class FTDataPoint(APIRequests):
 
-    path = URL_BASE + "/api/ft-data-points"
+    API_PATH = "/api/ft-data-points"
 
 
 class FTDataPointCRUD(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/FTDataPoint"
+    API_PATH = "/api/fissiontrack/ft/FTDataPoint"
 
     def __init__(self, dataPoint: DataPoint, ftDataPoint: ftDataPoint, dataPointID=None, id=None):
 
@@ -43,7 +43,7 @@ class FTDataPointCRUD(APIRequests):
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()
         
@@ -64,17 +64,17 @@ class FTDataPointCRUD(APIRequests):
 
 class FTLengthData(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft-length-data"
+    API_PATH = "/api/fissiontrack/ft-length-data"
 
 
 class FTRawDataPoint(APIRequests):
 
-    path = URL_BASE + "/api/ft-raw-data-points"
+    API_PATH = "/api/ft-raw-data-points"
 
 
 class FTRawDataPointCRUD(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ftraw-datapoints"
+    API_PATH = "/api/fissiontrack/ftraw-datapoints"
     
     def __init__(self, dataPoint: DataPoint, ftrawDataPoint: ftrawDataPoint, dataPointID=None, id=None):
 
@@ -98,7 +98,7 @@ class FTRawDataPointCRUD(APIRequests):
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
-        response = func(self.path, data=json.dumps(data, cls=NumpyEncoder), headers=headers)
+        response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()
         
@@ -119,4 +119,4 @@ class FTRawDataPointCRUD(APIRequests):
 
 class FTSingleGrain(APIRequests):
 
-    path = URL_BASE + "/api/fissiontrack/ft/FTSingleGrain"
+    API_PATH = "/api/fissiontrack/ft/FTSingleGrain"
