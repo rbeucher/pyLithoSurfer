@@ -1,20 +1,18 @@
+from abc import ABC
 import os
-
 import numpy as np
 import pandas as pd
 
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
-from pyLithoSurferAPI.core.schemas import DataPointSchema
-from pyLithoSurferAPI.core.tables import DataPoint
-from pyLithoSurferAPI.management.tables import DataPackage
-
 from tqdm import tqdm
 
+class Uploader(ABC):
 
-class Uploader(object):
+    def validate(self):
+        self.dataframe = Uploader._validate(self.dataframe, self.schema, self.list)
+        self.validated = True
 
     @staticmethod
-    def validate(dataframe, schema, lists=None):
+    def _validate(dataframe, schema, lists=None):
 
         dataframe = schema.validate(dataframe)
 
@@ -34,7 +32,7 @@ class Uploader(object):
     def get_unique_query(self, args):
         return {}
 
-    def upload(self, update=False, update_strategy="merge_keep"):
+    def batch_upload(self, dataframe, datapackage, update=False, update_strategy="merge_keep"):
         
         self.dataframe["id"] = None
         self.errors_df = pd.DataFrame(columns=["id", "exception"])
@@ -61,7 +59,6 @@ class Uploader(object):
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id
-            self.dataframe.loc[index, "dataPointId"] = obj.dataPoint.id
 
     def save_dataframe(self, outfile="output.xlsx"):
        

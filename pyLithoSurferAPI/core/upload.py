@@ -1,3 +1,4 @@
+from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.core.tables import Location
 from pyLithoSurferAPI.core.tables import Material
 from pyLithoSurferAPI.core.tables import Archive
@@ -6,7 +7,6 @@ from pyLithoSurferAPI.core.person import Person
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.sample import Sample
 from pyLithoSurferAPI.core.sample import SampleWithLocation
-from pyLithoSurferAPI.core.uploader import Uploader
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
 from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
@@ -19,7 +19,7 @@ import os
 
 class SampleWithLocationUploader(Uploader):
 
-    sample_params = {
+    sample_lists = {
         "dataPackage": DataPackage,
         "archive": Archive,
         "material": Material,
@@ -29,7 +29,7 @@ class SampleWithLocationUploader(Uploader):
         "referenceElevationKind": LElevationKind,
         }
 
-    location_params = {
+    location_lists = {
         "celestial": LCelestial
     }
 
@@ -42,8 +42,8 @@ class SampleWithLocationUploader(Uploader):
 
     def validate(self):
 
-        self.locations_df = Uploader.validate(self.locations_df, LocationSchema, self.sample_params)
-        self.samples_df = Uploader.validate(self.samples_df, SampleSchema, self.location_params)
+        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, self.sample_lists)
+        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, self.location_lists)
         self.validated = True
 
     def get_unique_query(self, samp_args, loc_args):
@@ -123,7 +123,7 @@ class SampleWithLocationUploader(Uploader):
             self.locations_df.to_excel(writer, sheet_name='Locations')
 
 
-class PersonUploader(object):
+class PersonUploader(Uploader):
 
     name = "Persons"
 
@@ -137,7 +137,7 @@ class PersonUploader(object):
         return query
 
 
-class StratigraphicUnitUploader(object):
+class StratigraphicUnitUploader(Uploader):
     
     def __init__(self, stratigraphic_df):
         
@@ -146,7 +146,7 @@ class StratigraphicUnitUploader(object):
 
     def get_unique_query(self, args):
         query = {"name.equals": args.get("name", None)}
-        return
+        return query
 
     def validate(self):
         Uploader.validate(self.dataframe, StratigraphicUnitSchema)

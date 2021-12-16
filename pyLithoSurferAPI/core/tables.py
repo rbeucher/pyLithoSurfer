@@ -1,6 +1,6 @@
 
 from pyLithoSurferAPI.REST import APIRequests
-
+from pyLithoSurferAPI.uploader import Uploader
 
 class Archive(APIRequests):
 
@@ -92,7 +92,7 @@ class Person2Sample(APIRequests):
     API_PATH = "/api/core/person-2-samples"
 
 
-class StratigraphicUnit(APIRequests):
+class StratigraphicUnit(APIRequests, Uploader):
 
     API_PATH = "/api/core/stratigraphic-units"
 

@@ -32,9 +32,6 @@ class VitriniteDataPointCRUD(APIRequests):
         data["id"] = self.id
 
         headers = APIRequests.SESSION.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-
         response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
         response.raise_for_status() 
         response = response.json()

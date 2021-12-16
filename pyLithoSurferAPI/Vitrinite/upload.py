@@ -11,24 +11,13 @@ from tqdm import tqdm
 
 class VitriniteDataPointUploader(object):
 
+    lists = {"dataPackage": DataPackage}
+
     def __init__(self, datapackageId, vitrinite_datapoints_df):
 
         self.datapackageId = datapackageId 
-        self.vitrinite_datapoints_df = vitrinite_datapoints_df
+        self.dataframe = vitrinite_datapoints_df
         self.validated = False
-
-    def validate(self):
-
-        self.vitrinite_datapoints_df = VitriniteDataPointSchema.validate(self.vitrinite_datapoints_df)
-
-        if "dataPackageId" not in self.vitrinite_datapoints_df.columns:
-            if "dataPackageName" in self.vitrinite_datapoints_df.columns:
-                self.vitrinite_datapoints_df["dataPackageId"] = self.vitrinite_datapoints_df.dataPackageName.map(get_id(DataPackage))
-        
-        self.vitrinite_datapoints_df = self.vitrinite_datapoints_df.replace({np.nan: None})
-        self.vitrinite_datapoints_df = VitriniteDataPointSchema.validate(self.vitrinite_datapoints_df)
-        self.vitrinite_datapoints_df = self.vitrinite_datapoints_df.astype(object).where(pd.notnull(self.vitrinite_datapoints_df), None)
-        self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
         
@@ -38,8 +27,6 @@ class VitriniteDataPointUploader(object):
             raise ValueError("Data not validated")
 
         self.vitrinite_datapoints_df["id"] = None
-        self.errors_df = pd.DataFrame(columns=["id", "exception"])
-
 
         for index in tqdm(self.vitrinite_datapoints_df.index):
 
