@@ -1,8 +1,6 @@
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
-from pyLithoSurferAPI.core.tables import GeoeventAtAge
-from pyLithoSurferAPI.core.tables import Statement
-from pyLithoSurferAPI.core.tables import DataPoint
+from pyLithoSurferAPI.core.tables import (GeoeventAtAge, Statement, DataPoint)
 import json
 
 

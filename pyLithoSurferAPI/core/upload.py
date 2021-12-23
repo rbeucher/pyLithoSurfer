@@ -1,15 +1,9 @@
 from pyLithoSurferAPI.uploader import Uploader
-from pyLithoSurferAPI.core.tables import Location
-from pyLithoSurferAPI.core.tables import Material
-from pyLithoSurferAPI.core.tables import Archive
-from pyLithoSurferAPI.core.tables import StratigraphicUnit
-from pyLithoSurferAPI.core.person import Person
-from pyLithoSurferAPI.management.tables import DataPackage
-from pyLithoSurferAPI.core.tables import Sample
-from pyLithoSurferAPI.core.tables import SampleWithLocation
+from pyLithoSurferAPI.core.tables import (Location, Material, Archive, StratigraphicUnit, Sample, SampleWithLocation, Person)
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
-from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
+from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
 import numpy as np
