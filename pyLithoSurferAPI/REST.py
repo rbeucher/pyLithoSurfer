@@ -58,8 +58,9 @@ class APIRequests(ABC):
         return response.json()   
 
     # DELETE
-    def delete(self):
-        path = self.path() + "/" + str(self.id)
+    @classmethod
+    def delete(cls, id):
+        path = cls.path() + "/" + str(id)
         response = APIRequests.SESSION.delete(path)
         response.raise_for_status()
         return response

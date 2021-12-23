@@ -63,7 +63,7 @@ class Uploader(object):
 
             self.dataframe.loc[index, "id"] = obj.id
 
-    def save_dataframe(self, outfile="output.xlsx"):
+    def save(self, outfile="output.xlsx"):
        
         if os.path.isfile(outfile):
             mode = "a"
@@ -72,7 +72,6 @@ class Uploader(object):
 
         with pd.ExcelWriter(outfile, mode=mode, if_sheet_exists="replace") as writer:  
             self.dataframe.to_excel(writer, sheet_name=self.name)
-            self.errors_df.to_excel(writer, sheet_name=self.name+"Errors")  
 
     def _update_args(self, old_args, new_args, update_strategy):
 

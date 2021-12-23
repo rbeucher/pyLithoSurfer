@@ -107,6 +107,11 @@ class SampleWithLocationUploader(Uploader):
             self.samples_df.loc[index, "id"] = SampWLocation.sample.id
             self.samples_df.loc[index, "locationId"] = SampWLocation.location.id
 
+    def clean(self):
+
+        for sample in self.samples_df.id:
+            obj = SampleWithLocation.delete(sample)
+
     def save(self, outfile="output.xlsx"):
 
         if os.path.isfile("output.xlsx"):
@@ -114,7 +119,7 @@ class SampleWithLocationUploader(Uploader):
         else:
             mode = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
+        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
 

@@ -22,7 +22,7 @@ class AgeDataPointUploader(Uploader):
     def __init__(self, datapackageId, age_datapoints_df):
 
         self.datapackageId = datapackageId 
-        self.age_datapoints_df = age_datapoints_df
+        self.dataframe = age_datapoints_df
         self.validated = False
 
     def validate(self):
@@ -32,8 +32,8 @@ class AgeDataPointUploader(Uploader):
                     "geoEvent": LGeoEvent
                     }
 
-        self.age_datapoints_df.dropna(subset=["age"], inplace=True)
-        self.age_datapoints_df = Uploader._validate(self.age_datapoints_df, AgeDataPointSchema, age_list)
+        self.dataframe.dropna(subset=["age"], inplace=True)
+        self.dataframe = Uploader._validate(self.dataframe, AgeDataPointSchema, age_list)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -48,17 +48,17 @@ class AgeDataPointUploader(Uploader):
         if not self.validated:
             raise ValueError("Data not validated")
 
-        self.age_datapoints_df["id"] = None
-        self.age_datapoints_df["dataPointId"] = None
+        self.dataframe["id"] = None
+        self.dataframe["dataPointId"] = None
 
-        for index in tqdm(self.age_datapoints_df.index):
+        for index in tqdm(self.dataframe.index):
 
-            age_args = self.age_datapoints_df.loc[index].to_dict()
+            age_args = self.dataframe.loc[index].to_dict()
             analyticalMethodId = age_args.pop("analyticalMethodId")
             sampleId = age_args.pop("sampleId")
             locationId = age_args.pop("locationId")
-            stat_args = {k:v for k,v in age_args.items() if k in self.statement_keys}
-            event_args = {k:v for k,v in age_args.items() if k in self.geoEvent_keys}
+            stat_args = {k:v for k,v in age_args.items() if k in statement_keys}
+            event_args = {k:v for k,v in age_args.items() if k in geoEvent_keys}
 
             dpts_args = {"dataPackageId": self.datapackageId,
                          "dataStructure": "AGE",
@@ -102,8 +102,8 @@ class AgeDataPointUploader(Uploader):
                 AgeDataptsCRUD.new() 
                 
                 # Recover Datapoint
-                self.age_datapoints_df.loc[index, "id"] = AgeDataptsCRUD.id
-                self.age_datapoints_df.loc[index, "dataPointId"] = AgeDataptsCRUD.dataPoint.id
+                self.dataframe.loc[index, "id"] = AgeDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = AgeDataptsCRUD.dataPoint.id
     
             elif update:
 
@@ -140,5 +140,5 @@ class AgeDataPointUploader(Uploader):
                 AgeDataptsCRUD.dataPoint.dataEntityId = age_datapoint.id
                 AgeDataptsCRUD.dataPoint.age_datapoint_id = age_datapoint.id
                 AgeDataptsCRUD.update()
-                self.age_datapoints_df.loc[index, "id"] = AgeDataptsCRUD.id
-                self.age_datapoints_df.loc[index, "dataPointId"] = datapoint.id
+                self.dataframe.loc[index, "id"] = AgeDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = datapoint.id
