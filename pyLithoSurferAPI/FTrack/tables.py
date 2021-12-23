@@ -1,5 +1,7 @@
 
 from pyLithoSurferAPI.REST import APIRequests
+from pyLithoSurferAPI.utilities import NumpyEncoder
+import json
 
 
 class FTBinnedLengthData(APIRequests):
@@ -39,7 +41,7 @@ class FTDataPointCRUD(APIRequests):
         data["dataPointDTO"]["ftdataPointId"] = self.id
         data["id"] = self.id
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
@@ -56,10 +58,10 @@ class FTDataPointCRUD(APIRequests):
         return response
 
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put)
+        return self._send_payload(APIRequests.SESSION.put)
 
 
 class FTLengthData(APIRequests):
@@ -94,7 +96,7 @@ class FTRawDataPointCRUD(APIRequests):
         data["dataPointDTO"]["ftrawDataPointId"] = self.id
         data["id"] = self.id
 
-        headers = session.headers
+        headers = APIRequests.SESSION.headers
         headers["Accept"] = "application/json"
         headers["Content-Type"] = "application/json"
 
@@ -111,10 +113,10 @@ class FTRawDataPointCRUD(APIRequests):
         return response
 
     def new(self):
-        return self._send_payload(session.post)
+        return self._send_payload(APIRequests.SESSION.post)
     
     def update(self):
-        return self._send_payload(session.put)
+        return self._send_payload(APIRequests.SESSION.put)
 
 
 class FTSingleGrain(APIRequests):

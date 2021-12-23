@@ -9,34 +9,34 @@ def _get_token(username: str, password: str, remember_me=False, url_base="http:/
             'password': password,
             'rememberMe': remember_me}
 
-    return requests.post(url, json=data, headers=headers).json()['id_token']
+    return requests.post(url, json=data, headers=headers)
 
 def select_database(database="test"):
 
     if database == "production":
 
-        url_base = 'http://app.ausgeochem.com.au'
+        url_base = 'http://app.lithodat.com'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_PROD_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_PROD_PASSWORD", None)
-        print("You are now using Production")
+        selected_db="production"
     
     elif database == "test":
     
         url_base = 'http://testapp.lithodat.com'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_TEST_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_TEST_PASSWORD", None)
-        print("You are now using Test")
+        selected_db="test"
     
     elif database == "development":
     
         url_base = 'http://devapp.lithodat.com'
         LITHODAT_USERNAME = os.environ.get("LITHODAT_DEV_USERNAME", None)
         LITHODAT_PASSWORD = os.environ.get("LITHODAT_DEV_PASSWORD", None)
-        print("You are now using Development")
+        selected_db="development"
     
     LITHOSURFER_API_KEY = _get_token(username=LITHODAT_USERNAME,
                                      password=LITHODAT_PASSWORD,
-                                     url_base=url_base)
+                                     url_base=url_base).json()['id_token']
 
     session = requests.Session()
     session.headers = {'Accept': 'application/json',
@@ -48,6 +48,6 @@ def select_database(database="test"):
     APIRequests.URL_BASE = url_base
     APIRequests.SESSION = session
 
-    return
+    return selected_db
 
 select_database()

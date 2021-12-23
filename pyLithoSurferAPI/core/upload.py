@@ -19,19 +19,7 @@ import os
 
 class SampleWithLocationUploader(Uploader):
 
-    sample_lists = {
-        "dataPackage": DataPackage,
-        "archive": Archive,
-        "material": Material,
-        "sampleMethod": LSampleMethod,
-        "sampleKind" : LSampleKind,
-        "locationKind": LLocationKind,
-        "referenceElevationKind": LElevationKind,
-        }
-
-    location_lists = {
-        "celestial": LCelestial
-    }
+    name = "Sample"
 
     def __init__(self, datapackageId, locations_df, samples_df):
         self.datapackageId = datapackageId
@@ -42,8 +30,22 @@ class SampleWithLocationUploader(Uploader):
 
     def validate(self):
 
-        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, self.sample_lists)
-        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, self.location_lists)
+        sample_lists = {
+            "dataPackage": DataPackage,
+            "archive": Archive,
+            "material": Material,
+            "sampleMethod": LSampleMethod,
+            "sampleKind" : LSampleKind,
+            "locationKind": LLocationKind,
+            "referenceElevationKind": LElevationKind,
+            }
+
+        location_lists = {
+            "celestial": LCelestial
+        }
+
+        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, sample_lists)
+        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, location_lists)
         self.validated = True
 
     def get_unique_query(self, samp_args, loc_args):

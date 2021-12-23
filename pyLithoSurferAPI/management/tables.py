@@ -28,7 +28,6 @@ class DataPackage(APIRequests):
             setattr(self, key, val)
 
     def new(self, *args, **kwargs):
-        from . import LITHODAT_USERNAME as name
         from . import User, LithoUser
         A = User()
         query={"login.in": name}

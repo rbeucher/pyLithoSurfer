@@ -1,11 +1,14 @@
-from abc import ABC
 import os
 import numpy as np
 import pandas as pd
 
 from tqdm import tqdm
 
-class Uploader(ABC):
+class Uploader(object):
+
+    def __init__(self, dataframe):
+
+        self.dataframe = dataframe
 
     def validate(self):
         self.dataframe = Uploader._validate(self.dataframe, self.schema, self.list)
@@ -32,7 +35,7 @@ class Uploader(ABC):
     def get_unique_query(self, args):
         return {}
 
-    def batch_upload(self, dataframe, datapackage, update=False, update_strategy="merge_keep"):
+    def batch_upload(self, update=False, update_strategy="merge_keep"):
         
         self.dataframe["id"] = None
         self.errors_df = pd.DataFrame(columns=["id", "exception"])
