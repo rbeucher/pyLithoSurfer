@@ -10,8 +10,8 @@ from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
 from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.SHRIMPModel.schemas import (SHRIMPAgeSchema,
                                                   SHRIMPDataPointSchema)
-from pyLithoSurferAPI.SHRIMPModel.SHRIMPAge import SHRIMPAge, SHRIMPAgeCRUD
-from pyLithoSurferAPI.SHRIMPModel.SHRIMPDataPoint import (SHRIMPDataPoint,
+from pyLithoSurferAPI.SHRIMPModel.tables import SHRIMPAge, SHRIMPAgeCRUD
+from pyLithoSurferAPI.SHRIMPModel.tables import (SHRIMPDataPoint,
                                                           SHRIMPDataPointCRUD)
 
 from pyLithoSurferAPI.management.tables import DataPackage

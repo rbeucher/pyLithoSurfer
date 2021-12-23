@@ -8,7 +8,7 @@ from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
                                           Statement)
 from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.AgeModel.schemas import (AgeDataPointSchema)
-from pyLithoSurferAPI.AgeModel.AgeDataPoint import AgeDataPoint, AgeDataPointCRUD
+from pyLithoSurferAPI.AgeModel.tables import AgeDataPoint, AgeDataPointCRUD
 
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.uploader import Uploader

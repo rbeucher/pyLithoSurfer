@@ -5,8 +5,8 @@ from pyLithoSurferAPI.core.tables import Archive
 from pyLithoSurferAPI.core.tables import StratigraphicUnit
 from pyLithoSurferAPI.core.person import Person
 from pyLithoSurferAPI.management.tables import DataPackage
-from pyLithoSurferAPI.core.sample import Sample
-from pyLithoSurferAPI.core.sample import SampleWithLocation
+from pyLithoSurferAPI.core.tables import Sample
+from pyLithoSurferAPI.core.tables import SampleWithLocation
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
 from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
