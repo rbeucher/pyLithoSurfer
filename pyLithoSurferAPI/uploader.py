@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from .REST import APIRequests
 
-class Uploader(APIRequests):
+class Uploader(object):
 
     def __init__(self, dataframe):
 
@@ -32,34 +32,6 @@ class Uploader(APIRequests):
 
     def get_unique_query(self, args):
         return {}
-
-    def upload(self, update=False, update_strategy="merge_keep"):
-        
-        self.dataframe["id"] = None
-        self.errors_df = pd.DataFrame(columns=["id", "exception"])
-
-        for index in tqdm(self.dataframe.index):
-
-            args = self.dataframe.loc[index].to_dict()
-            response = self.query(self.get_unique_query(args))
-            records = response.json()
-
-            if len(records) == 1:
-                existing_id = records[0]["id"]
-                old_args =  {k:v for k,v in records[0].items() if v is not None}
-            else:
-                existing_id = None
-
-            if existing_id is None:
-                obj = self(**args) 
-                obj.new() 
-
-            elif update:
-                dtp_args = self._update_args(old_args, args, update_strategy)
-                obj = self(**args) 
-                obj.update()
-
-            self.dataframe.loc[index, "id"] = obj.id
 
     def save(self, outfile="output.xlsx"):
        

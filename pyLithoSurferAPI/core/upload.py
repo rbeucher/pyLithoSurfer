@@ -54,7 +54,7 @@ class SampleWithLocationUploader(Uploader):
             query = {"dataPackageId.equals": self.datapackageId,
                      "igsn.equals": igsn}
 
-        return query
+        return SampleWithLocation.query(query)
 
     def upload(self, update=False, update_strategy="merge_keep"):
 
@@ -75,7 +75,7 @@ class SampleWithLocationUploader(Uploader):
             loc_args["id"] = None
             samp_args["id"] = None
             
-            response = SampleWithLocation.query(self.get_unique_query(samp_args, loc_args))
+            response = self.get_unique_query(samp_args, loc_args)
             records = response.json() 
 
             sample_with_location_id = None
@@ -138,7 +138,7 @@ class PersonUploader(Uploader):
         return query
 
 
-class StratigraphicUnitUploader(Uploader):
+class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
     
     def __init__(self, stratigraphic_df):
         
@@ -147,9 +147,36 @@ class StratigraphicUnitUploader(Uploader):
 
     def get_unique_query(self, args):
         query = {"name.equals": args.get("name", None)}
-        return query
+        return super().query(query)
 
     def validate(self):
-        Uploader._validate(self.dataframe, StratigraphicUnitSchema)
+        self.dataframe = Uploader._validate(self.dataframe, StratigraphicUnitSchema)
         self.validated = True
         return
+
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = StratigraphicUnit(**args) 
+                obj.new() 
+
+            elif update:
+                dtp_args = self._update_args(old_args, args, update_strategy)
+                obj = StratigraphicUnit(**args) 
+                obj.update()
+
+            self.dataframe.loc[index, "id"] = obj.id
