@@ -3,30 +3,28 @@ import numpy as np
 import pandas as pd
 
 from tqdm import tqdm
+from .REST import APIRequests
 
-class Uploader(object):
+class Uploader(APIRequests):
 
     def __init__(self, dataframe):
 
         self.dataframe = dataframe
-
-    def validate(self):
-        self.dataframe = Uploader._validate(self.dataframe, self.schema, self.list)
-        self.validated = True
 
     @staticmethod
     def _validate(dataframe, schema, lists=None):
 
         dataframe = schema.validate(dataframe)
 
-        for key, val in lists.items():
-            if key + "Id" not in dataframe.columns:
-                if key + "Name" in dataframe.columns:
-                    uniques = dataframe[key + "Name"].unique()
-                    mapping = {}
-                    for unique in uniques:
-                        mapping[unique] = val.get_id_from_name(unique)
-                    dataframe[key + "Id"] = dataframe[key + "Name"].map(mapping)
+        if lists:
+            for key, val in lists.items():
+                if key + "Id" not in dataframe.columns:
+                    if key + "Name" in dataframe.columns:
+                        uniques = dataframe[key + "Name"].unique()
+                        mapping = {}
+                        for unique in uniques:
+                            mapping[unique] = val.get_id_from_name(unique)
+                        dataframe[key + "Id"] = dataframe[key + "Name"].map(mapping)
         
         dataframe = dataframe.replace({np.nan: None})
         dataframe = schema.validate(dataframe)
@@ -35,7 +33,7 @@ class Uploader(object):
     def get_unique_query(self, args):
         return {}
 
-    def batch_upload(self, update=False, update_strategy="merge_keep"):
+    def upload(self, update=False, update_strategy="merge_keep"):
         
         self.dataframe["id"] = None
         self.errors_df = pd.DataFrame(columns=["id", "exception"])

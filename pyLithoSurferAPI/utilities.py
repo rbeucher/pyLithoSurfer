@@ -40,8 +40,7 @@ def convert_coordinates(x, y, epsg_in="epsg:4283", epsg_out="epsg:4326"):
     return {"x": x, "y": y}
 
 
-def get_connection_to_db():
-    from pyLithoSurferAPI import DB_MODE
+def get_connection_to_db(DB_MODE):
     import os
     import psycopg2
 
@@ -63,7 +62,7 @@ def get_connection_to_db():
 
 def map_to_new_literature_id(source_ids):
 
-    connection = get_connection_to_db()
+    connection = get_connection_to_db("TEST")
     uploaded = pd.read_sql_query("SELECT * FROM literature", connection)
 
     # This is required as some new literature entries may not have a source_id
@@ -81,7 +80,7 @@ def migrate_lithology_to_mindat(lithologies):
     import pkg_resources
     migration_filepath = pkg_resources.resource_filename(__name__, "resources/Lithology migration table.xlsx")
 
-    connection = get_connection_to_db()
+    connection = get_connection_to_db("TEST")
     mindat_lithologies = pd.read_sql_query("SELECT * FROM material", connection)
     # This is required as the Mindat material table is somewhat messed up.
     # There are some extra lines in the table, with some random strings in the 

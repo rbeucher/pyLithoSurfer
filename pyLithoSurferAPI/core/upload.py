@@ -150,6 +150,6 @@ class StratigraphicUnitUploader(Uploader):
         return query
 
     def validate(self):
-        Uploader.validate(self.dataframe, StratigraphicUnitSchema)
+        Uploader._validate(self.dataframe, StratigraphicUnitSchema)
         self.validated = True
         return
