@@ -38,8 +38,8 @@ class SampleWithLocationUploader(Uploader):
             "celestial": LCelestial
         }
 
-        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, sample_lists)
-        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, location_lists)
+        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, location_lists)
+        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, sample_lists)
         self.validated = True
 
     def get_unique_query(self, samp_args, loc_args):
