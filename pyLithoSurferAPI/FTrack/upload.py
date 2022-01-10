@@ -4,10 +4,18 @@ import numpy as np
 import pandas as pd
 
 from pyLithoSurferAPI.FTrack.schemas import FTDataPointSchema
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
-from pyLithoSurferAPI.core.tables import DataPoint
+from pyLithoSurferAPI.core.tables import DataPoint, Material
 from pyLithoSurferAPI.FTrack.tables import FTDataPoint, FTDataPointCRUD
+from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique, 
+                                           LDosimeter,
+                                           LEtchant,
+                                           LFTAgeEquation,
+                                           LFTAgeType,
+                                           LFTAnalyticalMethod,
+                                           LIrradiationReactor,
+                                           LLambdaF, LLambda, LRmr0Equation)
 
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
@@ -27,7 +35,22 @@ class FTDataPointUploader(Uploader):
 
     def validate(self):
 
-        ft_list = {"dataPackage": DataPackage}
+        ft_list = {"dataPackage": DataPackage,
+                   "ageErrorType": LErrorType,
+                   "ftAgeAnalyticalTechnique": LFTAgeAnalyticalTechnique,
+                   "dosimeter": LDosimeter,
+                   "etchant": LEtchant,
+                   "ftAgeEquation": LFTAgeEquation,
+                   "ftAgeTyp": LFTAgeType,
+                   "ftAnalyticalMethod": LFTAnalyticalMethod,
+                   "irradiationReactor": LIrradiationReactor,
+                   "lambdaF": LLambdaF,
+                   "lambda": LLambda,
+                   "mineral": Material,
+                   "referenceMaterial": ReferenceMaterial,
+                   "rmr0Equation": LRmr0Equation,
+                   "zetaErrorType": LErrorType 
+                   }
 
         self.ft_datapoints_df = Uploader._validate(self.ft_datapoints_df, FTDataPointSchema, ft_list)
         self.validated = True
@@ -48,14 +71,14 @@ class FTDataPointUploader(Uploader):
                 ft_args.pop("dataPointId")
 
             dpts_args = {"dataPackageId": self.datapackageId,
-                         "dataStructure": "FTRACK",
+                         "dataStructure": "FT",
                          "dataEntityId": None,
                          "name": None,
                          "locationId": locationId,
                          "sampleId": sampleId}
             
-            query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
-                     "dataPointLithoCriteria.dataStructure.equals": "FTRACK",
+            query = {"dataPointLithoCriteria.dataStructure.equals": "FT",
+                     "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
             response = FTDataPointCRUD.query(query)

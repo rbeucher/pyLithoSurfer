@@ -1,8 +1,8 @@
 from pyLithoSurferAPI.uploader import Uploader
-from pyLithoSurferAPI.core.tables import (Location, Material, Archive, StratigraphicUnit, Sample, SampleWithLocation, Person)
+from pyLithoSurferAPI.core.tables import (Literature, Location, Material, Archive, StratigraphicUnit, Sample, SampleWithLocation, Person)
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
-from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
+from pyLithoSurferAPI.core.schemas import LiteratureSchema, LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
@@ -56,10 +56,13 @@ class SampleWithLocationUploader(Uploader):
 
         return SampleWithLocation.query(query)
 
-    def upload(self, update=False, update_strategy="merge_keep"):
+    def upload(self, update=False, update_strategy="merge_keep", auto_set_elevation=None):
 
         if not self.validated:
             raise ValueError("Data not validated")
+
+        if auto_set_elevation is not None: 
+            self.samples_df["autoSetElevationWriteConf"] = auto_set_elevation
 
         self.samples_df["locationId"] = None
         self.samples_df["id"] = None
@@ -114,12 +117,14 @@ class SampleWithLocationUploader(Uploader):
 
     def save(self, outfile="output.xlsx"):
 
+        kwargs = {}
         if os.path.isfile("output.xlsx"):
-            mode = "a"
+            kwargs["mode"] = "a"
+            kwargs["if_sheet_exists"] = "replace"
         else:
-            mode = "w"
+            kwargs["mode"] = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
+        with pd.ExcelWriter('output.xlsx', **kwargs) as writer:  
             self.samples_df.to_excel(writer, sheet_name='Samples')
             self.locations_df.to_excel(writer, sheet_name='Locations')
 
@@ -177,6 +182,52 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
             elif update:
                 dtp_args = self._update_args(old_args, args, update_strategy)
                 obj = StratigraphicUnit(**args) 
+                obj.update()
+
+            self.dataframe.loc[index, "id"] = obj.id
+
+
+class LiteratureUploader(Literature, Uploader):
+
+    name = "Literature"
+
+    def __init__(self, literature_df):
+        self.dataframe = literature_df
+
+    def get_unique_query(self, args):
+        
+        query = {"title.equals": args["title"],
+                 "pubYear.equals": args["pubYear"]}
+        return super().query(query)
+    
+    def validate(self):
+
+        self.dataframe = Uploader._validate(self.dataframe, LiteratureSchema)
+        self.validated = True
+
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = Literature(**args) 
+                obj.new() 
+
+            elif update:
+                dtp_args = self._update_args(old_args, args, update_strategy)
+                obj = Literature(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id

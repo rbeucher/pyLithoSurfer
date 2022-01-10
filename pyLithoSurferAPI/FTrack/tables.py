@@ -1,6 +1,7 @@
 
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
+from pyLithoSurferAPI.core.tables import DataPoint
 import json
 
 
@@ -23,7 +24,7 @@ class FTDataPointCRUD(APIRequests):
 
     API_PATH = "/api/fissiontrack/ft/FTDataPoint"
 
-    def __init__(self, dataPoint: DataPoint, ftDataPoint: ftDataPoint, dataPointID=None, id=None):
+    def __init__(self, dataPoint: DataPoint, ftDataPoint: FTDataPoint, dataPointID=None, id=None):
 
         self.dataPoint = dataPoint
         self.ftDataPoint = ftDataPoint
@@ -43,7 +44,12 @@ class FTDataPointCRUD(APIRequests):
 
         headers = APIRequests.SESSION.headers
         response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
-        response.raise_for_status() 
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(data, cls=NumpyEncoder))
+            print(response.json())
+            raise e
         response = response.json()
         
         self.id = response["id"]
@@ -75,7 +81,7 @@ class FTRawDataPointCRUD(APIRequests):
 
     API_PATH = "/api/fissiontrack/ftraw-datapoints"
     
-    def __init__(self, dataPoint: DataPoint, ftrawDataPoint: ftrawDataPoint, dataPointID=None, id=None):
+    def __init__(self, dataPoint: DataPoint, ftrawDataPoint: FTRawDataPoint, dataPointID=None, id=None):
 
         self.dataPoint = dataPoint
         self.ftrawDataPoint = ftrawDataPoint

@@ -86,6 +86,8 @@ class FTDataPointSchema(pa.SchemaModel):
     dPer: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     dPerStandardError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     dispersion: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    dosimeterId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    dosimeterName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     errorMa: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     etchantId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     etchantName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -95,6 +97,8 @@ class FTDataPointSchema(pa.SchemaModel):
     ftAgeEquationName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     ftAgeTypId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     ftAgeTypName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    ftAgeAnalyticalTechniqueId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    ftAgeAnalyticalTechniqueName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     irradiationReactorId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     irradiationReactorName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
@@ -109,6 +113,7 @@ class FTDataPointSchema(pa.SchemaModel):
     mtl1se: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     nTracks: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     nd: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    neutronDose: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     ni: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     noOfGrains: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     ns: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -128,6 +133,10 @@ class FTDataPointSchema(pa.SchemaModel):
     zetaError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     zetaErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     zetaErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+
+    locationId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    sampleId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+
 
     
 class FTLengthDataSchema(pa.SchemaModel):

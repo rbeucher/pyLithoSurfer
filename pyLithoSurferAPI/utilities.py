@@ -127,3 +127,21 @@ class NumpyEncoder(json.JSONEncoder):
             return None
         
         return json.JSONEncoder.default(self, obj)
+
+
+def check_entries(pd_series, refClass):
+    missing = []
+    for item in pd_series.unique():
+        if refClass.get_id_from_name(item) is None:
+            missing.append(item)
+    return missing
+
+
+def clean_entries(pd_series, nan_default="Unknown", replace=None):
+    # Remove Leading and Trailing blanks
+    pd_series = pd_series.str.strip()
+    # Capitalize
+    pd_series = pd_series.str.capitalize()
+    # Replace Nan values
+    pd_series = pd_series.replace({np.nan: nan_default})
+    return pd_series

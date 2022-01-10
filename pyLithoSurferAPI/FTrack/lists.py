@@ -37,6 +37,11 @@ class LFTAnalyticalSoftware(APIRequests):
     API_PATH = "/api/fissiontrack/l-ft-analytical-software"
 
 
+class LFTAnalyticalMethod(APIRequests):
+
+    API_PATH = "/api/fissiontrack/l-ft-analytical-method"
+
+
 class LIrradiationReactor(APIRequests):
 
     API_PATH = "/api/fissiontrack/ft/LIrradiationReactor"
