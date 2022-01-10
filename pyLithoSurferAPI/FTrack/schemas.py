@@ -108,6 +108,8 @@ class FTDataPointSchema(pa.SchemaModel):
     lambdaFName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     lambdaId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     lambdaName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    mineralId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    mineralName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     mountID: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     mtl: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     mtl1se: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)

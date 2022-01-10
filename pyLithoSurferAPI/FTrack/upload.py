@@ -55,7 +55,7 @@ class FTDataPointUploader(Uploader):
         self.ft_datapoints_df = Uploader._validate(self.ft_datapoints_df, FTDataPointSchema, ft_list)
         self.validated = True
 
-    def upload(self, update=False, update_strategy="merge_keep"):
+    def upload(self, update=False, update_strategy="replace"):
         
         if not self.validated:
             raise ValueError("Data not validated")
