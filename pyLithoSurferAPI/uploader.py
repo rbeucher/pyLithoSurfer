@@ -35,12 +35,14 @@ class Uploader(object):
 
     def save(self, outfile="output.xlsx"):
        
+        kwargs = {}
         if os.path.isfile(outfile):
-            mode = "a"
+            kwargs["mode"] = "a"
+            kwargs["if_sheet_exists"] = "replace"
         else:
-            mode = "w"
+            kwargs["mode"] = "w"
 
-        with pd.ExcelWriter(outfile, mode=mode, if_sheet_exists="replace") as writer:  
+        with pd.ExcelWriter(outfile, **kwargs) as writer:  
             self.dataframe.to_excel(writer, sheet_name=self.name)
 
     def _update_args(self, old_args, new_args, update_strategy):

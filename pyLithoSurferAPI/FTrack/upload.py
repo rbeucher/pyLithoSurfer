@@ -25,12 +25,12 @@ from tqdm import tqdm
 
 class FTDataPointUploader(Uploader):
 
-    name = "FTDataPoint"
+    name = "FTDataPoints"
 
     def __init__(self, datapackageId, ft_datapoints_df):
 
         self.datapackageId = datapackageId 
-        self.ft_datapoints_df = ft_datapoints_df
+        self.dataframe = ft_datapoints_df
         self.validated = False
 
     def validate(self):
@@ -52,7 +52,7 @@ class FTDataPointUploader(Uploader):
                    "zetaErrorType": LErrorType 
                    }
 
-        self.ft_datapoints_df = Uploader._validate(self.ft_datapoints_df, FTDataPointSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTDataPointSchema, ft_list)
         self.validated = True
 
     def upload(self, update=False, update_strategy="replace"):
@@ -60,11 +60,11 @@ class FTDataPointUploader(Uploader):
         if not self.validated:
             raise ValueError("Data not validated")
 
-        self.ft_datapoints_df["id"] = None
+        self.dataframe["id"] = None
 
-        for index in tqdm(self.ft_datapoints_df.index):
+        for index in tqdm(self.dataframe.index):
 
-            ft_args = self.ft_datapoints_df.loc[index].to_dict()
+            ft_args = self.dataframe.loc[index].to_dict()
             sampleId = ft_args.pop("sampleId")
             locationId = ft_args.pop("locationId")
             if ft_args.get("dataPointId"):
@@ -105,8 +105,8 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD.new() 
                 
                 # Recover Datapoint
-                self.ft_datapoints_df.loc[index, "id"] = FTDataptsCRUD.id
-                self.ft_datapoints_df.loc[index, "dataPointId"] = FTDataptsCRUD.dataPoint.id
+                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = FTDataptsCRUD.dataPoint.id
 
             elif update:
 
@@ -129,5 +129,5 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD.dataPoint.dataEntityId = ft_datapoint.id
                 FTDataptsCRUD.dataPoint.ftdatapoint_id = ft_datapoint.id
                 FTDataptsCRUD.update()
-                self.ft_datapoints_df.loc[index, "id"] = FTDataptsCRUD.id
-                self.ft_datapoints_df.loc[index, "dataPointId"] = datapoint.id
+                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = datapoint.id
