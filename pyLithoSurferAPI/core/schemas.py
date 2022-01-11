@@ -20,7 +20,7 @@ class SampleSchema(pa.SchemaModel):
     dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
     description: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
     id: Optional[Series[pa.Int64]]
-    igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
+    igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     igsnHandleURL: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnMintingTimestamp: Optional[Series[pa.DateTime]]
     locationId: Optional[Series[pa.Int64]]
