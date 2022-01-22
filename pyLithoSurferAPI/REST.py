@@ -78,7 +78,7 @@ class APIRequests(ABC):
     # GET FROM ID
     def get_from_id(self, id_value):
         path = self.path() + "/" + str(id_value)
-        response = APIRequests.session.get(path)
+        response = APIRequests.SESSION.get(path)
         response.raise_for_status()
         data = response.json()
         self.__init__(**data)

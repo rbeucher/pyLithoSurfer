@@ -166,18 +166,16 @@ class FTRawDataPointUploader(Uploader):
 
             ftraw_args = self.dataframe.loc[index].to_dict()
             sampleId = ftraw_args.pop("sampleId")
-            locationId = ftraw_args.pop("locationId")
-            ftdataPointId = ftraw_args.pop("ftdataPointId")
             if ftraw_args.get("dataPointId"):
                 ftraw_args.pop("dataPointId")
 
             dpts_args = {"dataPackageId": self.datapackageId,
                          "dataStructure": "FT_RAW",
                          "dataEntityId": None,
-                         "ftdataPointId": ftdataPointId,
-                         "name": None,
-                         "locationId": locationId,
-                         "sampleId": sampleId}
+                         "name": None
+                         # Here we should not linke sampleId and location_id
+                         # Same, the ftdatapoint should not be linked here
+                         }
             
             query = {"dataPointLithoCriteria.dataStructure.equals": "FT_RAW",
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),

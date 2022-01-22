@@ -66,6 +66,27 @@ class FTDataPointCRUD(APIRequests):
     def update(self):
         return self._send_payload(APIRequests.SESSION.put)
 
+    @classmethod
+    def get_from_id(cls, id_value):
+        path = cls.path() + "/" + str(id_value)
+        response = APIRequests.SESSION.get(path)
+        response.raise_for_status()
+        records = response.json()
+        dpts_args = records["dataPointDTO"]
+        ft_args = records["ftdataPointDTO"]
+        # Create DataPoint
+        datapoint = DataPoint(**dpts_args)
+        # Create FTDataPoint
+        ft_datapoint = FTDataPoint(**ft_args)
+
+        # Use FTDataPointCRUD to create the Datapoint and
+        # the FTDatapoint
+        obj =  FTDataPointCRUD(datapoint, ft_datapoint) 
+        obj.id = ft_datapoint.id
+        obj.dataPointID = datapoint.id
+        obj.dataPoint.dataEntityId = ft_datapoint.id
+        obj.dataPoint.ftdatapoint_id = ft_datapoint.id
+        return obj
 
 class FTLengthData(APIRequests):
 
