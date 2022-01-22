@@ -38,7 +38,12 @@ class APIRequests(ABC):
         data = self.to_dict()
         data.pop("id")
         response = APIRequests.SESSION.post(self.path(), data=json.dumps(data), headers=self.SESSION.headers)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(data, cls=NumpyEncoder))
+            print(response.json())
+            raise e
         response = response.json()
         self.id = response["id"]
         return response
@@ -46,7 +51,12 @@ class APIRequests(ABC):
     # PUT
     def update(self):
         response = APIRequests.SESSION.put(self.path(), data=self.to_json(), headers=self.SESSION.headers)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(self.to_json(), cls=NumpyEncoder))
+            print(response.json())
+            raise e
         return response
 
     # COUNT

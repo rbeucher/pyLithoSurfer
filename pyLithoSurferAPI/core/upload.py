@@ -1,10 +1,8 @@
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.core.tables import (Literature, Location, Material, Archive, StratigraphicUnit, Sample, SampleWithLocation, Person)
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.core.schemas import LiteratureSchema, LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.management.tables import DataPackage
-from pyLithoSurferAPI.utilities import get_elevation_from_google
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -226,7 +224,7 @@ class LiteratureUploader(Literature, Uploader):
                 obj.new() 
 
             elif update:
-                dtp_args = self._update_args(old_args, args, update_strategy)
+                args = self._update_args(old_args, args, update_strategy)
                 obj = Literature(**args) 
                 obj.update()
 
