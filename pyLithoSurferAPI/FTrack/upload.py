@@ -7,7 +7,7 @@ from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDat
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
-from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthData, FTCountData, FTDataPoint, FTDataPointCRUD, FTSingleGrain, FTRawDataPoint, FTRawDataPointCRUD
+from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthData, FTCountData, FTDataPoint, FTDataPointCRUD, FTLengthData, FTSingleGrain, FTRawDataPoint, FTRawDataPointCRUD
 from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique, 
                                            LDosimeter,
                                            LEtchant,
@@ -15,7 +15,7 @@ from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique,
                                            LFTAgeType,
                                            LFTAnalyticalMethod, LFTAnalyticalSoftware,
                                            LIrradiationReactor,
-                                           LLambdaF, LLambda, LRmr0Equation)
+                                           LLambdaF, LLambda, LRmr0Equation, LTrackType)
 
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
@@ -392,6 +392,61 @@ class FTCountDataUploader(FTCountData, Uploader):
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
                 obj = FTCountData(**args) 
+                obj.update()
+
+            self.dataframe.loc[index, "id"] = obj.id
+
+
+class FTLengthsDataUploader(FTSingleGrain, Uploader):
+
+    name = "FTLengthsData"
+
+    def __init__(self, datapackageId, ftsingle_grains_df):
+
+        self.datapackageId = datapackageId 
+        self.dataframe = ftsingle_grains_df
+        self.validated = False
+
+    def validate(self):
+
+        ft_list = {"dataPackage": DataPackage,
+                   "errorType": LErrorType,
+                   "trackType": LTrackType, 
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, FTSingleGrainSchema, ft_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+        
+        query = {"ftdataPointId.equals": args["ftdataPointId"],
+                 "grainName.equals": args["grainName"]}
+        return super().query(query)
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+            records = []
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = FTLengthData(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = FTLengthData(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id
