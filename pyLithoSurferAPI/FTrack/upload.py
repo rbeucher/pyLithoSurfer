@@ -401,10 +401,10 @@ class FTLengthDataUploader(FTSingleGrain, Uploader):
 
     name = "FTLengthData"
 
-    def __init__(self, datapackageId, ftsingle_grains_df):
+    def __init__(self, datapackageId, ftlengthdata_df):
 
         self.datapackageId = datapackageId 
-        self.dataframe = ftsingle_grains_df
+        self.dataframe = ftlengthdata_df
         self.validated = False
 
     def validate(self):
