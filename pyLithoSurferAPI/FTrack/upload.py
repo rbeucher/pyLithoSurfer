@@ -397,9 +397,9 @@ class FTCountDataUploader(FTCountData, Uploader):
             self.dataframe.loc[index, "id"] = obj.id
 
 
-class FTLengthsDataUploader(FTSingleGrain, Uploader):
+class FTLengthDataUploader(FTSingleGrain, Uploader):
 
-    name = "FTLengthsData"
+    name = "FTLengthData"
 
     def __init__(self, datapackageId, ftsingle_grains_df):
 
