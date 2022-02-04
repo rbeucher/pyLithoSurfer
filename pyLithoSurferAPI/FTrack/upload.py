@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTRawDataPointSchema, FTSingleGrainSchema
+from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTRawDataPointSchema, FTSingleGrainSchema
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
@@ -414,7 +414,7 @@ class FTLengthDataUploader(FTSingleGrain, Uploader):
                    "trackType": LTrackType, 
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, FTSingleGrainSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTLengthDataSchema, ft_list)
         self.validated = True
 
     def get_unique_query(self, args):

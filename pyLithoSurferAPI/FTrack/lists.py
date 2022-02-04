@@ -1,6 +1,5 @@
 
 from pyLithoSurferAPI.REST import APIRequests
-import pandas as pd
 
 class LDosimeter(APIRequests):
 
