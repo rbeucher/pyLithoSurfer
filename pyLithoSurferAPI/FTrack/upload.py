@@ -419,8 +419,11 @@ class FTLengthDataUploader(FTSingleGrain, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"ftdataPointId.equals": args["ftdataPointId"],
-                 "grainName.equals": args["grainName"]}
+        query = {"ftdataPointId.equals": args["ftrawDataPointId"],
+                 "grainName.equals": args["grainName"],
+                 "trackLength.equals": args["trackLength"],
+                 "cAcisAngle": args["cAcisAngle"],
+                 "averageDpar": args["averageDpar"]}
         return super().query(query)
     
     def upload(self, update=False, update_strategy="merge_keep"):

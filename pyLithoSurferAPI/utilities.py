@@ -129,11 +129,14 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def check_entries(pd_series, refClass):
+def check_entries(pd_series, refClass, addMissing=False):
     missing = []
     for item in pd_series.unique():
         if refClass.get_id_from_name(item) is None:
             missing.append(item)
+    if addMissing:
+        for item in missing:
+            refClass(name=item).new()
     return missing
 
 
