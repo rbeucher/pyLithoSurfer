@@ -13,17 +13,17 @@ class LEtchant(APIRequests):
 
 class LFTAgeAnalyticalTechnique(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LFTAgeAnalyticalTechnique"
+    API_PATH = "/api/fissiontrack/LFTAgeAnalyticalTechnique"
 
 
 class LFTAgeEquation(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LFTAgeEquation"
+    API_PATH = "/api/fissiontrack/LFTAgeEquation"
 
 
 class LFTAgeType(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LFTAgeType"
+    API_PATH = "/api/fissiontrack/LFTAgeType"
 
 
 class LFTAgeEquation(APIRequests):
@@ -48,22 +48,22 @@ class LFTAnalyticalAlgorithm(APIRequests):
 
 class LIrradiationReactor(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LIrradiationReactor"
+    API_PATH = "/api/fissiontrack/LIrradiationReactor"
 
 
 class LLambda(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LLambda"
+    API_PATH = "/api/fissiontrack/LLambda"
 
 
 class LLambdaF(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LLambdaF"
+    API_PATH = "/api/fissiontrack/LLambdaF"
 
 
 class LRmr0Equation(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/LRmr0Equation"
+    API_PATH = "/api/fissiontrack/LRmr0Equation"
 
 
 class LTrackType(APIRequests):

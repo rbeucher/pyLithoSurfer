@@ -7,12 +7,12 @@ import json
 
 class FTBinnedLengthData(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/FTBinnedLengthData"
+    API_PATH = "/api/fissiontrack/FTBinnedLengthData"
 
 
 class FTCountData(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft-count-data"
+    API_PATH = "/api/fissiontrack-count-data"
 
 
 class FTDataPoint(APIRequests):
@@ -22,7 +22,7 @@ class FTDataPoint(APIRequests):
 
 class FTDataPointCRUD(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/FTDataPoint"
+    API_PATH = "/api/fissiontrack/FTDataPoint"
 
     def __init__(self, dataPoint: DataPoint, ftDataPoint: FTDataPoint, dataPointID=None, id=None):
 
@@ -90,9 +90,9 @@ class FTDataPointCRUD(APIRequests):
 
 class FTLengthData(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft-length-data"
+    API_PATH = "/api/fissiontrack-length-data"
 
 
 class FTSingleGrain(APIRequests):
 
-    API_PATH = "/api/fissiontrack/ft/FTSingleGrain"
+    API_PATH = "/api/fissiontrack/FTSingleGrain"
