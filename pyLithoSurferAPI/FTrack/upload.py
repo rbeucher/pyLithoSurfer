@@ -13,7 +13,7 @@ from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique,
                                            LEtchant,
                                            LFTAgeEquation,
                                            LFTAgeType,
-                                           LFTAnalyticalMethod, LFTAnalyticalSoftware,
+                                           LFTAnalyticalMethod, LFTAnalyticalSoftware, LFTAnalyticalAlgorithm,
                                            LIrradiationReactor,
                                            LLambdaF, LLambda, LRmr0Equation, LTrackType)
 
@@ -37,15 +37,18 @@ class FTDataPointUploader(Uploader):
 
         ft_list = {"dataPackage": DataPackage,
                    "ageErrorType": LErrorType,
-                   "ftAgeAnalyticalTechnique": LFTAgeAnalyticalTechnique,
                    "dosimeter": LDosimeter,
                    "etchant": LEtchant,
+                   "ftAgeAnalyticalTechnique": LFTAgeAnalyticalTechnique,
                    "ftAgeEquation": LFTAgeEquation,
                    "ftAgeTyp": LFTAgeType,
                    "ftAnalyticalMethod": LFTAnalyticalMethod,
+                   "ftAnalyticalSoftwareName" : LFTAnalyticalSoftware,
+                   "ftAnalyticalAlgorithm": LFTAnalyticalAlgorithm,
                    "irradiationReactor": LIrradiationReactor,
                    "lambdaF": LLambdaF,
                    "lambda": LLambda,
+                   "machine": Machine,
                    "mineral": Material,
                    "referenceMaterial": ReferenceMaterial,
                    "rmr0Equation": LRmr0Equation,
@@ -131,109 +134,6 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD.update()
                 self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
                 self.dataframe.loc[index, "dataPointId"] = datapoint.id
-
-class FTRawDataPointUploader(Uploader):
-
-    name = "FTRawDataPoints"
-
-    def __init__(self, datapackageId, ftraw_datapoints_df):
-
-        self.datapackageId = datapackageId 
-        self.dataframe = ftraw_datapoints_df
-        self.validated = False
-
-    def validate(self):
-
-        ft_list = {"dataPackage": DataPackage,
-                   "etchant": LEtchant,
-                   "ftAnalyticalMethod": LFTAnalyticalMethod,
-                   "ftAnalyticalSoftwareName" : LFTAnalyticalSoftware,
-                   "machine": Machine,
-                   "mineral": Material,
-                   }
-
-        self.dataframe = Uploader._validate(self.dataframe, FTRawDataPointSchema, ft_list)
-        self.validated = True
-
-    def upload(self, update=False, update_strategy="replace"):
-        
-        if not self.validated:
-            raise ValueError("Data not validated")
-
-        self.dataframe["id"] = None
-
-        for index in tqdm(self.dataframe.index):
-
-            ftraw_args = self.dataframe.loc[index].to_dict()
-            sampleId = ftraw_args.pop("sampleId")
-            if ftraw_args.get("dataPointId"):
-                ftraw_args.pop("dataPointId")
-
-            dpts_args = {"dataPackageId": self.datapackageId,
-                         "dataStructure": "FT_RAW",
-                         "dataEntityId": None,
-                         "name": None
-                         # Here we should not linke sampleId and location_id
-                         # Same, the ftdatapoint should not be linked here
-                         }
-            
-            query = {"dataPointLithoCriteria.dataStructure.equals": "FT_RAW",
-                     "dataPointLithoCriteria.sampleId.equals": int(sampleId),
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
-
-            response = FTRawDataPointCRUD.query(query)
-            records = response.json()
-
-            if len(records) == 1:
-                existing_id = records[0]["id"]
-            elif len(records) > 1:
-                existing_id = records[0]["id"]
-            else:
-                existing_id = None
-
-            if existing_id is None:
-
-                # Create DataPoint
-                datapoint = DataPoint(**dpts_args)
-
-                # Create FTDataPoint
-                ftraw_datapoint = FTRawDataPoint(**ftraw_args)
-
-                # Use FTDataPointCRUD to create the Datapoint and
-                # the FTDatapoint
-                FTDataptsCRUD = FTRawDataPointCRUD(datapoint, ftraw_datapoint) 
-                FTDataptsCRUD.new() 
-                
-                # Recover Datapoint
-                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
-                self.dataframe.loc[index, "dataPointId"] = FTDataptsCRUD.dataPoint.id
-
-            elif update:
-
-                old_dpts_args = records[0]["dataPointDTO"]
-                dpts_args = self._update_args(old_dpts_args, dpts_args, update_strategy)
-                old_ftraw_args = records[0]["ftrawDataPointDTO"]
-                ftraw_args = self._update_args(old_ftraw_args, ftraw_args, update_strategy)
-
-                # Create DataPoint
-                datapoint = DataPoint(**dpts_args)
-
-                # Create FTDataPoint
-                ftraw_datapoint = FTRawDataPoint(**ftraw_args)
-
-                # Use FTDataPointCRUD to create the Datapoint and
-                # the FTDatapoint
-                FTDataptsCRUD = FTRawDataPointCRUD(datapoint, ftraw_datapoint) 
-                FTDataptsCRUD.id = ftraw_datapoint.id
-                FTDataptsCRUD.dataPointID = datapoint.id
-                FTDataptsCRUD.dataPoint.dataEntityId = ftraw_datapoint.id
-                FTDataptsCRUD.dataPoint.ftrawDataPointId = ftraw_datapoint.id
-                FTDataptsCRUD.update()
-                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
-                self.dataframe.loc[index, "dataPointId"] = datapoint.id
-
-
-
 
 
 class FTBinnedLengthsUploader(FTBinnedLengthData, Uploader):

@@ -5,7 +5,7 @@ from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.tables import DataPoint
 from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.Vitrinite.schemas import VitriniteDataPointSchema
-from pyLithoSurferAPI.Vitrinite.VitriniteDataPoint import VitriniteDataPointCRUD, VitriniteDataPoint
+from pyLithoSurferAPI.Vitrinite.tables import VitriniteDataPointCRUD, VitriniteDataPoint
 from pyLithoSurferAPI.uploader import Uploader
 from tqdm import tqdm
 
@@ -30,11 +30,11 @@ class VitriniteDataPointUploader(object):
         if not self.validated:
             raise ValueError("Data not validated")
 
-        self.vitrinite_datapoints_df["id"] = None
+        self.dataframe["id"] = None
 
-        for index in tqdm(self.vitrinite_datapoints_df.index):
+        for index in tqdm(self.dataframe.index):
 
-            vitrinite_args = self.vitrinite_datapoints_df.loc[index].to_dict()
+            vitrinite_args = self.dataframe.loc[index].to_dict()
             sampleId = vitrinite_args.pop("sampleId")
             locationId = vitrinite_args.pop("locationId")
             if vitrinite_args.get("dataPointId"):
@@ -73,8 +73,8 @@ class VitriniteDataPointUploader(object):
                 VitriniteDataptsCRUD.new() 
                 
                 # Recover Datapoint
-                self.vitrinite_datapoints_df.loc[index, "id"] = VitriniteDataptsCRUD.id
-                self.vitrinite_datapoints_df.loc[index, "dataPointId"] = VitriniteDataptsCRUD.dataPoint.id
+                self.dataframe.loc[index, "id"] = VitriniteDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = VitriniteDataptsCRUD.dataPoint.id
 
             elif update:
 
@@ -95,6 +95,6 @@ class VitriniteDataPointUploader(object):
                 VitriniteDataptsCRUD.dataPoint.dataEntityId = vitrinite_datapoint.id
                 VitriniteDataptsCRUD.dataPoint.shrimp_datapoint_id = vitrinite_datapoint.id
                 VitriniteDataptsCRUD.update()
-                self.vitrinite_datapoints_df.loc[index, "id"] = VitriniteDataptsCRUD.id
-                self.vitrinite_datapoints_df.loc[index, "dataPointId"] = datapoint.id
+                self.dataframe.loc[index, "id"] = VitriniteDataptsCRUD.id
+                self.dataframe.loc[index, "dataPointId"] = datapoint.id
 

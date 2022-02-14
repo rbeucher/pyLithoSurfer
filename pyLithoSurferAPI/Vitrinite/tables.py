@@ -33,7 +33,12 @@ class VitriniteDataPointCRUD(APIRequests):
 
         headers = APIRequests.SESSION.headers
         response = func(self.path(), data=json.dumps(data, cls=NumpyEncoder), headers=headers)
-        response.raise_for_status() 
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(data, cls=NumpyEncoder))
+            print(response.json())
+            raise e
         response = response.json()
         
         self.id = response["id"]
