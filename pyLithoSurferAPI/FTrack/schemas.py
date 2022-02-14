@@ -57,7 +57,7 @@ class FTCountDataSchema(pa.SchemaModel):
     dosimeterName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     errorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    ftrawDataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    ftdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     grainName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     nd: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -178,38 +178,12 @@ class FTLengthDataSchema(pa.SchemaModel):
     dip: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    ftrawDataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    ftdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     grainName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackLength: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-
-
-class FTRawDataPointSchema(pa.SchemaModel):
-
-    class Config:
-        name = "FTRawDataPointSchema"
-        strict = True
-
-    comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    etchantId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    etchantName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    etchingTemp: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    etchingTime: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    ftAnalyticalMethodId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    ftAnalyticalMethodName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    ftAnalyticalSoftwareId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    ftAnalyticalSoftwareName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    machineId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    machineName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    mineralId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    mineralName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    mountIDCount: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    mountIDLength: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
-    sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
 
 
 class FTSingleGrainSchema(pa.SchemaModel):

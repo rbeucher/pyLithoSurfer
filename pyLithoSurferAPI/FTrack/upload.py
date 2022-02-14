@@ -3,11 +3,11 @@ import os
 import numpy as np
 import pandas as pd
 
-from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTRawDataPointSchema, FTSingleGrainSchema
+from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTSingleGrainSchema
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
-from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthData, FTCountData, FTDataPoint, FTDataPointCRUD, FTLengthData, FTSingleGrain, FTRawDataPoint, FTRawDataPointCRUD
+from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthData, FTCountData, FTDataPoint, FTDataPointCRUD, FTLengthData, FTSingleGrain
 from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique, 
                                            LDosimeter,
                                            LEtchant,
@@ -265,7 +265,7 @@ class FTCountDataUploader(FTCountData, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"ftrawDataPointId.equals": args["ftrawDataPointId"],
+        query = {"FTDataPointId.equals": args["ftdataPointId"],
                  "grainName.equals": args["grainName"]}
         return super().query(query)
     
@@ -319,7 +319,7 @@ class FTLengthDataUploader(FTSingleGrain, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"ftdataPointId.equals": args["ftrawDataPointId"],
+        query = {"FTDataPointId.equals": args["ftdataPointId"],
                  "grainName.equals": args["grainName"],
                  "trackLength.equals": args["trackLength"],
                  "cAcisAngle": args["cAcisAngle"],
