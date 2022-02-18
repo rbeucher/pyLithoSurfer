@@ -1,6 +1,7 @@
 
 from pyLithoSurferAPI.REST import APIRequests
 
+
 class LDosimeter(APIRequests):
 
     API_PATH = "/api/fissiontrack/l-dosimeter"
