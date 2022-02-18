@@ -7,7 +7,7 @@ from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDat
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
-from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthData, FTCountData, FTDataPoint, FTDataPointCRUD, FTLengthData, FTSingleGrain
+from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthDataCRUD, FTCountDataCRUD, FTDataPoint, FTDataPointCRUD, FTLengthDataCRUD, FTSingleGrainCRUD
 from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique, 
                                            LDosimeter,
                                            LEtchant,
@@ -136,7 +136,7 @@ class FTDataPointUploader(Uploader):
                 self.dataframe.loc[index, "dataPointId"] = datapoint.id
 
 
-class FTBinnedLengthsUploader(FTBinnedLengthData, Uploader):
+class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
 
     name = "FTBinnedLengthsData"
 
@@ -177,19 +177,19 @@ class FTBinnedLengthsUploader(FTBinnedLengthData, Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = FTBinnedLengthData(**args) 
+                obj = FTBinnedLengthDataCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = FTBinnedLengthData(**args) 
+                obj = FTBinnedLengthDataCRUD(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id
 
 
 
-class FTSingleGrainsUploader(FTSingleGrain, Uploader):
+class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
 
     name = "FTSingleGrainData"
 
@@ -232,18 +232,18 @@ class FTSingleGrainsUploader(FTSingleGrain, Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = FTSingleGrain(**args) 
+                obj = FTSingleGrainCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = FTSingleGrain(**args) 
+                obj = FTSingleGrainCRUD(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id
 
 
-class FTCountDataUploader(FTCountData, Uploader):
+class FTCountDataUploader(FTCountDataCRUD, Uploader):
 
     name = "FTCountData"
 
@@ -286,18 +286,18 @@ class FTCountDataUploader(FTCountData, Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = FTCountData(**args) 
+                obj = FTCountDataCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = FTCountData(**args) 
+                obj = FTCountDataCRUD(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id
 
 
-class FTLengthDataUploader(FTSingleGrain, Uploader):
+class FTLengthDataUploader(FTSingleGrainCRUD, Uploader):
 
     name = "FTLengthData"
 
@@ -344,12 +344,12 @@ class FTLengthDataUploader(FTSingleGrain, Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = FTLengthData(**args) 
+                obj = FTLengthDataCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = FTLengthData(**args) 
+                obj = FTLengthDataCRUD(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id

@@ -1,8 +1,8 @@
-from pyLithoSurferAPI.UThHe.schemas import HeDataPointSchema, HeWholeGrainSchema
+from pyLithoSurferAPI.UThHe.schemas import HeDataPointSchema, HeInSituSchema, HeWholeGrainSchema
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material
-from pyLithoSurferAPI.UThHe.tables import HeDataPoint, HeDataPointCRUD, HeWholeGrain
+from pyLithoSurferAPI.UThHe.tables import HeDataPoint, HeDataPointCRUD, HeWholeGrainCRUD, HeInSituCRUD
 from pyLithoSurferAPI.UThHe.lists import (LHeAgeEquation,
                                           LHeAlphaStopDistRef,
                                           LHeCorrectedAgeMethod,
@@ -132,7 +132,7 @@ class HeDataPointUploader(Uploader):
                 self.dataframe.loc[index, "dataPointId"] = datapoint.id
 
 
-class HeWholeGrainsUploader(HeWholeGrain, Uploader):
+class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 
     name = "HeWholeGrain"
 
@@ -192,12 +192,76 @@ class HeWholeGrainsUploader(HeWholeGrain, Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = HeWholeGrain(**args) 
+                obj = HeWholeGrainCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = HeWholeGrain(**args) 
+                obj = HeWholeGrainCRUD(**args) 
+                obj.update()
+
+            self.dataframe.loc[index, "id"] = obj.id
+
+
+class HeInSituUploader(HeInSituCRUD, Uploader):
+
+    name = "HeInSitu"
+
+    def __init__(self, datapackageId, he_in_situ_df):
+
+        self.datapackageId = datapackageId 
+        self.dataframe = he_in_situ_df
+        self.validated = False
+
+    def validate(self):
+
+        he_list = {"dataPackage": DataPackage,
+                   "crysFrag": LHeCrysFrag,
+                   "he4AmountErrorType": LErrorType,
+                   "he4ConcentrationErrorType": LErrorType,
+                   "parentPitVolumeErrorType": LErrorType,
+                   "pitVolumeErrorType": LErrorType,
+                   "smAmountErrorType": LErrorType,
+                   "smConcentrationErrorType": LErrorType,
+                   "tauErrorType": LErrorType,
+                   "thAmountErrorType": LErrorType,
+                   "thConcentrationErrorType": LErrorType,
+                   "uamountErrorType": LErrorType,
+                   "uconcentrationErrorType": LErrorType,
+                   "uncorrectedHeAgeErrorType": LErrorType,
+                   "euerrorType": LErrorType,
+                   "pitRelationship": None
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, HeInSituSchema, he_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+        return []
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = HeInSituCRUD(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = HeInSituCRUD(**args) 
                 obj.update()
 
             self.dataframe.loc[index, "id"] = obj.id

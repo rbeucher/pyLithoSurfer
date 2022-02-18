@@ -189,6 +189,7 @@ class FTLengthDataSchema(pa.SchemaModel):
     rmr0: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     kParameter: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackLength: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    trackID: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     trackTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 

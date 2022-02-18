@@ -161,5 +161,71 @@ class HeDataPointSchema(pa.SchemaModel):
     locationId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     sampleId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
 
-
     
+class HeInSituSchema(pa.SchemaModel):
+
+    class Config:
+        name = "HeInSituSchema"
+        strict = True
+
+    ageCalibrationFactor: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    correctedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    crysFragId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    crysFragName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    eU: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    eUError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    euerrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    euerrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    grainID: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    he4Amount: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4AmountError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4AmountErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4AmountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    he4Concentraion: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4ConcentrationError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4ConcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4ConcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    heDataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pParentPitVolumeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    parentPitVolume: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    parentPitVolumeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    parentPitVolumeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    parentPitVolumeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    pitRelationshipId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pitRelationshipName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    pitVolume: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pitVolumeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pitVolumeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    smAmount: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smAmountError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smAmountErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smAmountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    smConcentration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smConcentrationError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smConcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    smConcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    tau: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    tauErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    tauErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    thAmount: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thAmountError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thAmountErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thAmountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    thConcentration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thConcentrationError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thConcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thConcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    uAmount: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uAmountError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uConcentration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uConcentrationError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uamountErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uamountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    uconcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uconcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
+    uncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})  

@@ -5,14 +5,19 @@ from pyLithoSurferAPI.core.tables import DataPoint
 import json
 
 
-class HeWholeGrain(APIRequests):
+class HeWholeGrainCRUD(APIRequests):
 
-    API_PATH = "/api/he-whole-grains"
+    API_PATH = "/api/helium/HeWholeGrain"
 
 
 class HeDataPoint(APIRequests):
 
     API_PATH = "/api/he-data-points"
+
+
+class HeInSituCRUD(APIRequests):
+
+    API_PATH = "/api/helium/HeInSitu"
 
 
 class HeDataPointCRUD(APIRequests):

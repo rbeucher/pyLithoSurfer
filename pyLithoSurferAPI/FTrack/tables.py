@@ -5,14 +5,14 @@ from pyLithoSurferAPI.core.tables import DataPoint
 import json
 
 
-class FTBinnedLengthData(APIRequests):
+class FTBinnedLengthDataCRUD(APIRequests):
 
     API_PATH = "/api/fissiontrack/FTBinnedLengthData"
 
 
-class FTCountData(APIRequests):
+class FTCountDataCRUD(APIRequests):
 
-    API_PATH = "/api/fissiontrack-count-data"
+    API_PATH = "/api/fissiontrack/ft-count-data"
 
 
 class FTDataPoint(APIRequests):
@@ -88,11 +88,11 @@ class FTDataPointCRUD(APIRequests):
         obj.dataPoint.ftdatapoint_id = ft_datapoint.id
         return obj
 
-class FTLengthData(APIRequests):
+class FTLengthDataCRUD(APIRequests):
 
-    API_PATH = "/api/fissiontrack-length-data"
+    API_PATH = "/api/fissiontrack/ft-length-data"
 
 
-class FTSingleGrain(APIRequests):
+class FTSingleGrainCRUD(APIRequests):
 
     API_PATH = "/api/fissiontrack/FTSingleGrain"
