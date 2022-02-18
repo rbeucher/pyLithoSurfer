@@ -148,3 +148,36 @@ def clean_entries(pd_series, nan_default="Unknown", replace=None):
     # Replace Nan values
     pd_series = pd_series.replace({np.nan: nan_default})
     return pd_series
+
+def upload_list_excel(xlsxFile, name, Entity):
+    data = pd.read_excel(xlsxFile, sheet_name=name, skiprows=11) 
+    data = data[["name", "description"]]
+    data = data.to_dict(orient="records")
+    data = data[::-1]
+
+    for item in data:
+        name = item["name"]
+        description = item["description"]
+        print(name, description)
+        entity = Entity(name=name, id=0)
+        entity.new()
+    return data
+
+def upload_list_gsheet(sheet_id, sheet_name, Entity):
+    url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    df = pd.read_csv(url, skip_blank_lines=False, skiprows=5)
+    df = df[["name", "description"]]
+    df = df.to_dict(orient="records")
+    df = df[::-1]
+
+    print(f"Uploading {sheet_name}")
+    for item in df:
+        response = Entity.query({"name.equals": item["name"]})
+        if response:
+            continue
+        name = item["name"]
+        description = item["description"]
+        print(name, description)
+        entity = Entity(name=name, id=0)
+        entity.new()
+    return df
