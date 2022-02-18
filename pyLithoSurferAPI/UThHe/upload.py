@@ -14,6 +14,8 @@ from pyLithoSurferAPI.UThHe.lists import (LHeAgeEquation,
                                           LHeGrainMorphology,
                                           LHeRFTEq,
                                           LHeRSVEq,
+                                          LPitRelationship,
+                                          LHeAliquotType,
                                           LLambda)
 
 from pyLithoSurferAPI.uploader import Uploader
@@ -146,7 +148,7 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 
         he_list = {"dataPackage": DataPackage,
                    "aliquotMassErrorType": LErrorType,
-                   #"aliquotType": None,
+                   "aliquotType": LHeAliquotType,
                    "crysFrag": LHeCrysFrag,
                    "euerrorType": LErrorType,
                    "ftErrorType": LErrorType,
@@ -230,7 +232,7 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
                    "uconcentrationErrorType": LErrorType,
                    "uncorrectedHeAgeErrorType": LErrorType,
                    "euerrorType": LErrorType,
-                   "pitRelationship": None
+                   "pitRelationship": LPitRelationship
                    }
 
         self.dataframe = Uploader._validate(self.dataframe, HeInSituSchema, he_list)
