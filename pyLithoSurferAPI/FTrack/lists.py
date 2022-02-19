@@ -29,7 +29,7 @@ class LFTAgeType(APIRequests):
 
 class LFTAgeEquation(APIRequests):
 
-    API_PATH = "/api/fissiontrack/l-ft-analytical-method"
+    API_PATH = "/api/fissiontrack/LFTAgeEquation"
 
 
 class LFTAnalyticalSoftware(APIRequests):
