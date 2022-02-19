@@ -53,11 +53,15 @@ class Uploader(object):
         old_args = {k:v for k,v in old_args.items() if v is not None}
 
         if update_strategy == "merge_keep":
-            return new_args.update(old_args)
+            for k, v in old_args.items():
+                new_args[k] = v
+            return new_args
         
         if update_strategy == "merge_replace":
             new_args["id"] = old_args["id"]
-            return old_args.update(new_args)
+            for k, v in new_args.items():
+                old_args[k] = v
+            return old_args
 
         if update_strategy == "replace":
             for key, val in old_args.items():

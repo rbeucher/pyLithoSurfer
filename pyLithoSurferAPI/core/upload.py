@@ -30,6 +30,7 @@ class SampleWithLocationUploader(Uploader):
             "sampleKind" : LSampleKind,
             "locationKind": LLocationKind,
             "referenceElevationKind": LElevationKind,
+            "stratographicUnit": StratigraphicUnit,
             }
 
         location_lists = {
@@ -142,6 +143,8 @@ class PersonUploader(Uploader):
 
 
 class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
+
+    name = "StratigraphicUnit"
     
     def __init__(self, stratigraphic_df):
         
@@ -178,9 +181,12 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
                 obj.new() 
 
             elif update:
-                dtp_args = self._update_args(old_args, args, update_strategy)
+                args = self._update_args(old_args, args, update_strategy)
                 obj = StratigraphicUnit(**args) 
                 obj.update()
+                
+            #for k in args.keys():
+            #    self.dataframe.loc[index, k] = args[k]
 
             self.dataframe.loc[index, "id"] = obj.id
 

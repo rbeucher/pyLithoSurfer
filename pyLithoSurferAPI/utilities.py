@@ -173,7 +173,7 @@ def upload_list_gsheet(sheet_id, sheet_name, Entity):
     print(f"Uploading {sheet_name}")
     for item in df:
         response = Entity.query({"name.equals": item["name"]})
-        if response:
+        if response.json():
             continue
         name = item["name"]
         description = item["description"]
