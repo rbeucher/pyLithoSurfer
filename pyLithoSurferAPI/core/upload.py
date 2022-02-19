@@ -128,7 +128,7 @@ class SampleWithLocationUploader(Uploader):
             self.locations_df.to_excel(writer, sheet_name='Locations')
 
 
-class PersonUploader(Uploader):
+class PersonUploader(Person, Uploader):
 
     name = "Persons"
 
@@ -139,7 +139,34 @@ class PersonUploader(Uploader):
         
         query = {"name.equals": args["name"],
                  "firstName.equals": args["firstName"]}
-        return query
+        return super().query(query)
+        
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = Person(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = Person(**args) 
+                obj.update()
+
+            self.dataframe.loc[index, "id"] = obj.id
 
 
 class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
@@ -185,9 +212,6 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
                 obj = StratigraphicUnit(**args) 
                 obj.update()
                 
-            #for k in args.keys():
-            #    self.dataframe.loc[index, k] = args[k]
-
             self.dataframe.loc[index, "id"] = obj.id
 
 
