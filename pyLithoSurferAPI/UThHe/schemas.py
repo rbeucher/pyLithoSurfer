@@ -9,7 +9,7 @@ class HeWholeGrainSchema(pa.SchemaModel):
         name = "HeWholeGrainSchema"
         strict = True
 
-    aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     aliquotMass: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     aliquotMassError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     aliquotMassErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -49,7 +49,7 @@ class HeWholeGrainSchema(pa.SchemaModel):
     he4AmountError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     he4AmountErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     he4AmountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    he4Concentraion: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    he4Concentration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     he4ConcentrationError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     he4ConcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     he4ConcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})

@@ -39,7 +39,7 @@ class HeDataPointCRUD(APIRequests):
         heDataPoint = self.heDataPoint.to_dict()
         data["heDataPointDTO"] = heDataPoint 
         data["dataPointId"] = self.dataPointID
-        data["dataPointDTO"]["ftdataPointId"] = self.id
+        data["dataPointDTO"]["heDataPointId"] = self.id
         data["id"] = self.id
 
         headers = APIRequests.SESSION.headers
@@ -56,7 +56,7 @@ class HeDataPointCRUD(APIRequests):
         
         self.dataPoint.id = response["dataPointDTO"]["id"]
         self.dataPointID = self.dataPoint.id
-        self.heDataPoint.id = response["hedataPointDTO"]["id"]
+        self.heDataPoint.id = response["heDataPointDTO"]["id"]
         
         return response
 
@@ -73,11 +73,11 @@ class HeDataPointCRUD(APIRequests):
         response.raise_for_status()
         records = response.json()
         dpts_args = records["dataPointDTO"]
-        he_args = records["hedataPointDTO"]
+        he_args = records["heDataPointDTO"]
         # Create DataPoint
         datapoint = DataPoint(**dpts_args)
         # Create FTDataPoint
-        he_datapoint = HeDataPoint(**ft_args)
+        he_datapoint = HeDataPoint(**he_args)
 
         # Use FTDataPointCRUD to create the Datapoint and
         # the FTDatapoint
@@ -85,6 +85,6 @@ class HeDataPointCRUD(APIRequests):
         obj.id = he_datapoint.id
         obj.dataPointID = datapoint.id
         obj.dataPoint.dataEntityId = he_datapoint.id
-        obj.dataPoint.ftdatapoint_id = he_datapoint.id
+        obj.dataPoint.hedatapoint_id = he_datapoint.id
         return obj
 

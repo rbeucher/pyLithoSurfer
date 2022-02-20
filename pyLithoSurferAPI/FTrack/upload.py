@@ -265,7 +265,7 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"FTDataPointId.equals": args["ftdataPointId"],
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"]),
                  "grainName.equals": args["grainName"]}
         return super().query(query)
     
@@ -297,7 +297,7 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
             self.dataframe.loc[index, "id"] = obj.id
 
 
-class FTLengthDataUploader(FTSingleGrainCRUD, Uploader):
+class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
 
     name = "FTLengthData"
 
@@ -319,11 +319,10 @@ class FTLengthDataUploader(FTSingleGrainCRUD, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"FTDataPointId.equals": args["ftdataPointId"],
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"]),
                  "grainName.equals": args["grainName"],
-                 "trackLength.equals": args["trackLength"],
-                 "cAcisAngle": args["cAcisAngle"],
-                 "averageDpar": args["averageDpar"]}
+                 "trackID.equals": args["trackID"]}
+                 
         return super().query(query)
     
     def upload(self, update=False, update_strategy="merge_keep"):

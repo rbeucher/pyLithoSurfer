@@ -15,8 +15,7 @@ from pyLithoSurferAPI.UThHe.lists import (LHeAgeEquation,
                                           LHeRFTEq,
                                           LHeRSVEq,
                                           LPitRelationship,
-                                          LHeAliquotType,
-                                          LLambda)
+                                          LHeAliquotType)
 
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
@@ -113,7 +112,7 @@ class HeDataPointUploader(Uploader):
 
                 old_dpts_args = records[0]["dataPointDTO"]
                 dpts_args = self._update_args(old_dpts_args, dpts_args, update_strategy)
-                old_he_args = records[0]["ftdataPointDTO"]
+                old_he_args = records[0]["heDataPointDTO"]
                 he_args = self._update_args(old_he_args, he_args, update_strategy)
 
                 # Create DataPoint
@@ -128,7 +127,7 @@ class HeDataPointUploader(Uploader):
                 HeDataptsCRUD.id = he_datapoint.id
                 HeDataptsCRUD.dataPointID = datapoint.id
                 HeDataptsCRUD.dataPoint.dataEntityId = he_datapoint.id
-                HeDataptsCRUD.dataPoint.ftdatapoint_id = he_datapoint.id
+                HeDataptsCRUD.dataPoint.hedatapoint_id = he_datapoint.id
                 HeDataptsCRUD.update()
                 self.dataframe.loc[index, "id"] = HeDataptsCRUD.id
                 self.dataframe.loc[index, "dataPointId"] = datapoint.id
@@ -173,7 +172,7 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"hedataPointId.equals": args["hedataPointId"],
+        query = {"heDataPointId.equals": int(args["heDataPointId"]),
                  "aliquotID.equals": args["aliquotID"]}
         return super().query(query)
     
