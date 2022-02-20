@@ -140,6 +140,12 @@ class PersonUploader(Person, Uploader):
         query = {"name.equals": args["name"],
                  "firstName.equals": args["firstName"]}
         return super().query(query)
+
+    def validate(self):
+
+        self.dataframe = Uploader._validate(self.dataframe, PersonSchema)
+        self.validated = True
+        return
         
     def upload(self, update=False, update_strategy="merge_keep"):
         

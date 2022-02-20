@@ -74,16 +74,6 @@ class Location(APIRequests):
     API_PATH = "/api/locations"
 
 
-class LPerson2DataPointRole(APIRequests):
-
-    API_PATH = "/api/core/l-person-2-data-point-roles"
-
-
-class LPerson2SampleRole(APIRequests):
-
-    API_PATH = "/api/core/l-person-2-sample-roles"
-
-
 class Person2Data(APIRequests):
 
     API_PATH = "/api/core/person-2-data-points"
@@ -94,6 +84,16 @@ class Person2Sample(APIRequests):
     API_PATH = "/api/core/person-2-samples"
 
 
+class Funding2Sample(APIRequests):
+
+    API_PATH = "/api/core/funding-2-samples"
+
+
+class Funding2Data(APIRequests):
+
+    API_PATH = "/api/core/funding-2-data-points"
+
+
 class StratigraphicUnit(APIRequests):
 
     API_PATH = "/api/core/stratigraphic-units"
@@ -102,18 +102,18 @@ class StratigraphicUnit(APIRequests):
     def get_id_from_name(cls, name):
         import pandas as pd
         
-        query = {"name.contains": name}
+        query = {"name.equals": name}
         response = cls.query(query)
         records = response.json()
         if len(records) > 1:
             df = pd.DataFrame.from_records(records)
-            print(df)
+            print(df, name)
             chosen_id = input("Choose id:")
             return chosen_id
         elif len(records):
             return records[0]["id"]
         else:
-            raise ValueError(f"cannot find {name}")
+            print(f"cannot find {name}")
 
 
 class Statement(APIRequests):

@@ -102,6 +102,16 @@ class ReferenceMaterial(APIRequests):
     API_PATH = "/api/core/reference-materials"
 
 
+class LPerson2DataPointRole(APIRequests):
+
+    API_PATH = "/api/core/l-person-2-data-point-roles"
+
+
+class LPerson2SampleRole(APIRequests):
+
+    API_PATH = "/api/core/l-person-2-sample-roles"
+
+
 def get_list_name_to_id_mapping(ListClass):
     df = ListClass.get_all()
     return pd.Series(df.id.values, index=df.name).to_dict()

@@ -130,11 +130,11 @@ class PersonSchema(pa.SchemaModel):
     
     calcName: Optional[Series[pa.String]]
     firstName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
-    id: Optional[Series[pa.Int64]]
+    id: Optional[Series[pa.Int64]] = pa.Field(nullable=True)
     name: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
-    note: Optional[Series[pa.String]]
+    note: Optional[Series[pa.String]] = pa.Field(nullable=True)
     orcId: Optional[Series[pa.String]] = pa.Field(nullable=True)
-    title: Optional[Series[pa.String]]
+    title: Optional[Series[pa.String]] = pa.Field(nullable=True)
 
 
 class LiteratureSchema(pa.SchemaModel):
