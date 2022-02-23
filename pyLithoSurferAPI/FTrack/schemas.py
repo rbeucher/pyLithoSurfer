@@ -167,12 +167,10 @@ class FTLengthDataSchema(pa.SchemaModel):
         strict = True
 
     apparentLength: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    averageDpar: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     averageDparError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     azimuth: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     cAxisAngle: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     cAxisCorrectedLength: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    cfIrradiation: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
     comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     correctedZDepth: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     dPar: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
