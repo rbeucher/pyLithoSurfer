@@ -8,12 +8,12 @@ from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
 from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthDataCRUD, FTCountDataCRUD, FTDataPoint, FTDataPointCRUD, FTLengthDataCRUD, FTSingleGrainCRUD
-from pyLithoSurferAPI.FTrack.lists import (LFTAgeAnalyticalTechnique, 
+from pyLithoSurferAPI.FTrack.lists import (LFTUDeterminationTechnique, 
                                            LDosimeter,
                                            LEtchant,
                                            LFTAgeEquation,
                                            LFTAgeType,
-                                           LFTAnalyticalMethod, LFTAnalyticalSoftware, LFTAnalyticalAlgorithm,
+                                           LFTCharacterisationMethod, LFTAnalyticalSoftware, LFTAnalyticalAlgorithm,
                                            LIrradiationReactor,
                                            LLambdaF, LLambda, LRmr0Equation, LTrackType)
 
@@ -39,10 +39,10 @@ class FTDataPointUploader(Uploader):
                    "ageErrorType": LErrorType,
                    "dosimeter": LDosimeter,
                    "etchant": LEtchant,
-                   "ftAgeAnalyticalTechnique": LFTAgeAnalyticalTechnique,
+                   "ftUDeterminationTechnique": LFTUDeterminationTechnique,
                    "ftAgeEquation": LFTAgeEquation,
                    "ftAgeTyp": LFTAgeType,
-                   "ftAnalyticalMethod": LFTAnalyticalMethod,
+                   "ftCharacterisationMethod": LFTCharacterisationMethod,
                    "ftAnalyticalSoftwareName" : LFTAnalyticalSoftware,
                    "ftAnalyticalAlgorithm": LFTAnalyticalAlgorithm,
                    "irradiationReactor": LIrradiationReactor,

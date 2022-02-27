@@ -12,9 +12,9 @@ class LEtchant(APIRequests):
     API_PATH = "/api/fissiontrack/l-etchant"
 
 
-class LFTAgeAnalyticalTechnique(APIRequests):
+class LFTUDeterminationTechnique(APIRequests):
 
-    API_PATH = "/api/fissiontrack/LFTAgeAnalyticalTechnique"
+    API_PATH = "/api/fissiontrack/LFTUDeterminationTechnique"
 
 
 class LFTAgeEquation(APIRequests):
@@ -37,9 +37,9 @@ class LFTAnalyticalSoftware(APIRequests):
     API_PATH = "/api/fissiontrack/l-ft-analytical-software"
 
 
-class LFTAnalyticalMethod(APIRequests):
+class LFTCharacterisationMethod(APIRequests):
 
-    API_PATH = "/api/fissiontrack/l-ft-analytical-method"
+    API_PATH = "/api/fissiontrack/LFTCharacterisationMethod"
 
 
 class LFTAnalyticalAlgorithm(APIRequests):
