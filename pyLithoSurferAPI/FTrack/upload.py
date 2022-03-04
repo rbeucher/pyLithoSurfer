@@ -29,8 +29,9 @@ class FTDataPointUploader(Uploader):
 
     def __init__(self, datapackageId, ft_datapoints_df):
 
+        Uploader.__init__(self, ft_datapoints_df)
+        
         self.datapackageId = datapackageId 
-        self.dataframe = ft_datapoints_df
         self.validated = False
 
     def validate(self):
@@ -41,7 +42,6 @@ class FTDataPointUploader(Uploader):
                    "etchant": LEtchant,
                    "ftUDeterminationTechnique": LFTUDeterminationTechnique,
                    "ftAgeEquation": LFTAgeEquation,
-                   "ftAgeTyp": LFTAgeType,
                    "ftCharacterisationMethod": LFTCharacterisationMethod,
                    "ftAnalyticalSoftwareName" : LFTAnalyticalSoftware,
                    "ftAnalyticalAlgorithm": LFTAnalyticalAlgorithm,
@@ -84,6 +84,9 @@ class FTDataPointUploader(Uploader):
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
+            if ft_args["ageMa"]:
+                query["ageMa.equals"] = ft_args["ageMa"]
+
             response = FTDataPointCRUD.query(query)
             records = response.json()
 
@@ -107,10 +110,6 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD = FTDataPointCRUD(datapoint, ft_datapoint) 
                 FTDataptsCRUD.new() 
                 
-                # Recover Datapoint
-                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
-                self.dataframe.loc[index, "dataPointId"] = FTDataptsCRUD.dataPoint.id
-
             elif update:
 
                 old_dpts_args = records[0]["dataPointDTO"]
@@ -132,8 +131,14 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD.dataPoint.dataEntityId = ft_datapoint.id
                 FTDataptsCRUD.dataPoint.ftdatapoint_id = ft_datapoint.id
                 FTDataptsCRUD.update()
-                self.dataframe.loc[index, "id"] = FTDataptsCRUD.id
-                self.dataframe.loc[index, "dataPointId"] = datapoint.id
+
+            index = FTDataptsCRUD.id
+            self.dataframe_out.loc[index] = ft_args
+            self.dataframe_out.loc[index, "locationId"] = locationId
+            self.dataframe_out.loc[index, "sampleId"] = sampleId
+            self.dataframe_out.loc[index, "id"] = FTDataptsCRUD.id
+            self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
+        
 
 
 class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
@@ -142,8 +147,9 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
 
     def __init__(self, datapackageId, ftbinned_lengths_df):
 
+        Uploader.__init__(self, ftbinned_lengths_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = ftbinned_lengths_df
         self.validated = False
 
     def validate(self):
@@ -157,7 +163,7 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"ftdataPointId.equals": args["ftdataPointId"]}
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"])}
         return super().query(query)
     
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -182,10 +188,12 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = FTBinnedLengthDataCRUD(**args) 
+                obj = FTBinnedLengthDataCRUD(**args)
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 
@@ -195,8 +203,9 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
 
     def __init__(self, datapackageId, ftsingle_grains_df):
 
+        Uploader.__init__(self, ftsingle_grains_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = ftsingle_grains_df
         self.validated = False
 
     def validate(self):
@@ -240,7 +249,9 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
                 obj = FTSingleGrainCRUD(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 class FTCountDataUploader(FTCountDataCRUD, Uploader):
@@ -249,14 +260,14 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
 
     def __init__(self, datapackageId, ftcount_data_df):
 
+        Uploader.__init__(self, ftcount_data_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = ftcount_data_df
         self.validated = False
 
     def validate(self):
 
         ft_list = {"dataPackage": DataPackage,
-                   "dosimeter": LDosimeter,
                    "errorType": LErrorType, 
                    }
 
@@ -294,7 +305,9 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
                 obj = FTCountDataCRUD(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
@@ -303,8 +316,9 @@ class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
 
     def __init__(self, datapackageId, ftlengthdata_df):
 
+        Uploader.__init__(self, ftlengthdata_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = ftlengthdata_df
         self.validated = False
 
     def validate(self):
@@ -351,4 +365,6 @@ class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
                 obj = FTLengthDataCRUD(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id

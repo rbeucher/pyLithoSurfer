@@ -29,8 +29,9 @@ class HeDataPointUploader(Uploader):
 
     def __init__(self, datapackageId, he_datapoints_df):
 
+        Uploader.__init__(self, he_datapoints_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = he_datapoints_df
         self.validated = False
 
     def validate(self):
@@ -129,8 +130,13 @@ class HeDataPointUploader(Uploader):
                 HeDataptsCRUD.dataPoint.dataEntityId = he_datapoint.id
                 HeDataptsCRUD.dataPoint.hedatapoint_id = he_datapoint.id
                 HeDataptsCRUD.update()
-                self.dataframe.loc[index, "id"] = HeDataptsCRUD.id
-                self.dataframe.loc[index, "dataPointId"] = datapoint.id
+
+            index = HeDataptsCRUD.id
+            self.dataframe_out.loc[index] = he_args
+            self.dataframe_out.loc[index, "locationId"] = locationId
+            self.dataframe_out.loc[index, "sampleId"] = sampleId
+            self.dataframe_out.loc[index, "id"] = HeDataptsCRUD.id
+            self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
 
 
 class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
@@ -139,8 +145,9 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 
     def __init__(self, datapackageId, he_whole_grains_df):
 
+        Uploader.__init__(self, he_whole_grains_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = he_whole_grains_df
         self.validated = False
 
     def validate(self):
@@ -201,7 +208,9 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
                 obj = HeWholeGrainCRUD(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 class HeInSituUploader(HeInSituCRUD, Uploader):
@@ -210,8 +219,9 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
 
     def __init__(self, datapackageId, he_in_situ_df):
 
+        Uploader.__init__(self, he_in_situ_df)
+
         self.datapackageId = datapackageId 
-        self.dataframe = he_in_situ_df
         self.validated = False
 
     def validate(self):
@@ -265,4 +275,6 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
                 obj = HeInSituCRUD(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id

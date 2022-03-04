@@ -19,6 +19,8 @@ class SampleWithLocationUploader(Uploader):
         self.samples_df = samples_df
         self.samples_df["dataPackageId"] = datapackageId
         self.validated = False
+        self.locations_out = pd.DataFrame(columns=self.locations_df.columns)
+        self.samples_out = pd.DataFrame(columns=self.samples_df.columns)
 
     def validate(self):
 
@@ -51,6 +53,7 @@ class SampleWithLocationUploader(Uploader):
 
         if igsn:
             query = {"dataPackageId.equals": self.datapackageId,
+                     "name.equals": name,
                      "igsn.equals": igsn}
 
         return SampleWithLocation.query(query)
@@ -105,9 +108,14 @@ class SampleWithLocationUploader(Uploader):
                 SampWLocation.id = sample_with_location_id
                 SampWLocation.update()
 
-            self.locations_df.loc[index, "id"] = SampWLocation.location.id
-            self.samples_df.loc[index, "id"] = SampWLocation.sample.id
-            self.samples_df.loc[index, "locationId"] = SampWLocation.location.id
+            index = SampWLocation.location.id
+            self.locations_out.loc[index] = loc_args
+            self.locations_out.loc[index, "id"] = SampWLocation.location.id
+
+            index = SampWLocation.sample.id
+            self.samples_out.loc[index] = samp_args
+            self.samples_out.loc[index, "id"] = SampWLocation.sample.id
+            self.samples_out.loc[index, "locationId"] = SampWLocation.location.id
 
     def clean(self):
 
@@ -124,8 +132,8 @@ class SampleWithLocationUploader(Uploader):
             kwargs["mode"] = "w"
 
         with pd.ExcelWriter('output.xlsx', **kwargs) as writer:  
-            self.samples_df.to_excel(writer, sheet_name='Samples')
-            self.locations_df.to_excel(writer, sheet_name='Locations')
+            self.samples_out.to_excel(writer, sheet_name='Samples')
+            self.locations_out.to_excel(writer, sheet_name='Locations')
 
 
 class PersonUploader(Person, Uploader):

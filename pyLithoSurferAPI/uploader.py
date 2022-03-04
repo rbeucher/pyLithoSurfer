@@ -10,6 +10,7 @@ class Uploader(object):
     def __init__(self, dataframe):
 
         self.dataframe = dataframe
+        self.dataframe_out = pd.DataFrame(columns=self.dataframe.columns)
 
     @staticmethod
     def _validate(dataframe, schema, lists=None):
@@ -43,7 +44,7 @@ class Uploader(object):
             kwargs["mode"] = "w"
 
         with pd.ExcelWriter(outfile, **kwargs) as writer:  
-            self.dataframe.to_excel(writer, sheet_name=self.name)
+            self.dataframe_out.to_excel(writer, sheet_name=self.name)
 
     def _update_args(self, old_args, new_args, update_strategy):
 
