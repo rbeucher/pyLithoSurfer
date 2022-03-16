@@ -27,12 +27,14 @@ class HeDataPointUploader(Uploader):
 
     name = "HeDataPoints"
 
-    def __init__(self, datapackageId, he_datapoints_df):
+    def __init__(self, datapackageId, he_datapoints_df, skip_columns=None):
 
         Uploader.__init__(self, he_datapoints_df)
 
         self.datapackageId = datapackageId 
         self.validated = False
+        self.skip_columns = skip_columns
+
 
     def validate(self):
 
@@ -52,8 +54,16 @@ class HeDataPointUploader(Uploader):
                    "weightedMeanCorrectedHeAgeErrorType": LErrorType,
                    "weightedMeanUncorrectedHeAgeErrorType": LErrorType
                    }
+        if self.skip_columns:
+            skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
+            self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
 
         self.dataframe = Uploader._validate(self.dataframe, HeDataPointSchema, he_list)
+
+        if self.skip_columns:
+            for col in self.skip_columns:
+                self.dataframe[col] = skip_df[col]  
+       
         self.validated = True
 
     def upload(self, update=False, update_strategy="replace"):
@@ -66,6 +76,13 @@ class HeDataPointUploader(Uploader):
         for index in tqdm(self.dataframe.index):
 
             he_args = self.dataframe.loc[index].to_dict()
+
+            he_skip_args = {}
+            for k, v in he_args.items():
+                if self.skip_columns and k in self.skip_columns:
+                    he_skip_args[k] = he_args[k]
+            he_args = {k:v for k,v in he_args.items() if k not in he_skip_args.keys()}
+
             sampleId = he_args.pop("sampleId")
             locationId = he_args.pop("locationId")
             if he_args.get("dataPointId"):
@@ -81,6 +98,15 @@ class HeDataPointUploader(Uploader):
             query = {"dataPointLithoCriteria.dataStructure.equals": "HE",
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+
+            if he_args["mineralId"]:
+                query["mineralId.equals"] = int(he_args["mineralId"])
+
+            # We should not use ages but that will do the job for the Canadian
+            if he_args["meanCorrectedHeAge"]:
+                query["meanCorrectedHeAge.equals"] = he_args["meanCorrectedHeAge"] 
+            if he_args["meanUncorrectedHeAge"]:
+                query["meanUncorrectedHeAge.equals"] = he_args["meanUncorrectedHeAge"] 
 
             response = HeDataPointCRUD.query(query)
             records = response.json()
@@ -137,7 +163,8 @@ class HeDataPointUploader(Uploader):
             self.dataframe_out.loc[index, "sampleId"] = sampleId
             self.dataframe_out.loc[index, "id"] = HeDataptsCRUD.id
             self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
-
+            for k, v in he_skip_args.items():
+                self.dataframe_out.loc[index, k] = v  
 
 class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 

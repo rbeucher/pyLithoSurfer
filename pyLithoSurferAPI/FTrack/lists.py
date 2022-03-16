@@ -47,6 +47,11 @@ class LFTAnalyticalAlgorithm(APIRequests):
     API_PATH = "/api/fissiontrack/l-ft-analytical-algorithm"
 
 
+class LFTPopulationType(APIRequests):
+
+    API_PATH = "/api/fissiontrack/LFTPopulationType"
+
+
 class LIrradiationReactor(APIRequests):
 
     API_PATH = "/api/fissiontrack/LIrradiationReactor"

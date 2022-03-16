@@ -8,11 +8,10 @@ from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
 from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
 from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthDataCRUD, FTCountDataCRUD, FTDataPoint, FTDataPointCRUD, FTLengthDataCRUD, FTSingleGrainCRUD
-from pyLithoSurferAPI.FTrack.lists import (LFTUDeterminationTechnique, 
+from pyLithoSurferAPI.FTrack.lists import (LFTPopulationType, LFTUDeterminationTechnique, 
                                            LDosimeter,
                                            LEtchant,
                                            LFTAgeEquation,
-                                           LFTAgeType,
                                            LFTCharacterisationMethod, LFTAnalyticalSoftware, LFTAnalyticalAlgorithm,
                                            LIrradiationReactor,
                                            LLambdaF, LLambda, LRmr0Equation, LTrackType)
@@ -27,12 +26,13 @@ class FTDataPointUploader(Uploader):
 
     name = "FTDataPoints"
 
-    def __init__(self, datapackageId, ft_datapoints_df):
+    def __init__(self, datapackageId, ft_datapoints_df, skip_columns=None):
 
         Uploader.__init__(self, ft_datapoints_df)
         
         self.datapackageId = datapackageId 
         self.validated = False
+        self.skip_columns = skip_columns
 
     def validate(self):
 
@@ -52,10 +52,19 @@ class FTDataPointUploader(Uploader):
                    "mineral": Material,
                    "referenceMaterial": ReferenceMaterial,
                    "rmr0Equation": LRmr0Equation,
-                   "zetaErrorType": LErrorType 
+                   "zetaErrorType": LErrorType,
+                   "popType": LFTPopulationType
                    }
-
+        if self.skip_columns:
+            skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
+            self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
+        
         self.dataframe = Uploader._validate(self.dataframe, FTDataPointSchema, ft_list)
+        
+        if self.skip_columns:
+            for col in self.skip_columns:
+                self.dataframe[col] = skip_df[col]     
+
         self.validated = True
 
     def upload(self, update=False, update_strategy="replace"):
@@ -68,6 +77,13 @@ class FTDataPointUploader(Uploader):
         for index in tqdm(self.dataframe.index):
 
             ft_args = self.dataframe.loc[index].to_dict()
+
+            ft_skip_args = {}
+            for k, v in ft_args.items():
+                if self.skip_columns and k in self.skip_columns:
+                    ft_skip_args[k] = ft_args[k]
+            ft_args = {k:v for k,v in ft_args.items() if k not in ft_skip_args.keys()}
+
             sampleId = ft_args.pop("sampleId")
             locationId = ft_args.pop("locationId")
             if ft_args.get("dataPointId"):
@@ -84,8 +100,36 @@ class FTDataPointUploader(Uploader):
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
-            if ft_args["ageMa"]:
-                query["ageMa.equals"] = ft_args["ageMa"]
+            if ft_args["mineralId"]:
+                query["mineralId.equals"] = int(ft_args["mineralId"])
+            if ft_args["ftAgeEquationId"]:
+                query["ftAgeEquationId.equals"] = int(ft_args["ftAgeEquationId"])
+            if ft_args["ftUDeterminationTechniqueId"]:
+                query["ftUDeterminationTechniqueID.equals"] = int(ft_args["ftUDeterminationTechniqueId"])
+            if ft_args["mountIDCount"]:
+                query["mountIDCount.equals"] = ft_args["mountIDCount"]
+            
+            # Note that these are probably temporary...
+            if ft_args["population"]:
+                query["population.equals"] = int(ft_args["population"])
+            if ft_args["popTypeId"]:
+                query["popTypeId.equals"] = int(ft_args["popTypeId"])           
+            #if ft_args["popTypeName"]:
+            #    query["popTypeName.equals"] = ft_args["popTypeId"]
+
+            # We should not use ages but that will do the job for the Canadian
+            if ft_args["meanAgeMa"]:
+                query["meanAgeMa.equals"] = ft_args["meanAgeMa"]     
+            if ft_args["meanErrorMa"]:
+                query["meanErrorMa.equals"] = ft_args["meanErrorMa"]                       
+            if ft_args["centralAgeMa"]:
+                query["centralAgeMa.equals"] = ft_args["centralAgeMa"]     
+            if ft_args["centralErrorMa"]:
+                query["centralErrorMa.equals"] = ft_args["centralErrorMa"]                       
+            if ft_args["pooledAgeMa"]:
+                query["pooledAgeMa.equals"] = ft_args["pooledAgeMa"]     
+            if ft_args["pooledErrorMa"]:
+                query["pooledErrorMa.equals"] = ft_args["pooledErrorMa"]                       
 
             response = FTDataPointCRUD.query(query)
             records = response.json()
@@ -138,7 +182,8 @@ class FTDataPointUploader(Uploader):
             self.dataframe_out.loc[index, "sampleId"] = sampleId
             self.dataframe_out.loc[index, "id"] = FTDataptsCRUD.id
             self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
-        
+            for k, v in ft_skip_args.items():
+                self.dataframe_out.loc[index, k] = v       
 
 
 class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
@@ -219,8 +264,8 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
         self.validated = True
 
     def get_unique_query(self, args):
-        
-        query = {"ftdataPointId.equals": args["ftdataPointId"],
+
+        query = {"ftdataPointId.equals": int(args["ftdataPointId"]),
                  "grainName.equals": args["grainName"]}
         return super().query(query)
     

@@ -13,7 +13,7 @@ class SampleWithLocationUploader(Uploader):
 
     name = "Sample"
 
-    def __init__(self, datapackageId, locations_df, samples_df):
+    def __init__(self, datapackageId, locations_df, samples_df, locations_skip=None, samples_skip=None):
         self.datapackageId = datapackageId
         self.locations_df = locations_df
         self.samples_df = samples_df
@@ -21,6 +21,8 @@ class SampleWithLocationUploader(Uploader):
         self.validated = False
         self.locations_out = pd.DataFrame(columns=self.locations_df.columns)
         self.samples_out = pd.DataFrame(columns=self.samples_df.columns)
+        self.locations_skip = locations_skip
+        self.samples_skip = samples_skip
 
     def validate(self):
 
@@ -38,9 +40,23 @@ class SampleWithLocationUploader(Uploader):
         location_lists = {
             "celestial": LCelestial
         }
-
+        if self.locations_skip:
+            skip_df = self.locations_df[[col for col in self.locations_skip if col in self.locations_df.columns]]
+            self.locations_df = self.locations_df.drop(columns=[col for col in self.locations_skip if col in self.locations_df.columns])
         self.locations_df = Uploader._validate(self.locations_df, LocationSchema, location_lists)
+        
+        if self.locations_skip:
+            for col in self.locations_skip:
+                self.locations_df[col] = skip_df[col]
+
+        if self.samples_skip:
+            skip_df = self.samples_df[[col for col in self.samples_skip if col in self.samples_df.columns]]
+            self.samples_df = self.samples_df.drop(columns=[col for col in self.samples_skip if col in self.samples_df.columns])
         self.samples_df = Uploader._validate(self.samples_df, SampleSchema, sample_lists)
+        if self.samples_skip:
+            for col in self.samples_skip:
+                self.samples_df[col] = skip_df[col]
+
         self.validated = True
 
     def get_unique_query(self, samp_args, loc_args):
@@ -74,6 +90,20 @@ class SampleWithLocationUploader(Uploader):
 
             loc_args = self.locations_df.loc[index].to_dict()
             samp_args = self.samples_df.loc[index].to_dict()
+
+            loc_skip_args = {}
+            for k, v in loc_args.items():
+                if self.locations_skip and k in self.locations_skip:
+                    loc_skip_args[k] = loc_args[k]
+            loc_args = {k:v for k,v in loc_args.items() if k not in loc_skip_args.keys()}
+            
+            samp_skip_args = {}
+            for k, v in samp_args.items():
+                if self.samples_skip and k in self.samples_skip:
+                    samp_skip_args[k] = samp_args[k]
+
+            samp_args = {k:v for k,v in samp_args.items() if k not in samp_skip_args.keys()}
+
             loc_args = {k:v for k,v in loc_args.items() if v is not None}
             samp_args = {k:v for k,v in samp_args.items() if v is not None}
             
@@ -111,16 +141,15 @@ class SampleWithLocationUploader(Uploader):
             index = SampWLocation.location.id
             self.locations_out.loc[index] = loc_args
             self.locations_out.loc[index, "id"] = SampWLocation.location.id
+            for k, v in loc_skip_args.items():
+                self.locations_out.loc[index, k] = v
 
             index = SampWLocation.sample.id
             self.samples_out.loc[index] = samp_args
             self.samples_out.loc[index, "id"] = SampWLocation.sample.id
             self.samples_out.loc[index, "locationId"] = SampWLocation.location.id
-
-    def clean(self):
-
-        for sample in self.samples_df.id:
-            obj = SampleWithLocation.delete(sample)
+            for k, v in samp_skip_args.items():
+                self.samples_out.loc[index, k] = v
 
     def save(self, outfile="output.xlsx"):
 
@@ -141,7 +170,7 @@ class PersonUploader(Person, Uploader):
     name = "Persons"
 
     def __init__(self, persons_df):
-        self.dataframe = persons_df
+        Uploader.__init__(self, persons_df)
 
     def get_unique_query(self, args):
         
@@ -180,7 +209,9 @@ class PersonUploader(Person, Uploader):
                 obj = Person(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
@@ -189,8 +220,7 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
     
     def __init__(self, stratigraphic_df):
         
-        self.dataframe = stratigraphic_df
-        self.validated = False
+        Uploader.__init__(self, stratigraphic_df)
 
     def get_unique_query(self, args):
         query = {"name.equals": args.get("name", None)}
@@ -226,7 +256,9 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
                 obj = StratigraphicUnit(**args) 
                 obj.update()
                 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
 
 class LiteratureUploader(Literature, Uploader):
@@ -234,7 +266,8 @@ class LiteratureUploader(Literature, Uploader):
     name = "Literature"
 
     def __init__(self, literature_df):
-        self.dataframe = literature_df
+
+        Uploader.__init__(self, literature_df)
 
     def get_unique_query(self, args):
         
@@ -272,4 +305,6 @@ class LiteratureUploader(Literature, Uploader):
                 obj = Literature(**args) 
                 obj.update()
 
-            self.dataframe.loc[index, "id"] = obj.id
+            index = obj.id            
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
