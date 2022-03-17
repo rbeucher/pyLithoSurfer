@@ -104,9 +104,11 @@ class HeDataPointUploader(Uploader):
 
             # We should not use ages but that will do the job for the Canadian
             if he_args["meanCorrectedHeAge"]:
-                query["meanCorrectedHeAge.equals"] = he_args["meanCorrectedHeAge"] 
+                query["meanCorrectedHeAge.greaterOrEqualThan"] = he_args["meanCorrectedHeAge"] - 0.001
+                query["meanCorrectedHeAge.lessOrEqualThan"] = he_args["meanCorrectedHeAge"] + 0.001
             if he_args["meanUncorrectedHeAge"]:
-                query["meanUncorrectedHeAge.equals"] = he_args["meanUncorrectedHeAge"] 
+                query["meanUncorrectedHeAge.greaterOrEqualThan"] = he_args["meanUncorrectedHeAge"] - 0.001 
+                query["meanUncorrectedHeAge.lessOrEqualThan"] = he_args["meanUncorrectedHeAge"] + 0.001
 
             response = HeDataPointCRUD.query(query)
             records = response.json()

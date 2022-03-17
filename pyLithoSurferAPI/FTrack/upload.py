@@ -114,22 +114,26 @@ class FTDataPointUploader(Uploader):
                 query["population.equals"] = int(ft_args["population"])
             if ft_args["popTypeId"]:
                 query["popTypeId.equals"] = int(ft_args["popTypeId"])           
-            #if ft_args["popTypeName"]:
-            #    query["popTypeName.equals"] = ft_args["popTypeId"]
 
             # We should not use ages but that will do the job for the Canadian
             if ft_args["meanAgeMa"]:
-                query["meanAgeMa.equals"] = ft_args["meanAgeMa"]     
+                query["meanAgeMa.greaterOrEqualThan"] = ft_args["meanAgeMa"]  - 0.001
+                query["meanAgeMa.lessOrEqualThan"] = ft_args["meanAgeMa"]  + 0.001
             if ft_args["meanErrorMa"]:
-                query["meanErrorMa.equals"] = ft_args["meanErrorMa"]                       
+                query["meanErrorMa.greaterOrEqualThan"] = ft_args["meanErrorMa"] - 0.01                      
+                query["meanErrorMa.lessOrEqualThan"] = ft_args["meanErrorMa"] + 0.01                      
             if ft_args["centralAgeMa"]:
-                query["centralAgeMa.equals"] = ft_args["centralAgeMa"]     
+                query["centralAgeMa.greaterOrEqualThan"] = ft_args["centralAgeMa"] - 0.01    
+                query["centralAgeMa.lessOrEqualThan"] = ft_args["centralAgeMa"] + 0.01    
             if ft_args["centralErrorMa"]:
-                query["centralErrorMa.equals"] = ft_args["centralErrorMa"]                       
+                query["centralErrorMa.greaterOrEqualThan"] = ft_args["centralErrorMa"] - 0.01                       
+                query["centralErrorMa.lessOrEqualThan"] = ft_args["centralErrorMa"] + 0.01                      
             if ft_args["pooledAgeMa"]:
-                query["pooledAgeMa.equals"] = ft_args["pooledAgeMa"]     
+                query["pooledAgeMa.greaterOrEqualThan"] = ft_args["pooledAgeMa"] - 0.01     
+                query["pooledAgeMa.lessOrEqualThan"] = ft_args["pooledAgeMa"] + 0.01    
             if ft_args["pooledErrorMa"]:
-                query["pooledErrorMa.equals"] = ft_args["pooledErrorMa"]                       
+                query["pooledErrorMa.greaterOrEqualThan"] = ft_args["pooledErrorMa"] - 0.01 
+                query["pooledErrorMa.lessOrEqualThan"] = ft_args["pooledErrorMa"] + 0.01
 
             response = FTDataPointCRUD.query(query)
             records = response.json()
@@ -137,7 +141,7 @@ class FTDataPointUploader(Uploader):
             if len(records) == 1:
                 existing_id = records[0]["id"]
             elif len(records) > 1:
-                existing_id = records[0]["id"]
+                raise ValueError("Multiple Entries possible")
             else:
                 existing_id = None
 
