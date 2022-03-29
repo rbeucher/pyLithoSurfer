@@ -1,5 +1,5 @@
 import pandera as pa
-from pandera.typing import Index, DataFrame, Series
+from pandera.typing import Series
 from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LLocationKind, LSampleKind, LSampleMethod, LCelestial, LErrorType, LGeoEvent
 from pyLithoSurferAPI.core.tables import Archive
@@ -12,7 +12,7 @@ class SampleSchema(pa.SchemaModel):
         strict = True
     
     archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=Archive.get_all()["name"].to_list())
+    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
@@ -20,7 +20,7 @@ class SampleSchema(pa.SchemaModel):
     dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
     description: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
     id: Optional[Series[pa.Int64]]
-    igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
+    igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     igsnHandleURL: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     igsnMintingTimestamp: Optional[Series[pa.DateTime]]
     locationId: Optional[Series[pa.Int64]]
@@ -130,11 +130,11 @@ class PersonSchema(pa.SchemaModel):
     
     calcName: Optional[Series[pa.String]]
     firstName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
-    id: Optional[Series[pa.Int64]]
+    id: Optional[Series[pa.Int64]] = pa.Field(nullable=True)
     name: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
-    note: Optional[Series[pa.String]]
+    note: Optional[Series[pa.String]] = pa.Field(nullable=True)
     orcId: Optional[Series[pa.String]] = pa.Field(nullable=True)
-    title: Optional[Series[pa.String]]
+    title: Optional[Series[pa.String]] = pa.Field(nullable=True)
 
 
 class LiteratureSchema(pa.SchemaModel):
@@ -144,32 +144,32 @@ class LiteratureSchema(pa.SchemaModel):
         strict = True
     
     abstr: Optional[Series[pa.String]] = pa.Field( nullable=True)
-    author: Series[pa.String]
+    author: Series[pa.String] = pa.Field( nullable=True)
     booktitle: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    chapter: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    chapter: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     doi: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
     editor: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    howpublished: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    institution: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    issn: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    howpublished: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    institution: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    issn: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     journal: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
     keywords: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    language: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    language: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     litNumber: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
-    litOrganization: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    litOrganization: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     litType: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    note: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    otherId: Optional[Series[pa.Int]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    note: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    otherId: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
     pages: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     pubMonth: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    pubYear: Series[pa.Int] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    pubYear: Series[pa.Float] = pa.Field(nullable=True, coerce=True)
     publisher: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
     school: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    series: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    sourceId: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    series: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
+    sourceId: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True, str_length={"max_value": 255})
     title: Series[pa.String]
     url: Optional[Series[pa.String]] = pa.Field(nullable=True, str_length={"max_value": 255})
-    volume: Optional[Series[pa.Int]] = pa.Field(nullable=True, str_length={"max_value": 255})
+    volume: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
 
 
 

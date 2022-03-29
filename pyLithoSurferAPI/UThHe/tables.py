@@ -5,29 +5,29 @@ from pyLithoSurferAPI.core.tables import DataPoint
 import json
 
 
-class FTBinnedLengthDataCRUD(APIRequests):
+class HeWholeGrainCRUD(APIRequests):
 
-    API_PATH = "/api/fissiontrack/FTBinnedLengthData"
-
-
-class FTCountDataCRUD(APIRequests):
-
-    API_PATH = "/api/fissiontrack/ft-count-data"
+    API_PATH = "/api/helium/HeWholeGrain"
 
 
-class FTDataPoint(APIRequests):
+class HeDataPoint(APIRequests):
 
-    API_PATH = "/api/ft-data-points"
+    API_PATH = "/api/he-data-points"
 
 
-class FTDataPointCRUD(APIRequests):
+class HeInSituCRUD(APIRequests):
 
-    API_PATH = "/api/fissiontrack/FTDataPoint"
+    API_PATH = "/api/helium/HeInSitu"
 
-    def __init__(self, dataPoint: DataPoint, ftDataPoint: FTDataPoint, dataPointID=None, id=None):
+
+class HeDataPointCRUD(APIRequests):
+
+    API_PATH = "/api/helium/HeDataPoint"
+
+    def __init__(self, dataPoint: DataPoint, heDataPoint: HeDataPoint, dataPointID=None, id=None):
 
         self.dataPoint = dataPoint
-        self.ftDataPoint = ftDataPoint
+        self.heDataPoint = heDataPoint
         self.dataPointID = dataPointID
         self.id = id 
 
@@ -36,10 +36,10 @@ class FTDataPointCRUD(APIRequests):
         
         dataPoint = self.dataPoint.to_dict()
         data["dataPointDTO"] = dataPoint
-        ftDataPoint = self.ftDataPoint.to_dict()
-        data["ftdataPointDTO"] = ftDataPoint 
+        heDataPoint = self.heDataPoint.to_dict()
+        data["heDataPointDTO"] = heDataPoint 
         data["dataPointId"] = self.dataPointID
-        data["dataPointDTO"]["ftdataPointId"] = self.id
+        data["dataPointDTO"]["heDataPointId"] = self.id
         data["id"] = self.id
 
         headers = APIRequests.SESSION.headers
@@ -56,7 +56,7 @@ class FTDataPointCRUD(APIRequests):
         
         self.dataPoint.id = response["dataPointDTO"]["id"]
         self.dataPointID = self.dataPoint.id
-        self.ftDataPoint.id = response["ftdataPointDTO"]["id"]
+        self.heDataPoint.id = response["heDataPointDTO"]["id"]
         
         return response
 
@@ -73,31 +73,18 @@ class FTDataPointCRUD(APIRequests):
         response.raise_for_status()
         records = response.json()
         dpts_args = records["dataPointDTO"]
-        ft_args = records["ftdataPointDTO"]
+        he_args = records["heDataPointDTO"]
         # Create DataPoint
         datapoint = DataPoint(**dpts_args)
         # Create FTDataPoint
-        ft_datapoint = FTDataPoint(**ft_args)
+        he_datapoint = HeDataPoint(**he_args)
 
         # Use FTDataPointCRUD to create the Datapoint and
         # the FTDatapoint
-        obj =  FTDataPointCRUD(datapoint, ft_datapoint) 
-        obj.id = ft_datapoint.id
+        obj =  HeDataPointCRUD(datapoint, he_datapoint) 
+        obj.id = he_datapoint.id
         obj.dataPointID = datapoint.id
-        obj.dataPoint.dataEntityId = ft_datapoint.id
-        obj.dataPoint.ftdatapoint_id = ft_datapoint.id
+        obj.dataPoint.dataEntityId = he_datapoint.id
+        obj.dataPoint.hedatapoint_id = he_datapoint.id
         return obj
 
-class FTLengthDataCRUD(APIRequests):
-
-    API_PATH = "/api/fissiontrack/ft-length-data"
-
-
-class FTSingleGrainCRUD(APIRequests):
-
-    API_PATH = "/api/fissiontrack/FTSingleGrain"
-
-
-class FTGrainProp(APIRequests):
-
-    API_PATH = "/api/fissiontrack/FTGrainProp"

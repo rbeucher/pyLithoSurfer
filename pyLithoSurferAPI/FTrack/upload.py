@@ -3,75 +3,145 @@ import os
 import numpy as np
 import pandas as pd
 
-from pyLithoSurferAPI.FTrack.schemas import FTDataPointSchema
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
+from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTSingleGrainSchema
+from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
-from pyLithoSurferAPI.core.tables import DataPoint
-from pyLithoSurferAPI.FTrack.tables import FTDataPoint, FTDataPointCRUD
+from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
+from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthDataCRUD, FTCountDataCRUD, FTDataPoint, FTDataPointCRUD, FTLengthDataCRUD, FTSingleGrainCRUD
+from pyLithoSurferAPI.FTrack.lists import (LFTPopulationType, LFTUDeterminationTechnique, 
+                                           LDosimeter,
+                                           LEtchant,
+                                           LFTAgeEquation,
+                                           LFTCharacterisationMethod, LFTAnalyticalSoftware, LFTAnalyticalAlgorithm,
+                                           LIrradiationReactor,
+                                           LLambdaF, LLambda, LRmr0Equation, LTrackType)
 
+from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
 from tqdm import tqdm
 
 
 
-class FTDataPointUploader(object):
+class FTDataPointUploader(Uploader):
 
-    def __init__(self, datapackageId, ft_datapoints_df):
+    name = "FTDataPoints"
 
+    def __init__(self, datapackageId, ft_datapoints_df, skip_columns=None):
+
+        Uploader.__init__(self, ft_datapoints_df)
+        
         self.datapackageId = datapackageId 
-        self.ft_datapoints_df = ft_datapoints_df
         self.validated = False
+        self.skip_columns = skip_columns
 
     def validate(self):
 
-        self.ft_datapoints_df = FTDataPointSchema.validate(self.ft_datapoints_df)
-
-        if "dataPackageId" not in self.ft_datapoints_df.columns:
-            if "dataPackageName" in self.ft_datapoints_df.columns:
-                self.ft_datapoints_df["dataPackageId"] = self.ft_datapoints_df.dataPackageName.map(get_id(DataPackage))
+        ft_list = {"dataPackage": DataPackage,
+                   "ageErrorType": LErrorType,
+                   "dosimeter": LDosimeter,
+                   "etchant": LEtchant,
+                   "ftUDeterminationTechnique": LFTUDeterminationTechnique,
+                   "ftAgeEquation": LFTAgeEquation,
+                   "ftCharacterisationMethod": LFTCharacterisationMethod,
+                   "ftAnalyticalSoftwareName" : LFTAnalyticalSoftware,
+                   "ftAnalyticalAlgorithm": LFTAnalyticalAlgorithm,
+                   "irradiationReactor": LIrradiationReactor,
+                   "lambdaF": LLambdaF,
+                   "lambda": LLambda,
+                   "machine": Machine,
+                   "mineral": Material,
+                   "referenceMaterial": ReferenceMaterial,
+                   "rmr0Equation": LRmr0Equation,
+                   "zetaErrorType": LErrorType,
+                   "popType": LFTPopulationType
+                   }
+        if self.skip_columns:
+            skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
+            self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
         
-        self.ft_datapoints_df = self.ft_datapoints_df.replace({np.nan: None})
-        self.ft_datapoints_df = FTDataPointSchema.validate(self.ft_datapoints_df)
-        self.ft_datapoints_df = self.ft_datapoints_df.astype(object).where(pd.notnull(self.ft_datapoints_df), None)
+        self.dataframe = Uploader._validate(self.dataframe, FTDataPointSchema, ft_list)
+        
+        if self.skip_columns:
+            for col in self.skip_columns:
+                self.dataframe[col] = skip_df[col]     
+
         self.validated = True
 
-    def upload(self, update=False, update_strategy="merge_keep"):
+    def upload(self, update=False, update_strategy="replace"):
         
-        print("Upload FTDataPoints")
-
         if not self.validated:
             raise ValueError("Data not validated")
 
-        self.ft_datapoints_df["id"] = None
-        self.errors_df = pd.DataFrame(columns=["id", "exception"])
+        self.dataframe["id"] = None
 
+        for index in tqdm(self.dataframe.index):
 
-        for index in tqdm(self.ft_datapoints_df.index):
+            ft_args = self.dataframe.loc[index].to_dict()
 
-            ft_args = self.ft_datapoints_df.loc[index].to_dict()
+            ft_skip_args = {}
+            for k, v in ft_args.items():
+                if self.skip_columns and k in self.skip_columns:
+                    ft_skip_args[k] = ft_args[k]
+            ft_args = {k:v for k,v in ft_args.items() if k not in ft_skip_args.keys()}
+
             sampleId = ft_args.pop("sampleId")
             locationId = ft_args.pop("locationId")
             if ft_args.get("dataPointId"):
                 ft_args.pop("dataPointId")
 
             dpts_args = {"dataPackageId": self.datapackageId,
-                         "dataStructure": "FTRACK",
+                         "dataStructure": "FT",
                          "dataEntityId": None,
                          "name": None,
                          "locationId": locationId,
                          "sampleId": sampleId}
             
-            query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
-                     "dataPointLithoCriteria.dataStructure.equals": "FTRACK",
+            query = {"dataPointLithoCriteria.dataStructure.equals": "FT",
+                     "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
 
-            response = FTDataPoint.query(query)
+            if ft_args["mineralId"]:
+                query["mineralId.equals"] = int(ft_args["mineralId"])
+            if ft_args["ftAgeEquationId"]:
+                query["ftAgeEquationId.equals"] = int(ft_args["ftAgeEquationId"])
+            if ft_args["ftUDeterminationTechniqueId"]:
+                query["ftUDeterminationTechniqueID.equals"] = int(ft_args["ftUDeterminationTechniqueId"])
+            if ft_args["mountIDCount"]:
+                query["mountIDCount.equals"] = ft_args["mountIDCount"]
+            
+            # Note that these are probably temporary...
+            if ft_args["population"]:
+                query["population.equals"] = int(ft_args["population"])
+            if ft_args["popTypeId"]:
+                query["popTypeId.equals"] = int(ft_args["popTypeId"])           
+
+            # We should not use ages but that will do the job for the Canadian
+            if ft_args["meanAgeMa"]:
+                query["meanAgeMa.greaterOrEqualThan"] = ft_args["meanAgeMa"]  - 0.001
+                query["meanAgeMa.lessOrEqualThan"] = ft_args["meanAgeMa"]  + 0.001
+            if ft_args["meanErrorMa"]:
+                query["meanErrorMa.greaterOrEqualThan"] = ft_args["meanErrorMa"] - 0.01                      
+                query["meanErrorMa.lessOrEqualThan"] = ft_args["meanErrorMa"] + 0.01                      
+            if ft_args["centralAgeMa"]:
+                query["centralAgeMa.greaterOrEqualThan"] = ft_args["centralAgeMa"] - 0.01    
+                query["centralAgeMa.lessOrEqualThan"] = ft_args["centralAgeMa"] + 0.01    
+            if ft_args["centralErrorMa"]:
+                query["centralErrorMa.greaterOrEqualThan"] = ft_args["centralErrorMa"] - 0.01                       
+                query["centralErrorMa.lessOrEqualThan"] = ft_args["centralErrorMa"] + 0.01                      
+            if ft_args["pooledAgeMa"]:
+                query["pooledAgeMa.greaterOrEqualThan"] = ft_args["pooledAgeMa"] - 0.01     
+                query["pooledAgeMa.lessOrEqualThan"] = ft_args["pooledAgeMa"] + 0.01    
+            if ft_args["pooledErrorMa"]:
+                query["pooledErrorMa.greaterOrEqualThan"] = ft_args["pooledErrorMa"] - 0.01 
+                query["pooledErrorMa.lessOrEqualThan"] = ft_args["pooledErrorMa"] + 0.01
+
+            response = FTDataPointCRUD.query(query)
             records = response.json()
 
             if len(records) == 1:
                 existing_id = records[0]["id"]
             elif len(records) > 1:
-                existing_id = records[0]["id"]
+                raise ValueError("Multiple Entries possible")
             else:
                 existing_id = None
 
@@ -83,49 +153,17 @@ class FTDataPointUploader(object):
                 # Create FTDataPoint
                 ft_datapoint = FTDataPoint(**ft_args)
 
-                try:
-                    # Use FTDataPointCRUD to create the Datapoint and
-                    # the FTDatapoint
-                    FTDataptsCRUD = FTDataPointCRUD(datapoint, ft_datapoint) 
-                    FTDataptsCRUD.new() 
+                # Use FTDataPointCRUD to create the Datapoint and
+                # the FTDatapoint
+                FTDataptsCRUD = FTDataPointCRUD(datapoint, ft_datapoint) 
+                FTDataptsCRUD.new() 
                 
-                    # Recover Datapoint
-                    self.ft_datapoints_df.loc[index, "id"] = FTDataptsCRUD.id
-                    self.ft_datapoints_df.loc[index, "dataPointId"] = FTDataptsCRUD.dataPoint.id
-
-                except Exception as e:
-                    self.errors_df.loc[index] = [datapoint.id, str(type(e))]                
-
             elif update:
 
-                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
-                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
-
                 old_dpts_args = records[0]["dataPointDTO"]
+                dpts_args = self._update_args(old_dpts_args, dpts_args, update_strategy)
                 old_ft_args = records[0]["ftdataPointDTO"]
-                old_dpts_args = {k:v for k,v in old_dpts_args.items() if v is not None}
-                old_ft_args = {k:v for k,v in old_ft_args.items() if v is not None}
-
-                if update_strategy == "merge_keep":
-                    dpts_args.update(old_dpts_args)
-                    ft_args.update(old_ft_args)
-                
-                if update_strategy == "merge_replace":
-                    old_dpts_args.update(dpts_args)
-                    old_ft_args.update(ft_args)
-                    dpts_args = old_dpts_args
-                    ft_dpts = old_ft_args
-
-                if update_strategy == "replace":
-                    for key, val in old_dpts_args.items():
-                        if key not in dpts_args.keys():
-                            dpts_args[key] = None
-                    for key, val in old_ft_args.items():
-                        if key not in ft_args.keys():
-                            ft_args[key] = None   
-
-                dpts_args["id"] = old_dpts_args["id"]
-                ft_args["id"] = old_ft_args["id"]
+                ft_args = self._update_args(old_ft_args, ft_args, update_strategy)
 
                 # Create DataPoint
                 datapoint = DataPoint(**dpts_args)
@@ -133,27 +171,249 @@ class FTDataPointUploader(object):
                 # Create FTDataPoint
                 ft_datapoint = FTDataPoint(**ft_args)
 
-                try:
-                    # Use FTDataPointCRUD to create the Datapoint and
-                    # the FTDatapoint
-                    FTDataptsCRUD = FTDataPointCRUD(datapoint, ft_datapoint) 
-                    FTDataptsCRUD.id = ft_datapoint.id
-                    FTDataptsCRUD.dataPointId = datapoint.id
-                    FTDataptsCRUD.dataPoint.dataEntityId = ft_datapoint.id
-                    FTDataptsCRUD.dataPoint.ftdatapoint_id = ft_datapoint.id
-                    FTDataptsCRUD.update()
-                    self.ft_datapoints_df.loc[index, "id"] = FTDataptsCRUD.id
-                    self.ft_datapoints_df.loc[index, "dataPointId"] = datapoint.id
+                # Use FTDataPointCRUD to create the Datapoint and
+                # the FTDatapoint
+                FTDataptsCRUD = FTDataPointCRUD(datapoint, ft_datapoint) 
+                FTDataptsCRUD.id = ft_datapoint.id
+                FTDataptsCRUD.dataPointID = datapoint.id
+                FTDataptsCRUD.dataPoint.dataEntityId = ft_datapoint.id
+                FTDataptsCRUD.dataPoint.ftdatapoint_id = ft_datapoint.id
+                FTDataptsCRUD.update()
 
-                except Exception as e:
-                    self.errors_df.loc[index] = [datapoint.id, str(type(e))]
-        
-        
-        if os.path.isfile("output.xlsx"):
-            mode = "a"
-        else:
-            mode = "w"
+            index = FTDataptsCRUD.id
+            self.dataframe_out.loc[index] = ft_args
+            self.dataframe_out.loc[index, "locationId"] = locationId
+            self.dataframe_out.loc[index, "sampleId"] = sampleId
+            self.dataframe_out.loc[index, "id"] = FTDataptsCRUD.id
+            self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
+            for k, v in ft_skip_args.items():
+                self.dataframe_out.loc[index, k] = v       
 
-        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
-            self.ft_datapoints_df.to_excel(writer, sheet_name='FTDataPoint')
-            self.errors_df.to_excel(writer, sheet_name="FTErrors")   
+
+class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
+
+    name = "FTBinnedLengthsData"
+
+    def __init__(self, datapackageId, ftbinned_lengths_df):
+
+        Uploader.__init__(self, ftbinned_lengths_df)
+
+        self.datapackageId = datapackageId 
+        self.validated = False
+
+    def validate(self):
+
+        ft_list = {"dataPackage": DataPackage,
+                   "dperErrorType": LErrorType 
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, FTBinnedLengthDataSchema, ft_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+        
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"])}
+        return super().query(query)
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = FTBinnedLengthDataCRUD(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = FTBinnedLengthDataCRUD(**args)
+                obj.update()
+
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
+
+
+
+class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
+
+    name = "FTSingleGrainData"
+
+    def __init__(self, datapackageId, ftsingle_grains_df):
+
+        Uploader.__init__(self, ftsingle_grains_df)
+
+        self.datapackageId = datapackageId 
+        self.validated = False
+
+    def validate(self):
+
+        ft_list = {"dataPackage": DataPackage,
+                   "uErrorType": LErrorType,
+                   "ageErrorType": LErrorType, 
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, FTSingleGrainSchema, ft_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+
+        query = {"ftdataPointId.equals": int(args["ftdataPointId"]),
+                 "grainName.equals": args["grainName"]}
+        return super().query(query)
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = FTSingleGrainCRUD(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = FTSingleGrainCRUD(**args) 
+                obj.update()
+
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
+
+
+class FTCountDataUploader(FTCountDataCRUD, Uploader):
+
+    name = "FTCountData"
+
+    def __init__(self, datapackageId, ftcount_data_df):
+
+        Uploader.__init__(self, ftcount_data_df)
+
+        self.datapackageId = datapackageId 
+        self.validated = False
+
+    def validate(self):
+
+        ft_list = {"dataPackage": DataPackage,
+                   "errorType": LErrorType, 
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, FTCountDataSchema, ft_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+        
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"]),
+                 "grainName.equals": args["grainName"]}
+        return super().query(query)
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = FTCountDataCRUD(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = FTCountDataCRUD(**args) 
+                obj.update()
+
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
+
+
+class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
+
+    name = "FTLengthData"
+
+    def __init__(self, datapackageId, ftlengthdata_df):
+
+        Uploader.__init__(self, ftlengthdata_df)
+
+        self.datapackageId = datapackageId 
+        self.validated = False
+
+    def validate(self):
+
+        ft_list = {"dataPackage": DataPackage,
+                   "errorType": LErrorType,
+                   "trackType": LTrackType, 
+                   }
+
+        self.dataframe = Uploader._validate(self.dataframe, FTLengthDataSchema, ft_list)
+        self.validated = True
+
+    def get_unique_query(self, args):
+        
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"]),
+                 "grainName.equals": args["grainName"],
+                 "trackID.equals": args["trackID"]}
+                 
+        return super().query(query)
+    
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+            records = []
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
+            else:
+                existing_id = None
+
+            if existing_id is None:
+                obj = FTLengthDataCRUD(**args) 
+                obj.new() 
+
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = FTLengthDataCRUD(**args) 
+                obj.update()
+
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
