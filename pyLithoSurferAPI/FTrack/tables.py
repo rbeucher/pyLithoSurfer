@@ -96,3 +96,8 @@ class FTLengthDataCRUD(APIRequests):
 class FTSingleGrainCRUD(APIRequests):
 
     API_PATH = "/api/fissiontrack/FTSingleGrain"
+
+
+class FTGrainProp(APIRequests):
+
+    API_PATH = "/api/fissiontrack/FTGrainProp"

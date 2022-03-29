@@ -144,10 +144,11 @@ class SampleWithLocation(APIRequests):
 
     API_PATH = '/api/core/sample-with-locations'
 
-    def __init__(self, location: Location, sample: Sample, id = None):
+    def __init__(self, location: Location, sample: Sample, id = None, auto_set_elevation: bool = False ):
 
         self.location = location
         self.sample = sample
+        self.auto_set_elevation = auto_set_elevation
         self.id = id 
 
     def _send_payload(self, func):
@@ -158,6 +159,7 @@ class SampleWithLocation(APIRequests):
 
         sample = self.sample.to_dict()
         data["sampleDTO"] = sample
+        data["autoSetElevationWriteConfig"] = self.auto_set_elevation
         data["id"] = self.id
 
         headers = APIRequests.SESSION.headers

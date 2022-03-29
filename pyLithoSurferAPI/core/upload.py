@@ -74,13 +74,10 @@ class SampleWithLocationUploader(Uploader):
 
         return SampleWithLocation.query(query)
 
-    def upload(self, update=False, update_strategy="merge_keep", auto_set_elevation=None):
+    def upload(self, update=False, update_strategy="merge_keep", auto_set_elevation = False):
 
         if not self.validated:
             raise ValueError("Data not validated")
-
-        if auto_set_elevation is not None: 
-            self.samples_df["autoSetElevationWriteConf"] = auto_set_elevation
 
         self.samples_df["locationId"] = None
         self.samples_df["id"] = None
@@ -120,7 +117,7 @@ class SampleWithLocationUploader(Uploader):
                
             if sample_with_location_id is None: 
                
-                SampWLocation = SampleWithLocation(Location(**loc_args), Sample(**samp_args))
+                SampWLocation = SampleWithLocation(Location(**loc_args), Sample(**samp_args), auto_set_elevation)
                 SampWLocation.new()
 
             elif update:
@@ -134,7 +131,7 @@ class SampleWithLocationUploader(Uploader):
                 sample = Sample(**samp_args)    
                 sample.locationId = location.id
 
-                SampWLocation = SampleWithLocation(location=location, sample=sample)
+                SampWLocation = SampleWithLocation(location=location, sample=sample, auto_set_elevation=auto_set_elevation)
                 SampWLocation.id = sample_with_location_id
                 SampWLocation.update()
 

@@ -1,5 +1,5 @@
 import pandera as pa
-from pandera.typing import Index, DataFrame, Series
+from pandera.typing import Series
 from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LLocationKind, LSampleKind, LSampleMethod, LCelestial, LErrorType, LGeoEvent
 from pyLithoSurferAPI.core.tables import Archive
@@ -12,7 +12,7 @@ class SampleSchema(pa.SchemaModel):
         strict = True
     
     archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=Archive.get_all()["name"].to_list())
+    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
