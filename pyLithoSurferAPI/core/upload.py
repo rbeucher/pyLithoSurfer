@@ -1,101 +1,80 @@
-from pyLithoSurferAPI.core.tables import Location
-from pyLithoSurferAPI.core.tables import Material
-from pyLithoSurferAPI.core.tables import Archive
-from pyLithoSurferAPI.core.tables import StratigraphicUnit
-from pyLithoSurferAPI.core.person import Person
-from pyLithoSurferAPI.management.tables import DataPackage
-from pyLithoSurferAPI.core.sample import Sample
-from pyLithoSurferAPI.core.sample import SampleWithLocation
+from pyLithoSurferAPI.uploader import Uploader
+from pyLithoSurferAPI.core.tables import (Literature, Location, Material, Archive, StratigraphicUnit, Sample, SampleWithLocation, Person)
 from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKind, LElevationKind, LCelestial 
-from pyLithoSurferAPI.core.schemas import LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
-from pyLithoSurferAPI.utilities import get_elevation_from_google
+from pyLithoSurferAPI.core.schemas import LiteratureSchema, LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
+from pyLithoSurferAPI.management.tables import DataPackage
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import os
 
 
-class SampleWithLocationUploader(object):
+class SampleWithLocationUploader(Uploader):
 
-    def __init__(self, datapackageId, locations_df, samples_df):
+    name = "Sample"
+
+    def __init__(self, datapackageId, locations_df, samples_df, locations_skip=None, samples_skip=None):
         self.datapackageId = datapackageId
         self.locations_df = locations_df
         self.samples_df = samples_df
+        self.samples_df["dataPackageId"] = datapackageId
         self.validated = False
+        self.locations_out = pd.DataFrame(columns=self.locations_df.columns)
+        self.samples_out = pd.DataFrame(columns=self.samples_df.columns)
+        self.locations_skip = locations_skip
+        self.samples_skip = samples_skip
 
     def validate(self):
 
-        # Validate Samples
-        self.samples_df = SampleSchema.validate(self.samples_df)
+        sample_lists = {
+            "dataPackage": DataPackage,
+            "archive": Archive,
+            "material": Material,
+            "sampleMethod": LSampleMethod,
+            "sampleKind" : LSampleKind,
+            "locationKind": LLocationKind,
+            "referenceElevationKind": LElevationKind,
+            "stratographicUnit": StratigraphicUnit,
+            }
 
-        if "archiveId" not in self.samples_df.columns:
-            if "archiveName" in self.samples_df.columns:
-                self.samples_df["archiveId"] = self.samples_df.archiveName.map(get_id(Archive))
+        location_lists = {
+            "celestial": LCelestial
+        }
+        if self.locations_skip:
+            skip_df = self.locations_df[[col for col in self.locations_skip if col in self.locations_df.columns]]
+            self.locations_df = self.locations_df.drop(columns=[col for col in self.locations_skip if col in self.locations_df.columns])
+        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, location_lists)
         
-        if "dataPackageId" not in self.samples_df.columns:
-            if "dataPackageName" in self.samples_df.columns:
-                self.samples_df["dataPackageId"] = self.samples_df.dataPackageName.map(get_id(DataPackage))
-        
-        if "materialId" not in self.samples_df.columns:
-            if "materialName" in self.samples_df.columns:
-                materials = self.samples_df.materialName.unique()
-                mapping = {}
-                for material in materials:
-                    mapping[material] = Material.get_id_from_name(material)
-                self.samples_df["materialId"] = self.samples_df.materialName.map(mapping)
-        
-        if "sampleMethodId" not in self.samples_df.columns:
-            if "sampleMethodName" in self.samples_df.columns:
-                self.samples_df["sampleMethodId"] = self.samples_df.sampleMethodName.map(get_id(LSampleMethod))
-            else:
-                self.samples_df["sampleMethodId"] = LSampleMethod.get_id_from_name("Unknown")
-                self.samples_df["sampleMethodName"] = "Unknown"
+        if self.locations_skip:
+            for col in self.locations_skip:
+                self.locations_df[col] = skip_df[col]
 
-        if "sampleKindId" not in self.samples_df.columns:
-            if "sampleKindName" in self.samples_df.columns:
-                self.samples_df["sampleKindId"] = self.samples_df.sampleKindName.map(get_id(LSampleKind))
-            else:
-                self.samples_df["sampleKindId"] = LSampleKind.get_id_from_name("Rock")
-                self.samples_df["sampleKindName"] = "Rock"
-        
-        if "locationKindId" not in self.samples_df.columns:
-            if "locationKindName" in self.samples_df.columns:
-                self.samples_df["locationKindId"] = self.samples_df.locationKindName.map(get_id(LLocationKind))
-            else:
-                self.samples_df["locationKindId"] = LLocationKind.get_id_from_name("Unknown")
-                self.samples_df["locationKindName"] = "Unknown"
-        
-        if "referenceElevationKindId" not in self.samples_df.columns:
-            if "referenceElevationKindName" in self.samples_df.columns:
-                self.samples_df["referenceElevationKindId"] = self.samples_df.referenceElevationKindName.map(get_id(LElevationKind))
-            else:
-                self.samples_df["referenceElevationKindId"] = LElevationKind.get_id_from_name("Ground level")
-                self.samples_df["referenceElevationKindName"] = "Ground level"
-        
-        self.samples_df["dataPackageId"] = self.datapackageId
-        self.samples_df = SampleSchema.validate(self.samples_df)
-        self.samples_df = self.samples_df.astype(object).where(pd.notnull(self.samples_df), None)
-        
-        # Validate Location
-        self.locations_df = LocationSchema.validate(self.locations_df)
-
-        if "celestialId" not in self.locations_df.columns:
-            if "celestialName" in self.locations_df.columns:
-                self.locations_df["celestialId"] = self.locations_df.celestialName.map(get_id(LCelestial))
-            else:
-                self.locations_df["celestialId"] = LCelestial.get_id_from_name("Earth")
-                self.locations_df["celestialName"] = "Earth"
-
-        self.locations_df = LocationSchema.validate(self.locations_df)
-        self.locations_df = self.locations_df.astype(object).where(pd.notnull(self.locations_df), None)
+        if self.samples_skip:
+            skip_df = self.samples_df[[col for col in self.samples_skip if col in self.samples_df.columns]]
+            self.samples_df = self.samples_df.drop(columns=[col for col in self.samples_skip if col in self.samples_df.columns])
+        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, sample_lists)
+        if self.samples_skip:
+            for col in self.samples_skip:
+                self.samples_df[col] = skip_df[col]
 
         self.validated = True
-        return
 
-    def upload(self, update=False, update_strategy="merge_keep"):
+    def get_unique_query(self, samp_args, loc_args):
+            
+        name = samp_args.get("name") 
+        igsn = samp_args.get("igsn", None) 
+        
+        query = {"dataPackageId.equals": self.datapackageId,
+                 "name.equals": name}
 
-        print("Upload Samples and Locations")
+        if igsn:
+            query = {"dataPackageId.equals": self.datapackageId,
+                     "name.equals": name,
+                     "igsn.equals": igsn}
+
+        return SampleWithLocation.query(query)
+
+    def upload(self, update=False, update_strategy="merge_keep", auto_set_elevation = False):
 
         if not self.validated:
             raise ValueError("Data not validated")
@@ -103,301 +82,226 @@ class SampleWithLocationUploader(object):
         self.samples_df["locationId"] = None
         self.samples_df["id"] = None
         self.locations_df["id"] = None
-        self.errors_df = pd.DataFrame(columns=["sample.name", "exception"])
 
         for index in tqdm(self.samples_df.index):
 
-            # Check for existing samples at location
             loc_args = self.locations_df.loc[index].to_dict()
             samp_args = self.samples_df.loc[index].to_dict()
+
+            loc_skip_args = {}
+            for k, v in loc_args.items():
+                if self.locations_skip and k in self.locations_skip:
+                    loc_skip_args[k] = loc_args[k]
+            loc_args = {k:v for k,v in loc_args.items() if k not in loc_skip_args.keys()}
+            
+            samp_skip_args = {}
+            for k, v in samp_args.items():
+                if self.samples_skip and k in self.samples_skip:
+                    samp_skip_args[k] = samp_args[k]
+
+            samp_args = {k:v for k,v in samp_args.items() if k not in samp_skip_args.keys()}
+
             loc_args = {k:v for k,v in loc_args.items() if v is not None}
             samp_args = {k:v for k,v in samp_args.items() if v is not None}
-            if "id" not in loc_args.keys():
-                loc_args["id"] = None
-            if "id" not in samp_args.keys():
-                samp_args["id"] = None
             
-            lat = loc_args.get("lat")
-            lon = loc_args.get("lon")
-            name = samp_args.get("name") 
-            igsn = samp_args.get("igsn", None) 
+            loc_args["id"] = None
+            samp_args["id"] = None
             
-            query = {"dataPackageId.equals": self.datapackageId,
-                     "name.equals": name}
-
-            response = SampleWithLocation.query(query)
+            response = self.get_unique_query(samp_args, loc_args)
             records = response.json() 
 
+            sample_with_location_id = None
+            
             if len(records) == 1:
                 sample_with_location_id = records[0]["id"]
-
-            elif len(records) > 1:
-                
-                # Sometimes the same sample has been assigned different
-                # IGSN number...
-                # Lets take care of this
-                if "igsn" in samp_args.key():
-
-                    # Extract IGSN numbers
-                    igsn_dict = {}
-                    for record in records:
-                        sampDTO = record["sampleDTO"]
-                        if sampDTO.get("igsn"):
-                            igsn = sampDTO.pop("igsn")
-                            igsn_dict[igsn] = record
-
-                    if samp_args["igsn"] not in igsn_dict.keys():
-                        sample_with_location_id = None
-                    else:
-                        record_index = igsn_dict[samp_args["igsn"]]
-                        record = records[record_index]
-                        sample_with_location_id = record["id"]
-
-                else:
-                    print("Sample Already Exist")
-                    continue
-                
-            else:
-                sample_with_location_id = None
-
-
+               
             if sample_with_location_id is None: 
                
-                location = Location(**loc_args)
-                sample = Sample(**samp_args)    
-           
-                try:
-                    # Create SampleWithLocation object.
-                    SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.new()
-                except Exception as e:
-                    self.errors_df.loc[index] = [sample.name, str(type(e))]
+                SampWLocation = SampleWithLocation(Location(**loc_args), Sample(**samp_args), auto_set_elevation)
+                SampWLocation.new()
 
             elif update:
 
-                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
-                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
-                    
                 old_loc_args = records[0]["locationDTO"]
+                loc_args = self._update_args(old_loc_args, loc_args, update_strategy)
                 old_samp_args = records[0]["sampleDTO"]
-                old_loc_args = {k:v for k,v in old_loc_args.items() if v is not None}
-                old_samp_args = {k:v for k,v in old_samp_args.items() if v is not None}
-                
-                if update_strategy == "merge_keep":
-                    loc_args.update(old_loc_args)
-                    samp_args.update(old_samp_args)
-                
-                if update_strategy == "merge_replace":
-                    old_loc_args.update(loc_args)
-                    old_samp_args.update(samp_args)
-                    samp_args = old_samp_args
-                    loc_args = old_loc_args
+                samp_args = self._update_args(old_samp_args, samp_args, update_strategy)
 
-                if update_strategy == "replace":
-                    for key, val in old_loc_args.items():
-                        if key not in loc_args.keys():
-                            loc_args[key] = None
-                    for key, val in old_samp_args.items():
-                        if key not in samp_args.keys():
-                            samp_args[key] = None                            
-
-                loc_args["id"] = old_loc_args["id"]
-                samp_args["id"] = old_samp_args["id"]
-
-                # Create Location
                 location = Location(**loc_args)
-                # Create Sample
                 sample = Sample(**samp_args)    
                 sample.locationId = location.id
 
-                try:
-                    # Create SampleWithLocation
-                    SampWLocation = SampleWithLocation(location=location, sample=sample)
-                    SampWLocation.id = sample_with_location_id
-                    SampWLocation.update()
-                except Exception as e:
-                    self.errors_df.loc[index] = [sample.name, str(type(e))]
+                SampWLocation = SampleWithLocation(location=location, sample=sample, auto_set_elevation=auto_set_elevation)
+                SampWLocation.id = sample_with_location_id
+                SampWLocation.update()
 
-            else:
-                continue
-           
-            self.locations_df.loc[index, "id"] = SampWLocation.location.id
-            self.samples_df.loc[index, "id"] = SampWLocation.sample.id
-            self.samples_df.loc[index, "locationId"] = SampWLocation.location.id
+            index = SampWLocation.location.id
+            self.locations_out.loc[index] = loc_args
+            self.locations_out.loc[index, "id"] = SampWLocation.location.id
+            for k, v in loc_skip_args.items():
+                self.locations_out.loc[index, k] = v
 
+            index = SampWLocation.sample.id
+            self.samples_out.loc[index] = samp_args
+            self.samples_out.loc[index, "id"] = SampWLocation.sample.id
+            self.samples_out.loc[index, "locationId"] = SampWLocation.location.id
+            for k, v in samp_skip_args.items():
+                self.samples_out.loc[index, k] = v
+
+    def save(self, outfile="output.xlsx"):
+
+        kwargs = {}
         if os.path.isfile("output.xlsx"):
-            mode = "a"
+            kwargs["mode"] = "a"
+            kwargs["if_sheet_exists"] = "replace"
         else:
-            mode = "w"
+            kwargs["mode"] = "w"
 
-        with pd.ExcelWriter('output.xlsx', mode=mode, if_sheet_exists="replace") as writer:  
-            self.samples_df.to_excel(writer, sheet_name='Samples')
-            self.locations_df.to_excel(writer, sheet_name='Locations')
-            self.errors_df.to_excel(writer, sheet_name="Errors")   
+        with pd.ExcelWriter('output.xlsx', **kwargs) as writer:  
+            self.samples_out.to_excel(writer, sheet_name='Samples')
+            self.locations_out.to_excel(writer, sheet_name='Locations')
 
 
-class PersonUploader(object):
+class PersonUploader(Person, Uploader):
+
+    name = "Persons"
 
     def __init__(self, persons_df):
-        self.persons_df = persons_df
+        Uploader.__init__(self, persons_df)
+
+    def get_unique_query(self, args):
+        
+        query = {"name.equals": args["name"],
+                 "firstName.equals": args["firstName"]}
+        return super().query(query)
 
     def validate(self):
-        self.persons_df = self.persons_df.dropna(how="all")
-        self.persons_df = self.persons_df.drop_duplicates()
-        self.persons_df = PersonSchema.validate(self.persons_df)
-        self.persons_df = self.persons_df.astype(object).where(pd.notnull(self.persons_df), None)
-        return self.persons_df
 
+        self.dataframe = Uploader._validate(self.dataframe, PersonSchema)
+        self.validated = True
+        return
+        
     def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
 
-        self.persons_df["id"] = None
+        for index in tqdm(self.dataframe.index):
 
-        for index in tqdm(self.persons_df.index):
-
-            row = self.persons_df.loc[index]
-            args = row.to_dict()
-
-            query = {"name.equals": args["name"],
-                     "firstName.equals": args["firstName"]}
-            
-            response = Person.query(query)
-            records = response.json() 
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
 
             if len(records) == 1:
-                person_id = records[0]["id"]
-            elif len(records) > 1:
-                raise ValueError("Error")
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
             else:
-                person_id = None
+                existing_id = None
 
-            if (person_id is None):
-                
-                person = Person(**args)
-                person.new() 
-                person_id = person.id
+            if existing_id is None:
+                obj = Person(**args) 
+                obj.new() 
 
             elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = Person(**args) 
+                obj.update()
 
-                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
-                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
-                    
-                old_args = records[0]                
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
-                if update_strategy == "merge_keep":
-                    args.update(old_args)
-                
-                if update_strategy == "merge_replace":
-                    old_args.update(args)
-                    args = old_args
 
-                if update_strategy == "replace":
-                    for key, val in old_args.items():
-                        if key not in args.keys():
-                            args[key] = None
+class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
 
-                person = Person(**args)
-                person.id = person_id
-                person.update()
-
-            self.persons_df.loc[index, "id"] = person_id
-
-        with pd.ExcelWriter('persons_output.xlsx') as writer:  
-           self.persons_df.to_excel(writer, sheet_name='Persons')
-            
-
-class StratigraphicUnitUploader(object):
+    name = "StratigraphicUnit"
     
     def __init__(self, stratigraphic_df):
         
-        self.stratigraphic_df = stratigraphic_df
-        self.validated = False
-        
+        Uploader.__init__(self, stratigraphic_df)
+
+    def get_unique_query(self, args):
+        query = {"name.equals": args.get("name", None)}
+        return super().query(query)
+
     def validate(self):
-        self.stratigraphic_df = StratigraphicUnitSchema.validate(self.stratigraphic_df)
-        self.stratigraphic_df = self.stratigraphic_df.astype(object).where(pd.notnull(self.stratigraphic_df), None)
+        self.dataframe = Uploader._validate(self.dataframe, StratigraphicUnitSchema)
         self.validated = True
         return
-    
+
     def upload(self, update=False, update_strategy="merge_keep"):
         
-        print("Upload Stratigraphic Units")
-        self.errors_df = pd.DataFrame(columns=["Stratigraphic", "exception"])
+        self.dataframe["id"] = None
 
+        for index in tqdm(self.dataframe.index):
 
-        if not self.validated:
-            raise ValueError("Data not validated")
-       
-        for index in tqdm(self.stratigraphic_df.index):
-
-            # Check for existing samples at location
-            args = self.stratigraphic_df.loc[index].to_dict()
-            args = {k:v for k,v in args.items() if v is not None}
-            if "id" not in args.keys():
-                args["id"] = None
-                
-            query = {"name.equals": args["name"]}
-                
-            response = StratigraphicUnit.query(query)
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
             records = response.json()
-            
+
             if len(records) == 1:
-                stratigraphic_unit_id = records[0]["id"]
-            elif len(records) > 1:
-                raise ValueError("Error")
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
             else:
-                stratigraphic_unit_id = None
-                
-            if stratigraphic_unit_id is None: 
-               
-                try:
-                    stratigraphic_unit = StratigraphicUnit(**args)
-                    stratigraphic_unit.new()
-                    
-                except Exception as e:
-                    self.errors_df.loc[index] = [args["name"], str(e)]
+                existing_id = None
+
+            if existing_id is None:
+                obj = StratigraphicUnit(**args) 
+                obj.new() 
 
             elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = StratigraphicUnit(**args) 
+                obj.update()
+                
+            index = obj.id
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id
 
-                if update_strategy not in ["merge_keep", "merge_replace", "replace"]:
-                    raise ValueError(f"Update strategy must be 'replace', 'merge_keep', 'merge_replace'")
-                    
-                
-                old_args = records[0]
-                old_args = {k:v for k,v in old_args.items() if v is not None}
-                
-                if update_strategy == "merge_keep":
-                    args.update(old_args)
-                
-                if update_strategy == "merge_replace":
-                    old_args.update(args)
-                    args = old_args
 
-                if update_strategy == "replace":
-                    for key, val in old_args.items():
-                        if key not in args.keys():
-                            args[key] = None
-                                             
-                args["id"] = old_args["id"]
-                
-                try:
-                    stratigraphic_unit = StratigraphicUnit(**args)
-                    stratigraphic_unit.update()
-                    
-                except Exception as e:
-                    self.errors_df.loc[index] = [args["name"], str(e)]
+class LiteratureUploader(Literature, Uploader):
 
+    name = "Literature"
+
+    def __init__(self, literature_df):
+
+        Uploader.__init__(self, literature_df)
+
+    def get_unique_query(self, args):
+        
+        query = {"title.equals": args["title"],
+                 "pubYear.equals": args["pubYear"]}
+        return super().query(query)
+    
+    def validate(self):
+
+        self.dataframe = Uploader._validate(self.dataframe, LiteratureSchema)
+        self.validated = True
+
+    def upload(self, update=False, update_strategy="merge_keep"):
+        
+        self.dataframe["id"] = None
+
+        for index in tqdm(self.dataframe.index):
+
+            args = self.dataframe.loc[index].to_dict()
+            response = self.get_unique_query(args)
+            records = response.json()
+
+            if len(records) == 1:
+                existing_id = records[0]["id"]
+                old_args =  {k:v for k,v in records[0].items() if v is not None}
             else:
-                continue   
-                
-            self.stratigraphic_df.loc[index, "id"] = stratigraphic_unit.id
+                existing_id = None
 
-        if os.path.isfile("output.xlsx"):
-            mode = "a"
-        else:
-            mode = "w"
+            if existing_id is None:
+                obj = Literature(**args) 
+                obj.new() 
 
-        with pd.ExcelWriter('output.xlsx', mode=mode) as writer:  
-            self.stratigraphic_df.to_excel(writer, sheet_name='StratigraphicUnit')
-            self.errors_df.to_excel(writer, sheet_name="StratigraphicUnitErrors")  
-            
+            elif update:
+                args = self._update_args(old_args, args, update_strategy)
+                obj = Literature(**args) 
+                obj.update()
 
+            index = obj.id            
+            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index, "id"] = obj.id

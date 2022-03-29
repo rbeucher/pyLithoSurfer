@@ -1,4 +1,3 @@
-from . import session, URL_BASE
 from abc import ABC
 import json
 import pandas as pd
@@ -8,10 +7,18 @@ from pyLithoSurferAPI.utilities import NumpyEncoder
 
 class APIRequests(ABC):
 
+    URL_BASE = None
+    API_PATH = None
+    SESSION = None
+
     def __init__(self, **kwargs):
         self.id = kwargs.pop("id") if "id" in kwargs.keys() else None
         for key, val in kwargs.items():
             setattr(self, key, val)
+
+    @classmethod
+    def path(cls):
+        return APIRequests.URL_BASE + cls.API_PATH
 
     # GET ALL
     @classmethod
@@ -21,7 +28,7 @@ class APIRequests(ABC):
     # GET N ENTRIES
     @classmethod
     def get_entries(cls, nentries=1):
-        response = session.get(cls.path, data={"size": nentries})
+        response = APIRequests.SESSION.get(cls.path(), data={"size": nentries})
         response.raise_for_status()
         records = response.json()
         return pd.DataFrame.from_records(records)
@@ -29,50 +36,49 @@ class APIRequests(ABC):
     # POST
     def new(self):
         data = self.to_dict()
-        if "id" in data.keys():
-            data.pop("id")
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-
-        response = session.post(self.path, data=json.dumps(data), headers=headers)
-        response.raise_for_status()
+        data.pop("id")
+        response = APIRequests.SESSION.post(self.path(), data=json.dumps(data), headers=self.SESSION.headers)
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(data, cls=NumpyEncoder))
+            print(response.json())
+            raise e
         response = response.json()
-        if "id" in response.keys():
-            self.id = response["id"]
+        self.id = response["id"]
         return response
 
     # PUT
     def update(self):
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        response = session.put(self.path, data=self.to_json(), headers=headers)
-        response.raise_for_status()
+        response = APIRequests.SESSION.put(self.path(), data=self.to_json(), headers=self.SESSION.headers)
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(json.dumps(self.to_json(), cls=NumpyEncoder))
+            print(response.json())
+            raise e
         return response
 
     # COUNT
     @classmethod
     def count(cls):
-        path = cls.path + "/" + "count"
-        response = session.get(path)
+        path = cls.path() + "/" + "count"
+        response = APIRequests.SESSION.get(path)
         response.raise_for_status()
         return response.json()   
 
     # DELETE
-    def delete(self):
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
-        path = self.path + "/" + str(self.id)
-        response = session.delete(path)
+    @classmethod
+    def delete(cls, id):
+        path = cls.path() + "/" + str(id)
+        response = APIRequests.SESSION.delete(path)
         response.raise_for_status()
         return response
 
     # GET FROM ID
     def get_from_id(self, id_value):
-        path = self.path + "/" + str(id_value)
-        response = session.get(path)
+        path = self.path() + "/" + str(id_value)
+        response = APIRequests.SESSION.get(path)
         response.raise_for_status()
         data = response.json()
         self.__init__(**data)
@@ -81,10 +87,8 @@ class APIRequests(ABC):
     @classmethod
     def query(cls, query):
         query = urllib.parse.urlencode(query)
-        headers = session.headers
-        headers["Accept"] = "application/json"
-        path = cls.path + "?" + str(query)
-        response = session.get(path)
+        path = cls.path() + "?" + str(query)
+        response = APIRequests.SESSION.get(path)
         response.raise_for_status()
         return response
 
