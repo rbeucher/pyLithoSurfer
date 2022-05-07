@@ -28,7 +28,7 @@ class SHRIMPDataPointUploader(Uploader):
         self.shrimp_datapoints_df = shrimp_datapoints_df
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         shrimp_list = {"dataPackage": DataPackage,
                        "mineralOfInterest": Material,
@@ -36,7 +36,7 @@ class SHRIMPDataPointUploader(Uploader):
                        "machine": Machine
         }
 
-        self.shrimp_datapoints_df = Uploader._validate(self.shrimp_datapoints_df, SHRIMPDataPointSchema, shrimp_list)
+        self.shrimp_datapoints_df = Uploader._validate(self.shrimp_datapoints_df, SHRIMPDataPointSchema, shrimp_list, lazy=True)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -130,7 +130,7 @@ class SHRIMPAgeUploader(Uploader):
         self.shrimp_ages_df = shrimp_ages_df
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         shrimp_list = {"errorType": LErrorType,
                        "geoEvent": LGeoEvent,
@@ -144,7 +144,7 @@ class SHRIMPAgeUploader(Uploader):
         df.loc[pd.isnull(df["geoEventName"]), "geoEventName"] = "Unknown"
         df.loc[pd.isnull(df["ageTypeName"]), "ageTypeName"] = "Unknown date"
         df.loc[pd.isnull(df["ageGroupName"]), "ageGroupName"] = "Z (undefined)"
-        df = SHRIMPAgeSchema.validate(self.shrimp_ages_df)
+        df = SHRIMPAgeSchema.validate(self.shrimp_ages_df, lazy=lazy)
 
     def upload(self, update=False, update_strategy="merge_keep"):
     

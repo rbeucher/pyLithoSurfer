@@ -25,7 +25,7 @@ class AgeDataPointUploader(Uploader):
         self.dataframe = age_datapoints_df
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         age_list = {"errorType": LErrorType,
                     "analyticalMethod": LAnalyticalMethod,
@@ -33,7 +33,7 @@ class AgeDataPointUploader(Uploader):
                     }
 
         self.dataframe.dropna(subset=["age"], inplace=True)
-        self.dataframe = Uploader._validate(self.dataframe, AgeDataPointSchema, age_list)
+        self.dataframe = Uploader._validate(self.dataframe, AgeDataPointSchema, age_list, lazy=lazy)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):

@@ -34,7 +34,7 @@ class FTDataPointUploader(Uploader):
         self.validated = False
         self.skip_columns = skip_columns
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
                    "ageErrorType": LErrorType,
@@ -59,7 +59,7 @@ class FTDataPointUploader(Uploader):
             skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
             self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
         
-        self.dataframe = Uploader._validate(self.dataframe, FTDataPointSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTDataPointSchema, ft_list, lazy=lazy)
         
         if self.skip_columns:
             for col in self.skip_columns:
@@ -106,7 +106,7 @@ class FTDataPointUploader(Uploader):
                 query["ftAgeEquationId.equals"] = int(ft_args["ftAgeEquationId"])
             if ft_args["ftUDeterminationTechniqueId"]:
                 query["ftUDeterminationTechniqueID.equals"] = int(ft_args["ftUDeterminationTechniqueId"])
-            if ft_args["mountIDCount"]:
+            if "mountIdCount" in ft_args.keys() and ft_args["mountIDCount"]:
                 query["mountIDCount.equals"] = ft_args["mountIDCount"]
             
             # Note that these are probably temporary...
@@ -201,13 +201,13 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
                    "dperErrorType": LErrorType 
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, FTBinnedLengthDataSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTBinnedLengthDataSchema, ft_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):
@@ -257,14 +257,14 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
                    "uErrorType": LErrorType,
                    "ageErrorType": LErrorType, 
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, FTSingleGrainSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTSingleGrainSchema, ft_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):
@@ -314,13 +314,13 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
                    "errorType": LErrorType, 
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, FTCountDataSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTCountDataSchema, ft_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):
@@ -370,14 +370,14 @@ class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
                    "errorType": LErrorType,
                    "trackType": LTrackType, 
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, FTLengthDataSchema, ft_list)
+        self.dataframe = Uploader._validate(self.dataframe, FTLengthDataSchema, ft_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):

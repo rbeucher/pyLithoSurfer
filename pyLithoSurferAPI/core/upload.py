@@ -24,7 +24,7 @@ class SampleWithLocationUploader(Uploader):
         self.locations_skip = locations_skip
         self.samples_skip = samples_skip
 
-    def validate(self):
+    def validate(self, lazy=True):
 
         sample_lists = {
             "dataPackage": DataPackage,
@@ -43,7 +43,7 @@ class SampleWithLocationUploader(Uploader):
         if self.locations_skip:
             skip_df = self.locations_df[[col for col in self.locations_skip if col in self.locations_df.columns]]
             self.locations_df = self.locations_df.drop(columns=[col for col in self.locations_skip if col in self.locations_df.columns])
-        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, location_lists)
+        self.locations_df = Uploader._validate(self.locations_df, LocationSchema, location_lists, lazy=lazy)
         
         if self.locations_skip:
             for col in self.locations_skip:
@@ -52,7 +52,7 @@ class SampleWithLocationUploader(Uploader):
         if self.samples_skip:
             skip_df = self.samples_df[[col for col in self.samples_skip if col in self.samples_df.columns]]
             self.samples_df = self.samples_df.drop(columns=[col for col in self.samples_skip if col in self.samples_df.columns])
-        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, sample_lists)
+        self.samples_df = Uploader._validate(self.samples_df, SampleSchema, sample_lists, lazy=lazy)
         if self.samples_skip:
             for col in self.samples_skip:
                 self.samples_df[col] = skip_df[col]
@@ -175,9 +175,9 @@ class PersonUploader(Person, Uploader):
                  "firstName.equals": args["firstName"]}
         return super().query(query)
 
-    def validate(self):
+    def validate(self, lazy=False):
 
-        self.dataframe = Uploader._validate(self.dataframe, PersonSchema)
+        self.dataframe = Uploader._validate(self.dataframe, PersonSchema, lazy=lazy)
         self.validated = True
         return
         
@@ -223,8 +223,8 @@ class StratigraphicUnitUploader(StratigraphicUnit, Uploader):
         query = {"name.equals": args.get("name", None)}
         return super().query(query)
 
-    def validate(self):
-        self.dataframe = Uploader._validate(self.dataframe, StratigraphicUnitSchema)
+    def validate(self, lazy=False):
+        self.dataframe = Uploader._validate(self.dataframe, StratigraphicUnitSchema, lazy=lazy)
         self.validated = True
         return
 
@@ -272,9 +272,9 @@ class LiteratureUploader(Literature, Uploader):
                  "pubYear.equals": args["pubYear"]}
         return super().query(query)
     
-    def validate(self):
+    def validate(self, lazy=False):
 
-        self.dataframe = Uploader._validate(self.dataframe, LiteratureSchema)
+        self.dataframe = Uploader._validate(self.dataframe, LiteratureSchema, lazy=lazy)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):

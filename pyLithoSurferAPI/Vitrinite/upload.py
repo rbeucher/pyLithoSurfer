@@ -20,9 +20,9 @@ class VitriniteDataPointUploader(object):
         self.dataframe = vitrinite_datapoints_df
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
        lists = {"dataPackage": DataPackage}
-       self.dataframe = Uploader._validate(self.dataframe, VitriniteDataPointSchema, lists)
+       self.dataframe = Uploader._validate(self.dataframe, VitriniteDataPointSchema, lists, lazy=lazy)
        self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):

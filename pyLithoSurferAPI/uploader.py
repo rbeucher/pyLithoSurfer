@@ -13,9 +13,7 @@ class Uploader(object):
         self.dataframe_out = pd.DataFrame(columns=self.dataframe.columns)
 
     @staticmethod
-    def _validate(dataframe, schema, lists=None):
-
-        dataframe = schema.validate(dataframe)
+    def _validate(dataframe, schema, lists=None, lazy=False):
 
         if lists:
             for key, val in lists.items():
@@ -28,7 +26,7 @@ class Uploader(object):
                         dataframe[key + "Id"] = dataframe[key + "Name"].map(mapping)
         
         dataframe = dataframe.replace({np.nan: None})
-        dataframe = schema.validate(dataframe)
+        dataframe = schema.validate(dataframe, lazy=lazy)
         return dataframe.astype(object).where(pd.notnull(dataframe), None)
 
     def get_unique_query(self, args):

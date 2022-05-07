@@ -12,7 +12,7 @@ class SampleSchema(pa.SchemaModel):
         strict = True
     
     archiveId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    archiveName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    archiveName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
     archiveNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
@@ -25,23 +25,26 @@ class SampleSchema(pa.SchemaModel):
     igsnMintingTimestamp: Optional[Series[pa.DateTime]]
     locationId: Optional[Series[pa.Int64]]
     locationKindId: Optional[Series[pa.Int64]]
-    locationKindName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=LLocationKind.get_all()["name"].to_list())
+    locationKindName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255}, isin=LLocationKind.get_all()["name"].to_list())
     locationName: Optional[Series[pa.String]]
     materialId: Optional[Series[pa.Float]] = pa.Field(coerce=True, nullable=True)
-    materialName: Optional[Series[pa.String]]  = pa.Field(coerce=True, nullable=True)
+    materialName: Series[pa.String]  = pa.Field(coerce=True, nullable=True)
     name: Series[pa.String] = pa.Field(nullable=False, coerce=True, str_length={"min_value": 0, "max_value": 255})
+    rockUnitAgeDescription: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
+    rockUnitAgeMax: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
+    rockUnitAgeMin: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
     referenceElevation: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
     referenceElevationKindId: Optional[Series[pa.Int64]]
-    referenceElevationKindName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=LElevationKind.get_all()["name"].to_list())
+    referenceElevationKindName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255}, isin=LElevationKind.get_all()["name"].to_list())
     referenceElevationKindNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     referenceElevationSource:  Optional[Series[pa.String]]
     relativeElevationAccuracy: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
     sampleKindId: Optional[Series[pa.Int64]]
-    sampleKindName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LSampleKind.get_all()["name"].to_list())
+    sampleKindName: Series[pa.String] = pa.Field(nullable=False, isin=LSampleKind.get_all()["name"].to_list())
     sampleMethodId: Optional[Series[pa.Int64]]
-    sampleMethodName: Optional[Series[pa.String]]= pa.Field(nullable=True, isin=LSampleMethod.get_all()["name"].to_list())
+    sampleMethodName: Series[pa.String] = pa.Field(nullable=False, isin=LSampleMethod.get_all()["name"].to_list())
     sourceId: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     stratographicUnitId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     stratographicUnitName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
@@ -55,9 +58,9 @@ class LocationSchema(pa.SchemaModel):
     
     calcName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     captureMethodId: Optional[Series[pa.Int64]]
-    captureMethodName: Optional[Series[pa.String]]
+    captureMethodName: Series[pa.String]
     celestialId: Optional[Series[pa.Int64]]
-    celestialName: Optional[Series[pa.String]] = pa.Field( nullable=False, isin=LCelestial.get_all()["name"].to_list())
+    celestialName: Series[pa.String] = pa.Field( nullable=False, isin=LCelestial.get_all()["name"].to_list())
     description: Optional[Series[pa.String]] = pa.Field( nullable=True)
     id: Optional[Series[pa.Int64]]
     lat: Series[pa.Float] = pa.Field( nullable=False, coerce=True, ge=-90, le=90)
@@ -179,7 +182,7 @@ class StratigraphicUnitSchema(pa.SchemaModel):
     baseAgeName: Optional[Series[pa.String]]
     createdById:  Optional[Series[pa.Int]]
     createdTimestamp:  Optional[Series[pa.String]]
-    description: Optional[Series[pa.String]]
+    description: Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True)
     event: Optional[Series[pa.String]]
     geologicalProvince: Optional[Series[pa.String]]
     id:  Optional[Series[pa.Int]]

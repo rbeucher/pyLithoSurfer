@@ -36,7 +36,7 @@ class HeDataPointUploader(Uploader):
         self.skip_columns = skip_columns
 
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         he_list = {"dataPackage": DataPackage,
                    "alphaStopDistRef": LHeAlphaStopDistRef,
@@ -58,7 +58,7 @@ class HeDataPointUploader(Uploader):
             skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
             self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
 
-        self.dataframe = Uploader._validate(self.dataframe, HeDataPointSchema, he_list)
+        self.dataframe = Uploader._validate(self.dataframe, HeDataPointSchema, he_list, lazy=lazy)
 
         if self.skip_columns:
             for col in self.skip_columns:
@@ -179,7 +179,7 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         he_list = {"dataPackage": DataPackage,
                    "aliquotMassErrorType": LErrorType,
@@ -203,7 +203,7 @@ class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
                    "zrContentErrorType": LErrorType
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, HeWholeGrainSchema, he_list)
+        self.dataframe = Uploader._validate(self.dataframe, HeWholeGrainSchema, he_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):
@@ -253,7 +253,7 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
         self.datapackageId = datapackageId 
         self.validated = False
 
-    def validate(self):
+    def validate(self, lazy=False):
 
         he_list = {"dataPackage": DataPackage,
                    "crysFrag": LHeCrysFrag,
@@ -273,7 +273,7 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
                    "pitRelationship": LPitRelationship
                    }
 
-        self.dataframe = Uploader._validate(self.dataframe, HeInSituSchema, he_list)
+        self.dataframe = Uploader._validate(self.dataframe, HeInSituSchema, he_list, lazy=lazy)
         self.validated = True
 
     def get_unique_query(self, args):
