@@ -20,6 +20,7 @@ from pyLithoSurferAPI.UThHe.lists import (LHeAgeEquation,
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
 from tqdm import tqdm
+from datetime import datetime
 
 
 
@@ -45,7 +46,7 @@ class HeDataPointUploader(Uploader):
                    "ftEquation": LHeFTEquation,
                    "grainDimensionEquation": LHeGrainDimensionEq,
                    "heAgeEquation": LHeAgeEquation,
-                   "meanCorrectedHeAgeError": LErrorType,
+                   "meanCorrectedHeAgeErrorType": LErrorType,
                    "meanUncorrectedHeAgeErrorType": LErrorType,
                    "mineral": Material,
                    "referenceMaterial": ReferenceMaterial,
@@ -103,10 +104,10 @@ class HeDataPointUploader(Uploader):
                 query["mineralId.equals"] = int(he_args["mineralId"])
 
             # We should not use ages but that will do the job for the Canadian
-            if he_args["meanCorrectedHeAge"]:
+            if ("meanCorrectedHeAge" in he_args.keys()) and he_args["meanCorrectedHeAge"]:
                 query["meanCorrectedHeAge.greaterOrEqualThan"] = he_args["meanCorrectedHeAge"] - 0.001
                 query["meanCorrectedHeAge.lessOrEqualThan"] = he_args["meanCorrectedHeAge"] + 0.001
-            if he_args["meanUncorrectedHeAge"]:
+            if ("meanUncorrectedHeAge" in he_args.keys()) and he_args["meanUncorrectedHeAge"]:
                 query["meanUncorrectedHeAge.greaterOrEqualThan"] = he_args["meanUncorrectedHeAge"] - 0.001 
                 query["meanUncorrectedHeAge.lessOrEqualThan"] = he_args["meanUncorrectedHeAge"] + 0.001
 
@@ -119,6 +120,9 @@ class HeDataPointUploader(Uploader):
                 existing_id = records[0]["id"]
             else:
                 existing_id = None
+
+            if not dpts_args["name"]:
+                dpts_args["name"] = f"Data Entry {str(datetime.now())}" 
 
             if existing_id is None:
 
@@ -156,7 +160,7 @@ class HeDataPointUploader(Uploader):
                 HeDataptsCRUD.id = he_datapoint.id
                 HeDataptsCRUD.dataPointID = datapoint.id
                 HeDataptsCRUD.dataPoint.dataEntityId = he_datapoint.id
-                HeDataptsCRUD.dataPoint.hedatapoint_id = he_datapoint.id
+                HeDataptsCRUD.dataPoint.heDataPointId = he_datapoint.id
                 HeDataptsCRUD.update()
 
             index = HeDataptsCRUD.id

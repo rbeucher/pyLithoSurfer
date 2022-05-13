@@ -287,6 +287,9 @@ class LiteratureUploader(Literature, Uploader):
             response = self.get_unique_query(args)
             records = response.json()
 
+            if ("pubYear" in args.keys()) and args["pubYear"]:
+                args["pubYear"] = int(args["pubYear"])
+
             if len(records) == 1:
                 existing_id = records[0]["id"]
                 old_args =  {k:v for k,v in records[0].items() if v is not None}
