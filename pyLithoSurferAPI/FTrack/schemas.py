@@ -17,8 +17,7 @@ class FTBinnedLengthDataSchema(pa.SchemaModel):
     dPer: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 3.})
     dPerError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 3.})
     dPerNumTotal: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    dperErrorTypeId: Optional[Series[pa.Int]] = pa.Field( nullable=True, coerce=True)
-    dperErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    etchingTime:   Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     ftdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=True, coerce=True)
     i0x1:   Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     i10x11: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
@@ -41,6 +40,7 @@ class FTBinnedLengthDataSchema(pa.SchemaModel):
     i8x9: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     i9x10: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     id: Optional[Series[pa.Int]] = pa.Field( nullable=True, coerce=True)
+    mountID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 
 class FTCountDataSchema(pa.SchemaModel):
@@ -204,9 +204,9 @@ class FTSingleGrainSchema(pa.SchemaModel):
         name = "FTSingleGrainSchema"
         strict = True
 
-    ageErrorMa: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
-    ageErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    ageErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    ageUncertaintyMa: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    ageUncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    ageUncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     ageMa: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     ftdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -215,10 +215,8 @@ class FTSingleGrainSchema(pa.SchemaModel):
     kParameter: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     rmr0: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 20.})
     uCont: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uCaRatio: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uCaRatioError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uerrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uerrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-
-    
+    uCaRatioUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uUncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uUncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
