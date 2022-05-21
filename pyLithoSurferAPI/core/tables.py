@@ -184,3 +184,7 @@ class SampleWithLocation(APIRequests):
     def update(self):
         return self._send_payload(APIRequests.SESSION.put)
 
+
+class DatapointProperty(APIRequests):
+
+    API_PATH = "/api/core/DatapointProperty"
