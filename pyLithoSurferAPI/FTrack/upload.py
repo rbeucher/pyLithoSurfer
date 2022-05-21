@@ -269,7 +269,7 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
 
     def get_unique_query(self, args):
 
-        query = {"ftdataPointId.equals": int(args["ftdataPointId"]),
+        query = {"FTDataPointId.equals": int(args["ftdataPointId"]),
                  "grainName.equals": args["grainName"]}
         return super().query(query)
     
