@@ -1,19 +1,13 @@
-import os
-
-import numpy as np
-import pandas as pd
 from pyLithoSurferAPI.core.lists import (LErrorType, LGeoEvent, LSHRIMPAgeType,
                                          LSHRIMPSampleFormat, LSHRIMPAgeGroup)
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.core.tables import (DataPoint, GeoeventAtAge, Material,
                                           Statement, Machine)
-from pyLithoSurferAPI.core.upload import SampleWithLocationUploader
 from pyLithoSurferAPI.SHRIMPModel.schemas import (SHRIMPAgeSchema,
                                                   SHRIMPDataPointSchema)
 from pyLithoSurferAPI.SHRIMPModel.tables import SHRIMPAge, SHRIMPAgeCRUD
 from pyLithoSurferAPI.SHRIMPModel.tables import (SHRIMPDataPoint,
                                                           SHRIMPDataPointCRUD)
-
+from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
 from tqdm import tqdm
 
@@ -22,9 +16,8 @@ class SHRIMPDataPointUploader(Uploader):
 
     name = "SHRIMPDataPoint"
 
-    def __init__(self, datapackageId, shrimp_datapoints_df):
+    def __init__(self, shrimp_datapoints_df):
 
-        self.datapackageId = datapackageId 
         self.shrimp_datapoints_df = shrimp_datapoints_df
         self.validated = False
 
@@ -36,7 +29,7 @@ class SHRIMPDataPointUploader(Uploader):
                        "machine": Machine
         }
 
-        self.shrimp_datapoints_df = Uploader._validate(self.shrimp_datapoints_df, SHRIMPDataPointSchema, shrimp_list, lazy=True)
+        self.shrimp_datapoints_df = Uploader._validate(self.shrimp_datapoints_df, SHRIMPDataPointSchema, shrimp_list, lazy=lazy)
         self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
@@ -51,10 +44,12 @@ class SHRIMPDataPointUploader(Uploader):
             shrimp_args = self.shrimp_datapoints_df.loc[index].to_dict()
             sampleId = shrimp_args.pop("sampleId")
             locationId = shrimp_args.pop("locationId")
+            dataPackageId = shrimp_args.pop("dataPackageId")
+
             if shrimp_args.get("dataPointId"):
                 shrimp_args.pop("dataPointId")
 
-            dpts_args = {"dataPackageId": self.datapackageId,
+            dpts_args = {"dataPackageId": dataPackageId,
                          "dataStructure": "UPB_SHRIMP",
                          "dataEntityId": None,
                          "name": None,
@@ -63,7 +58,7 @@ class SHRIMPDataPointUploader(Uploader):
             
             query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
                      "dataPointLithoCriteria.dataStructure.equals": "UPB_SHRIMP",
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+                     "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
 
             if "mountIdentifier" in shrimp_args.keys():
                 query["mountIdentifier.equals"] = shrimp_args["mountIdentifier"]
@@ -124,9 +119,8 @@ class SHRIMPAgeUploader(Uploader):
 
     name = "SHIMPAge"
     
-    def __init__(self, datapackageId, shrimp_ages_df):
+    def __init__(self, shrimp_ages_df):
 
-        self.datapackageId = datapackageId 
         self.shrimp_ages_df = shrimp_ages_df
         self.validated = False
 
@@ -138,13 +132,8 @@ class SHRIMPAgeUploader(Uploader):
                        "ageGroup": LSHRIMPAgeGroup
                        }
 
-        self.shrimp_ages_df.dropna(subset=["age"], inplace=True)
-        df = self.shrimp_ages_df 
-        df.loc[pd.isnull(df["errorTypeName"]), "errorTypeName"] = "Unknown"
-        df.loc[pd.isnull(df["geoEventName"]), "geoEventName"] = "Unknown"
-        df.loc[pd.isnull(df["ageTypeName"]), "ageTypeName"] = "Unknown date"
-        df.loc[pd.isnull(df["ageGroupName"]), "ageGroupName"] = "Z (undefined)"
-        df = SHRIMPAgeSchema.validate(self.shrimp_ages_df, lazy=lazy)
+        self.dataframe = Uploader._validate(self.dataframe, SHRIMPAgeSchema, shrimp_list, lazy=lazy)
+        self.validated = True
 
     def upload(self, update=False, update_strategy="merge_keep"):
     
@@ -165,9 +154,9 @@ class SHRIMPAgeUploader(Uploader):
 
             args = self.shrimp_ages_df.loc[index].to_dict()
             args.pop("id")
-            stat_args = {k:v for k,v in args.items() if k in self.statement_keys}
-            event_args = {k:v for k,v in args.items() if k in self.geoEvent_keys}
-            shrimp_age_args = {k:v for k,v in args.items() if k in self.shrimp_age_keys}
+            stat_args = {k:v for k,v in args.items() if k in statement_keys}
+            event_args = {k:v for k,v in args.items() if k in geoEvent_keys}
+            shrimp_age_args = {k:v for k,v in args.items() if k in shrimp_age_keys}
 
             query = {"geoEventAtAgeLithoCriteria.age.equals": args["age"],
                      "geoEventAtAgeLithoCriteria.statementCriteria.dataPointId.equals": args["dataPointId"]}
@@ -202,8 +191,11 @@ class SHRIMPAgeUploader(Uploader):
             elif update:
 
                 old_stat_args = records[0]["geoEventAtAgeExtendsStatementDTO"]["statementDTO"]
+                stat_args = self._update_args(old_stat_args, stat_args, update_strategy)
                 old_event_args = records[0]["geoEventAtAgeExtendsStatementDTO"]["geoEventAtAgeDTO"]
+                event_args = self._update_args(old_event_args, event_args, update_strategy)
                 old_shrimp_age_args = records[0]["shrimpageDTO"]
+                shrimp_age_args = self._update_args(old_shrimp_age_args, shrimp_age_args, update_strategy)
                 
                 # Create a Statement
                 statement = Statement(**stat_args)

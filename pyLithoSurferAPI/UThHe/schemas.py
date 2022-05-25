@@ -90,8 +90,8 @@ class HeWholeGrainSchema(pa.SchemaModel):
     uamountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     uconcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uconcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    uncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    uncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     uncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     vsRatio: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -128,12 +128,12 @@ class HeDataPointSchema(pa.SchemaModel):
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     iqrCorrected: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     iqrUncorrected: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    meanCorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    meanCorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    meanCorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    meanCorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     meanCorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     meanCorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    meanUncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    meanUncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    meanUncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    meanUncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     meanUncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     meanUncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     mineralId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -149,17 +149,19 @@ class HeDataPointSchema(pa.SchemaModel):
     rsvequationId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     rsvequationName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     uncertaintyComment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    weightedMeanCorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    weightedMeanCorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    weightedMeanCorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    weightedMeanCorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     weightedMeanCorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     weightedMeanCorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    weightedMeanUncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    weightedMeanUncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    weightedMeanUncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    weightedMeanUncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     weightedMeanUncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     weightedMeanUncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 
-    locationId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    sampleId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    dataPackage: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
+    locationId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
+    sampleId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
 
     
 class HeInSituSchema(pa.SchemaModel):
@@ -170,7 +172,7 @@ class HeInSituSchema(pa.SchemaModel):
 
     ageCalibrationFactor: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
-    correctedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    correctedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     crysFragId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     crysFragName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
     eU: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
@@ -225,7 +227,7 @@ class HeInSituSchema(pa.SchemaModel):
     uamountErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
     uconcentrationErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uconcentrationErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}),
-    uncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncorrectedHeAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    uncorrectedHeAgeError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     uncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})  

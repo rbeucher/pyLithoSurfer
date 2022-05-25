@@ -1,9 +1,5 @@
-import os
-import numpy as np
-import pandas as pd
 from pyLithoSurferAPI.management.tables import DataPackage
 from pyLithoSurferAPI.core.tables import DataPoint
-from pyLithoSurferAPI.core.lists import get_list_name_to_id_mapping as get_id
 from pyLithoSurferAPI.Vitrinite.schemas import VitriniteDataPointSchema
 from pyLithoSurferAPI.Vitrinite.tables import VitriniteDataPointCRUD, VitriniteDataPoint
 from pyLithoSurferAPI.uploader import Uploader

@@ -39,6 +39,9 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     refMaterialName: Optional[Series[pa.String]]
     sampleFormatId: Optional[Series[pa.Int64]]
     sampleFormatName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LSHRIMPSampleFormat.get_all()["name"].to_list())
+
+    dataPackage: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
     locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
 
@@ -60,8 +63,8 @@ class SHRIMPAgeSchema(pa.SchemaModel):
     rmQcTest: Optional[Series[pa.String]]  = pa.Field( nullable=True, str_length={"max_value": 255})
 
     # GeoEvent
-    age: Optional[Series[pa.Float]] = pa.Field( nullable=False, coerce=True)
-    ageError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    age: Optional[Series[pa.Float]] = pa.Field( nullable=False, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    ageError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     errorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     errorTypeName: Optional[Series[pa.String]] = pa.Field(nullable=True, isin=LErrorType.get_all()["name"].to_list())
     geoEventId:  Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)

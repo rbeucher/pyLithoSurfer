@@ -1,8 +1,3 @@
-import os
-
-import numpy as np
-import pandas as pd
-
 from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTSingleGrainSchema
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
@@ -26,11 +21,10 @@ class FTDataPointUploader(Uploader):
 
     name = "FTDataPoints"
 
-    def __init__(self, datapackageId, ft_datapoints_df, skip_columns=None):
+    def __init__(self, ft_datapoints_df, skip_columns=None):
 
         Uploader.__init__(self, ft_datapoints_df)
         
-        self.datapackageId = datapackageId 
         self.validated = False
         self.skip_columns = skip_columns
 
@@ -86,10 +80,12 @@ class FTDataPointUploader(Uploader):
 
             sampleId = ft_args.pop("sampleId")
             locationId = ft_args.pop("locationId")
+            dataPackageId = ft_args.pop("dataPackageId")
+
             if ft_args.get("dataPointId"):
                 ft_args.pop("dataPointId")
 
-            dpts_args = {"dataPackageId": self.datapackageId,
+            dpts_args = {"dataPackageId": dataPackageId,
                          "dataStructure": "FT",
                          "dataEntityId": None,
                          "name": None,
@@ -194,18 +190,15 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
 
     name = "FTBinnedLengthsData"
 
-    def __init__(self, datapackageId, ftbinned_lengths_df):
+    def __init__(self, ftbinned_lengths_df):
 
         Uploader.__init__(self, ftbinned_lengths_df)
 
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        ft_list = {"dataPackage": DataPackage,
-                   "dperErrorType": LErrorType 
-                   }
+        ft_list = { "dperErrorType": LErrorType }
 
         self.dataframe = Uploader._validate(self.dataframe, FTBinnedLengthDataSchema, ft_list, lazy=lazy)
         self.validated = True
@@ -250,17 +243,15 @@ class FTSingleGrainsUploader(FTSingleGrainCRUD, Uploader):
 
     name = "FTSingleGrainData"
 
-    def __init__(self, datapackageId, ftsingle_grains_df):
+    def __init__(self, ftsingle_grains_df):
 
         Uploader.__init__(self, ftsingle_grains_df)
 
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        ft_list = {"dataPackage": DataPackage,
-                   "uErrorType": LErrorType,
+        ft_list = {"uErrorType": LErrorType,
                    "ageErrorType": LErrorType, 
                    }
 
@@ -307,18 +298,14 @@ class FTCountDataUploader(FTCountDataCRUD, Uploader):
 
     name = "FTCountData"
 
-    def __init__(self, datapackageId, ftcount_data_df):
+    def __init__(self, ftcount_data_df):
 
         Uploader.__init__(self, ftcount_data_df)
-
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        ft_list = {"dataPackage": DataPackage,
-                   "errorType": LErrorType, 
-                   }
+        ft_list = {"errorType": LErrorType}
 
         self.dataframe = Uploader._validate(self.dataframe, FTCountDataSchema, ft_list, lazy=lazy)
         self.validated = True
@@ -363,17 +350,14 @@ class FTLengthDataUploader(FTLengthDataCRUD, Uploader):
 
     name = "FTLengthData"
 
-    def __init__(self, datapackageId, ftlengthdata_df):
+    def __init__(self, ftlengthdata_df):
 
         Uploader.__init__(self, ftlengthdata_df)
-
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        ft_list = {"dataPackage": DataPackage,
-                   "errorType": LErrorType,
+        ft_list = {"errorType": LErrorType,
                    "trackType": LTrackType, 
                    }
 

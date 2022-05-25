@@ -23,16 +23,13 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-
 class HeDataPointUploader(Uploader):
 
     name = "HeDataPoints"
 
-    def __init__(self, datapackageId, he_datapoints_df, skip_columns=None):
+    def __init__(self, he_datapoints_df, skip_columns=None):
 
         Uploader.__init__(self, he_datapoints_df)
-
-        self.datapackageId = datapackageId 
         self.validated = False
         self.skip_columns = skip_columns
 
@@ -86,10 +83,12 @@ class HeDataPointUploader(Uploader):
 
             sampleId = he_args.pop("sampleId")
             locationId = he_args.pop("locationId")
+            dataPackageId = he_args.pop("dataPackageId")
+
             if he_args.get("dataPointId"):
                 he_args.pop("dataPointId")
 
-            dpts_args = {"dataPackageId": self.datapackageId,
+            dpts_args = {"dataPackageId": dataPackageId,
                          "dataStructure": "HE",
                          "dataEntityId": None,
                          "name": None,
@@ -98,7 +97,7 @@ class HeDataPointUploader(Uploader):
             
             query = {"dataPointLithoCriteria.dataStructure.equals": "HE",
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+                     "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
 
             if he_args["mineralId"]:
                 query["mineralId.equals"] = int(he_args["mineralId"])
@@ -172,21 +171,19 @@ class HeDataPointUploader(Uploader):
             for k, v in he_skip_args.items():
                 self.dataframe_out.loc[index, k] = v  
 
+
 class HeWholeGrainsUploader(HeWholeGrainCRUD, Uploader):
 
     name = "HeWholeGrain"
 
-    def __init__(self, datapackageId, he_whole_grains_df):
+    def __init__(self, he_whole_grains_df):
 
         Uploader.__init__(self, he_whole_grains_df)
-
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        he_list = {"dataPackage": DataPackage,
-                   "aliquotMassErrorType": LErrorType,
+        he_list = {"aliquotMassErrorType": LErrorType,
                    "aliquotType": LHeAliquotType,
                    "crysFrag": LHeCrysFrag,
                    "euerrorType": LErrorType,
@@ -250,17 +247,14 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
 
     name = "HeInSitu"
 
-    def __init__(self, datapackageId, he_in_situ_df):
+    def __init__(self, he_in_situ_df):
 
         Uploader.__init__(self, he_in_situ_df)
-
-        self.datapackageId = datapackageId 
         self.validated = False
 
     def validate(self, lazy=False):
 
-        he_list = {"dataPackage": DataPackage,
-                   "crysFrag": LHeCrysFrag,
+        he_list = {"crysFrag": LHeCrysFrag,
                    "he4AmountErrorType": LErrorType,
                    "he4ConcentrationErrorType": LErrorType,
                    "parentPitVolumeErrorType": LErrorType,

@@ -31,16 +31,16 @@ class SampleSchema(pa.SchemaModel):
     materialName: Series[pa.String]  = pa.Field(coerce=True, nullable=True)
     name: Series[pa.String] = pa.Field(nullable=False, coerce=True, str_length={"min_value": 0, "max_value": 255})
     rockUnitAgeDescription: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
-    rockUnitAgeMax: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
-    rockUnitAgeMin: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
-    referenceElevation: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True)
+    rockUnitAgeMax: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    rockUnitAgeMin: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
+    referenceElevation: Optional[Series[pa.Float]] = pa.Field(nullable=True, coerce=True, in_range={"min_value": -20000, "max_value": 9999})
     referenceElevationKindId: Optional[Series[pa.Int64]]
     referenceElevationKindName: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255}, isin=LElevationKind.get_all()["name"].to_list())
     referenceElevationKindNote: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     referenceElevationSource:  Optional[Series[pa.String]]
     relativeElevationAccuracy: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True) 
+    relativeElevationMax: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": -9999, "max_value": 9999})
+    relativeElevationMin: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": -9999, "max_value": 9999}) 
     sampleKindId: Optional[Series[pa.Int64]]
     sampleKindName: Series[pa.String] = pa.Field(nullable=False, isin=LSampleKind.get_all()["name"].to_list())
     sampleMethodId: Optional[Series[pa.Int64]]
@@ -98,8 +98,8 @@ class GeoEventAtAgeSchema(pa.SchemaModel):
         name = "GeoEventAtAgeSchema"
         strict = True
 
-    age: Series[pa.Float]
-    ageError: Optional[Series[pa.Float]]
+    age: Series[pa.Float] = pa.Field(nullable=False, in_range={"min_value": 0., "max_value": 9999})
+    ageError: Optional[Series[pa.Float]] = pa.Field(nullable=False, in_range={"min_value": 0., "max_value": 9999})
     errorTypeId: Optional[Series[pa.Int64]]
     errorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, isin=LErrorType.get_all()["name"].to_list())
     geoEventId: Optional[Series[pa.Int64]]

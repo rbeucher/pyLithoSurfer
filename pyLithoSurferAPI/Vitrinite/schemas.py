@@ -1,5 +1,5 @@
 import pandera as pa
-from pandera.typing import Index, DataFrame, Series
+from pandera.typing import Series
 from typing import Optional
 
 class VitriniteDataPointSchema(pa.SchemaModel):
@@ -26,5 +26,8 @@ class VitriniteDataPointSchema(pa.SchemaModel):
     vrMin: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrSD: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     tMax: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+
+    dataPackage: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
     locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)

@@ -4,7 +4,6 @@ from pyLithoSurferAPI.core.lists import LSampleMethod, LSampleKind, LLocationKin
 from pyLithoSurferAPI.core.schemas import LiteratureSchema, LocationSchema, SampleSchema, PersonSchema, StratigraphicUnitSchema
 from pyLithoSurferAPI.management.tables import DataPackage
 import pandas as pd
-import numpy as np
 from tqdm import tqdm
 import os
 
@@ -13,11 +12,9 @@ class SampleWithLocationUploader(Uploader):
 
     name = "Sample"
 
-    def __init__(self, datapackageId, locations_df, samples_df, locations_skip=None, samples_skip=None):
-        self.datapackageId = datapackageId
+    def __init__(self, locations_df, samples_df, locations_skip=None, samples_skip=None):
         self.locations_df = locations_df
         self.samples_df = samples_df
-        self.samples_df["dataPackageId"] = datapackageId
         self.validated = False
         self.locations_out = pd.DataFrame(columns=self.locations_df.columns)
         self.samples_out = pd.DataFrame(columns=self.samples_df.columns)
@@ -62,13 +59,14 @@ class SampleWithLocationUploader(Uploader):
     def get_unique_query(self, samp_args, loc_args):
             
         name = samp_args.get("name") 
-        igsn = samp_args.get("igsn", None) 
+        igsn = samp_args.get("igsn", None)
+        dataPackageId = samp_args("dataPackageId")
         
-        query = {"dataPackageId.equals": self.datapackageId,
+        query = {"dataPackageId.equals": dataPackageId,
                  "name.equals": name}
 
         if igsn:
-            query = {"dataPackageId.equals": self.datapackageId,
+            query = {"dataPackageId.equals": dataPackageId,
                      "name.equals": name,
                      "igsn.equals": igsn}
 
@@ -151,13 +149,13 @@ class SampleWithLocationUploader(Uploader):
     def save(self, outfile="output.xlsx"):
 
         kwargs = {}
-        if os.path.isfile("output.xlsx"):
+        if os.path.isfile(outfile):
             kwargs["mode"] = "a"
             kwargs["if_sheet_exists"] = "replace"
         else:
             kwargs["mode"] = "w"
 
-        with pd.ExcelWriter('output.xlsx', **kwargs) as writer:  
+        with pd.ExcelWriter(outfile, **kwargs) as writer:  
             self.samples_out.to_excel(writer, sheet_name='Samples')
             self.locations_out.to_excel(writer, sheet_name='Locations')
 
