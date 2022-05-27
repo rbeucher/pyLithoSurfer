@@ -60,7 +60,7 @@ class SampleWithLocationUploader(Uploader):
             
         name = samp_args.get("name") 
         igsn = samp_args.get("igsn", None)
-        dataPackageId = samp_args("dataPackageId")
+        dataPackageId = samp_args.get("dataPackageId")
         
         query = {"dataPackageId.equals": dataPackageId,
                  "name.equals": name}

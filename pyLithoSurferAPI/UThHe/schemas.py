@@ -158,7 +158,7 @@ class HeDataPointSchema(pa.SchemaModel):
     weightedMeanUncorrectedHeAgeErrorTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     weightedMeanUncorrectedHeAgeErrorTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 
-    dataPackage: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageName: Series[pa.String] = pa.Field(coerce=True)
     dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
     locationId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
     sampleId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)

@@ -94,7 +94,7 @@ class FTDataPointUploader(Uploader):
             
             query = {"dataPointLithoCriteria.dataStructure.equals": "FT",
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+                     "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
 
             if ft_args["mineralId"]:
                 query["mineralId.equals"] = int(ft_args["mineralId"])
