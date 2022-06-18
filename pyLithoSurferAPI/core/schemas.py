@@ -17,7 +17,7 @@ class SampleSchema(pa.SchemaModel):
     collectDateMax: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     collectDateMin: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 10})
     dataPackageId: Optional[Series[pa.Int64]]
-    dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, isin=DataPackage.get_all()["name"].to_list())
+    dataPackageName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     description: Optional[Series[pa.String]] = pa.Field(nullable=True, coerce=True)
     id: Optional[Series[pa.Int64]]
     igsn: Optional[Series[pa.String]]  = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
