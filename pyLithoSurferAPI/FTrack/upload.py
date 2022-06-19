@@ -31,7 +31,7 @@ class FTDataPointUploader(Uploader):
     def validate(self, lazy=False):
 
         ft_list = {"dataPackage": DataPackage,
-                   "ageErrorType": LErrorType,
+                   "ageUncertaintyType": LErrorType,
                    "dosimeter": LDosimeter,
                    "etchant": LEtchant,
                    "ftUDeterminationTechnique": LFTUDeterminationTechnique,
@@ -46,7 +46,7 @@ class FTDataPointUploader(Uploader):
                    "mineral": Material,
                    "referenceMaterial": ReferenceMaterial,
                    "rmr0Equation": LRmr0Equation,
-                   "zetaErrorType": LErrorType,
+                   "zetaUncertaintyType": LErrorType,
                    "popType": LFTPopulationType
                    }
         if self.skip_columns:
@@ -115,21 +115,21 @@ class FTDataPointUploader(Uploader):
             if ft_args["meanAgeMa"]:
                 query["meanAgeMa.greaterOrEqualThan"] = ft_args["meanAgeMa"]  - 0.001
                 query["meanAgeMa.lessOrEqualThan"] = ft_args["meanAgeMa"]  + 0.001
-            if ft_args["meanErrorMa"]:
-                query["meanErrorMa.greaterOrEqualThan"] = ft_args["meanErrorMa"] - 0.01                      
-                query["meanErrorMa.lessOrEqualThan"] = ft_args["meanErrorMa"] + 0.01                      
+            if ft_args["meanAgeUncertaintyMa"]:
+                query["meanAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["meanAgeUncertaintyMa"] - 0.01                      
+                query["meanAgeUncertaintyMa.lessOrEqualThan"] = ft_args["meanAgeUncertaintyMa"] + 0.01                      
             if ft_args["centralAgeMa"]:
                 query["centralAgeMa.greaterOrEqualThan"] = ft_args["centralAgeMa"] - 0.01    
                 query["centralAgeMa.lessOrEqualThan"] = ft_args["centralAgeMa"] + 0.01    
-            if ft_args["centralErrorMa"]:
-                query["centralErrorMa.greaterOrEqualThan"] = ft_args["centralErrorMa"] - 0.01                       
-                query["centralErrorMa.lessOrEqualThan"] = ft_args["centralErrorMa"] + 0.01                      
+            if ft_args["centralAgeUncertaintyMa"]:
+                query["centralAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["centralAgeUncertaintyMa"] - 0.01                       
+                query["centralAgeUncertaintyMa.lessOrEqualThan"] = ft_args["centralAgeUncertaintyMa"] + 0.01                      
             if ft_args["pooledAgeMa"]:
                 query["pooledAgeMa.greaterOrEqualThan"] = ft_args["pooledAgeMa"] - 0.01     
                 query["pooledAgeMa.lessOrEqualThan"] = ft_args["pooledAgeMa"] + 0.01    
-            if ft_args["pooledErrorMa"]:
-                query["pooledErrorMa.greaterOrEqualThan"] = ft_args["pooledErrorMa"] - 0.01 
-                query["pooledErrorMa.lessOrEqualThan"] = ft_args["pooledErrorMa"] + 0.01
+            if ft_args["pooledAgeUncertaintyMa"]:
+                query["pooledAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["pooledAgeUncertaintyMa"] - 0.01 
+                query["pooledAgeUncertaintyMa.lessOrEqualThan"] = ft_args["pooledAgeUncertaintyMa"] + 0.01
 
             response = FTDataPointCRUD.query(query)
             records = response.json()

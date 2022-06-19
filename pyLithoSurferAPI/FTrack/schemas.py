@@ -151,7 +151,7 @@ class FTDataPointSchema(pa.SchemaModel):
     rmr0StandardDeviation: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     stdDevMu: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uCaRatio: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uCaRatioError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)  
+    uCaRatioStandardDeviation: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)  
     uCont: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uStandardDeviation: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     zetaCalibration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
