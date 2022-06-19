@@ -137,7 +137,8 @@ class FTDataPointUploader(Uploader):
             if len(records) == 1:
                 existing_id = records[0]["id"]
             elif len(records) > 1:
-                raise ValueError("Multiple Entries possible")
+                print("Multiple Entries possible")
+                existing_id = records[0]["id"]
             else:
                 existing_id = None
 
