@@ -106,9 +106,9 @@ class FTDataPointUploader(Uploader):
                 query["mountIDCount.equals"] = ft_args["mountIDCount"]
             
             # Note that these are probably temporary...
-            if ft_args["population"]:
+            if "population" in ft_args.keys() and ft_args["population"]:
                 query["population.equals"] = int(ft_args["population"])
-            if ft_args["popTypeId"]:
+            if "popTypeId" in ft_args.keys() and ft_args["popTypeId"]:
                 query["popTypeId.equals"] = int(ft_args["popTypeId"])           
 
             # We should not use ages but that will do the job for the Canadian
