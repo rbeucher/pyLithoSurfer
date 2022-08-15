@@ -28,7 +28,7 @@ class APIRequests(ABC):
     # GET N ENTRIES
     @classmethod
     def get_entries(cls, nentries=1):
-        response = APIRequests.SESSION.get(cls.path(), data={"size": nentries})
+        response = APIRequests.SESSION.get(cls.path(), params={"size": nentries})
         response.raise_for_status()
         records = response.json()
         return pd.DataFrame.from_records(records)
