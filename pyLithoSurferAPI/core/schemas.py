@@ -2,7 +2,6 @@ import pandera as pa
 from pandera.typing import Series
 from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LLocationKind, LSampleKind, LSampleMethod, LCelestial, LErrorType, LGeoEvent
-from pyLithoSurferAPI.core.tables import Archive
 from pyLithoSurferAPI.management.tables import DataPackage
 
 class SampleSchema(pa.SchemaModel):

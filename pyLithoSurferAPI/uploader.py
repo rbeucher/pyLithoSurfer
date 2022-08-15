@@ -2,9 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 
-from tqdm import tqdm
-from .REST import APIRequests
-
 class Uploader(object):
 
     def __init__(self, dataframe):
