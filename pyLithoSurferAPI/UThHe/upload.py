@@ -275,7 +275,10 @@ class HeInSituUploader(HeInSituCRUD, Uploader):
         self.validated = True
 
     def get_unique_query(self, args):
-        return []
+        
+        query = {"heDataPointId.equals": int(args["heDataPointId"]),
+                 "grainID.equals": args["grainID"]}
+        return super().query(query)
     
     def upload(self, update=False, update_strategy="merge_keep"):
         
