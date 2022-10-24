@@ -111,7 +111,7 @@ class HeDataPointSchema(pa.SchemaModel):
 
     alphaStopDistRefId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     alphaStopDistRefName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    analyticalSessionID: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    batchID: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     chi2pctCorrected: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     chi2pctUncorrected: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     comment: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})

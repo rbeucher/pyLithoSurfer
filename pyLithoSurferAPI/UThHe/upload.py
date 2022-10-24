@@ -96,8 +96,10 @@ class HeDataPointUploader(Uploader):
                          "sampleId": sampleId}
             
             query = {"dataPointLithoCriteria.dataStructure.equals": "HE",
-                     "dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
+
+            if sampleId:
+                query["dataPointLithoCriteria.sampleId.equals"] = int(sampleId)
 
             if he_args["mineralId"]:
                 query["mineralId.equals"] = int(he_args["mineralId"])
