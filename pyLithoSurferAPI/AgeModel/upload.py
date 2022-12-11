@@ -19,15 +19,15 @@ class AgeDataPointUploader(Uploader):
 
     name = "AgeDataPoint"
     
-    def __init__(self, datapackageId, age_datapoints_df):
+    def __init__(self, age_datapoints_df):
 
-        self.datapackageId = datapackageId 
-        self.dataframe = age_datapoints_df
+        Uploader.__init__(self, age_datapoints_df)
         self.validated = False
 
     def validate(self, lazy=False):
 
-        age_list = {"errorType": LErrorType,
+        age_list = {"dataPackage": DataPackage,
+                    "errorType": LErrorType,
                     "analyticalMethod": LAnalyticalMethod,
                     "geoEvent": LGeoEvent
                     }
@@ -57,10 +57,11 @@ class AgeDataPointUploader(Uploader):
             analyticalMethodId = age_args.pop("analyticalMethodId")
             sampleId = age_args.pop("sampleId")
             locationId = age_args.pop("locationId")
+            dataPackageId = age_args.pop("dataPackageId")
             stat_args = {k:v for k,v in age_args.items() if k in statement_keys}
             event_args = {k:v for k,v in age_args.items() if k in geoEvent_keys}
 
-            dpts_args = {"dataPackageId": self.datapackageId,
+            dpts_args = {"dataPackageId": dataPackageId,
                          "dataStructure": "AGE",
                          "dataEntityId": None,
                          "name": None,
@@ -68,9 +69,9 @@ class AgeDataPointUploader(Uploader):
                          "locationId": locationId,
                          "sampleId": sampleId}
             
-            query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
+            query = {"dataPointLithoCriteria.sampleId.equals": int(sampleId),
                      "dataPointLithoCriteria.dataStructure.equals": "AGE",
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+                     "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
 
             response = AgeDataPointCRUD.query(query)
             records = response.json()

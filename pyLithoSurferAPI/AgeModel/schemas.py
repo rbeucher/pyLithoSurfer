@@ -24,11 +24,16 @@ class AgeDataPointSchema(pa.SchemaModel):
     geoEventName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
     # Statement
-    calculatedConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True)
+    calculatedConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True, coerce=True)
     description: Optional[Series[pa.String]]= pa.Field( nullable=True)
     geoEventAtAgeId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
-    humanConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True)
+    humanConfidence: Optional[Series[pa.Float]]= pa.Field( nullable=True, coerce=True)
     statementId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
-    relevance: Optional[Series[pa.Float]]= pa.Field( nullable=True)
+    relevance: Optional[Series[pa.Float]]= pa.Field( nullable=True, coerce=True)
     tempAtAgeId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
     tempGradientId: Optional[Series[pa.Int64]]= pa.Field( nullable=True)
+
+    dataPackageName: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
+    locationId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
+    sampleId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
