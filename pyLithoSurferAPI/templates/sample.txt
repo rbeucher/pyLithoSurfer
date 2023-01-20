@@ -1,0 +1,948 @@
+{# templates/sample.txt #}
+
+{
+    "name": null,
+    "batchId": null,
+    "messages": [],
+    "columns": [
+        {
+            "mandatory": true,
+            "ignore": false,
+            "tableRef": null,
+            "name": "Sample Name",
+            "number": 1,
+            "messages": []
+        },
+        {
+            "mandatory": true,
+            "ignore": false,
+            "tableRef": "DataPackage",
+            "name": "Datapackage Name",
+            "number": 2,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "latitude_(WGS84)",
+            "number": 3,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "longitude_(WGS84)",
+            "number": 4,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Material",
+            "name": "lithology_or_mineral",
+            "number": 5,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LSampleKind",
+            "name": "sample_kind",
+            "number": 6,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "igsn",
+            "number": 7,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Literature",
+            "name": "literature",
+            "number": 8,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "StratigraphicUnit",
+            "name": "unit_name",
+            "number": 9,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LSampleMethod",
+            "name": "sample_method",
+            "number": 10,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "collect_date_min",
+            "number": 11,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "collect_date_max",
+            "number": 12,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "sample_comment",
+            "number": 13,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LLocationKind",
+            "name": "location_kind",
+            "number": 14,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "location_name",
+            "number": 15,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "location_comment",
+            "number": 16,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "lat_lon_precision_(m)",
+            "number": 17,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "elevation_ground",
+            "number": 18,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "elevation_depth_min",
+            "number": 19,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "elevation_depth_max",
+            "number": 20,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "elevation_depth_accuracy",
+            "number": 21,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "elevation_note",
+            "number": 22,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Archive",
+            "name": "last_known_archive",
+            "number": 23,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "archive_comment",
+            "number": 24,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Funding",
+            "name": "funding",
+            "number": 25,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "PERSON",
+            "name": "person",
+            "number": 26,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LPerson2SampleRole",
+            "name": "person_role",
+            "number": 27,
+            "messages": []
+        }
+    ],
+    "rows": [
+        {
+            "number": 1,
+            "importTime": null,
+            "id": 14421091,
+            "dirty": false,
+            "messages": [],
+            "cells": [
+                {
+                    "value": "LITH14222052-40813",
+                    "id": null,
+                    "column": {
+                        "mandatory": true,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "Sample Name",
+                        "number": 1,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "SGM_MEX",
+                    "id": 14222052,
+                    "column": {
+                        "mandatory": true,
+                        "ignore": false,
+                        "tableRef": "DataPackage",
+                        "name": "Datapackage Name",
+                        "number": 2,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "29.055569",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "latitude_(WGS84)",
+                        "number": 3,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "-101.840706",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "longitude_(WGS84)",
+                        "number": 4,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Material",
+                        "name": "lithology_or_mineral",
+                        "number": 5,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 60964,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LSampleKind",
+                        "name": "sample_kind",
+                        "number": 6,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "igsn",
+                        "number": 7,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Literature",
+                        "name": "literature",
+                        "number": 8,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "StratigraphicUnit",
+                        "name": "unit_name",
+                        "number": 9,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 61209,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LSampleMethod",
+                        "name": "sample_method",
+                        "number": 10,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "collect_date_min",
+                        "number": 11,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "collect_date_max",
+                        "number": 12,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "sample_comment",
+                        "number": 13,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 60558,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LLocationKind",
+                        "name": "location_kind",
+                        "number": 14,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "40813",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "location_name",
+                        "number": 15,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "CAR_ID 68, NMUESTRA 138, NUMEROHOJA  H14-7, NOMBRE  CIUDAD ACUÑA",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "location_comment",
+                        "number": 16,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "lat_lon_precision_(m)",
+                        "number": 17,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_ground",
+                        "number": 18,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_min",
+                        "number": 19,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_max",
+                        "number": 20,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_accuracy",
+                        "number": 21,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_note",
+                        "number": 22,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 139827,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Archive",
+                        "name": "last_known_archive",
+                        "number": 23,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "archive_comment",
+                        "number": 24,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Funding",
+                        "name": "funding",
+                        "number": 25,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "PERSON",
+                        "name": "person",
+                        "number": 26,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LPerson2SampleRole",
+                        "name": "person_role",
+                        "number": 27,
+                        "messages": []
+                    },
+                    "messages": []
+                }
+            ]
+        },
+        {
+            "number": 2,
+            "importTime": null,
+            "id": 14421090,
+            "dirty": false,
+            "messages": [],
+            "cells": [
+                {
+                    "value": "LITH14222052-10163",
+                    "id": null,
+                    "column": {
+                        "mandatory": true,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "Sample Name",
+                        "number": 1,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "SGM_MEX",
+                    "id": 14222052,
+                    "column": {
+                        "mandatory": true,
+                        "ignore": false,
+                        "tableRef": "DataPackage",
+                        "name": "Datapackage Name",
+                        "number": 2,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "26.934378",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "latitude_(WGS84)",
+                        "number": 3,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "-106.07149",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "longitude_(WGS84)",
+                        "number": 4,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Material",
+                        "name": "lithology_or_mineral",
+                        "number": 5,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 60964,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LSampleKind",
+                        "name": "sample_kind",
+                        "number": 6,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "igsn",
+                        "number": 7,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Literature",
+                        "name": "literature",
+                        "number": 8,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "StratigraphicUnit",
+                        "name": "unit_name",
+                        "number": 9,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 61209,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LSampleMethod",
+                        "name": "sample_method",
+                        "number": 10,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "collect_date_min",
+                        "number": 11,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "collect_date_max",
+                        "number": 12,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "sample_comment",
+                        "number": 13,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 60558,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LLocationKind",
+                        "name": "location_kind",
+                        "number": 14,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "10163",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "location_name",
+                        "number": 15,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "CAR_ID 38, NMUESTRA 493, NUMEROHOJA  G13-4, NOMBRE  GUACHOCHI",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "location_comment",
+                        "number": 16,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "lat_lon_precision_(m)",
+                        "number": 17,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_ground",
+                        "number": 18,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_min",
+                        "number": 19,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "0.0",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_max",
+                        "number": 20,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_depth_accuracy",
+                        "number": 21,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "elevation_note",
+                        "number": 22,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "Unknown",
+                    "id": 139827,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Archive",
+                        "name": "last_known_archive",
+                        "number": 23,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "archive_comment",
+                        "number": 24,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "Funding",
+                        "name": "funding",
+                        "number": 25,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "PERSON",
+                        "name": "person",
+                        "number": 26,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LPerson2SampleRole",
+                        "name": "person_role",
+                        "number": 27,
+                        "messages": []
+                    },
+                    "messages": []
+                }
+            ]
+        }
+    ],
+    "table": "SAMPLE"
+}

@@ -181,3 +181,10 @@ def upload_list_gsheet(sheet_id, sheet_name, Entity):
         entity = Entity(name=name, id=0)
         entity.new()
     return df
+
+
+def get_template_file(filename):
+    import pkg_resources
+    filename = "/" + filename
+    return pkg_resources.resource_filename(__name__, filename)
+

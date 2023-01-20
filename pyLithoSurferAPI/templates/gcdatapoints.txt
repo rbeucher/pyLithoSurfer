@@ -1,0 +1,337 @@
+{# templates/gcdatapoints.txt #}
+
+{
+    "name": null,
+    "batchId": null,
+    "messages": [],
+    "columns": [
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": null,
+        "name": "Tag",
+        "number": 1,
+        "messages": []
+      },
+      {
+        "mandatory": true,
+        "ignore": false,
+        "tableRef": null,
+        "name": "Datapoint Name",
+        "number": 2,
+        "messages": []
+      },
+      {
+        "mandatory": true,
+        "ignore": false,
+        "tableRef": "DataPackage",
+        "name": "Datapackage Name",
+        "number": 3,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "SAMPLE",
+        "name": "Sample Name",
+        "number": 4,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": null,
+        "name": "description",
+        "number": 5,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "LGCAnalyticalTechnique",
+        "name": "geochemAnalyticalType",
+        "number": 6,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "LDataReductionSoftware",
+        "name": "dataReductionSoftware",
+        "number": 7,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": null,
+        "name": "analyticalSessionID",
+        "number": 8,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "PERSON",
+        "name": "analyst",
+        "number": 9,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": null,
+        "name": "batchID",
+        "number": 10,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": null,
+        "name": "mountID",
+        "number": 11,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "LGCAnalysisScale",
+        "name": "analysisScale",
+        "number": 12,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "Material",
+        "name": "mineral",
+        "number": 13,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "LErrorType",
+        "name": "oxideUncertaintyType",
+        "number": 14,
+        "messages": []
+      },
+      {
+        "mandatory": false,
+        "ignore": false,
+        "tableRef": "LErrorType",
+        "name": "elementUncertaintyType",
+        "number": 15,
+        "messages": []
+      }
+    ],
+    "rows": [
+      {% for row in rows %}
+      {
+        "number": {{ loop.index }},
+        "importTime": null,
+        "id": null ,
+        "dirty": false,
+        "messages": [],
+        "cells": [
+          {
+            "value": "{{ row["Tag"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": null,
+              "name": "Tag",
+              "number": 1,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["Datapoint Name"] }}",
+            "id": null,
+            "column": {
+              "mandatory": true,
+              "ignore": false,
+              "tableRef": null,
+              "name": "Datapoint Name",
+              "number": 2,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["Datapackage Name"] }}",
+            "id": null,
+            "column": {
+              "mandatory": true,
+              "ignore": false,
+              "tableRef": "DataPackage",
+              "name": "Datapackage Name",
+              "number": 3,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["Sample Name"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "SAMPLE",
+              "name": "Sample Name",
+              "number": 4,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["description"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": null,
+              "name": "description",
+              "number": 5,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["geochemAnalyticalType"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "LGCAnalyticalTechnique",
+              "name": "geochemAnalyticalType",
+              "number": 6,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["gdataReductionSoftware"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "LDataReductionSoftware",
+              "name": "dataReductionSoftware",
+              "number": 7,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["analyticalSessionID"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": null,
+              "name": "analyticalSessionID",
+              "number": 8,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["analyst"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "PERSON",
+              "name": "analyst",
+              "number": 9,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["batchID"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": null,
+              "name": "batchID",
+              "number": 10,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["mountID"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": null,
+              "name": "mountID",
+              "number": 11,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["analysisScale"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "LGCAnalysisScale",
+              "name": "analysisScale",
+              "number": 12,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["mineral"] }}",
+            "id": {{ row["mineralId"] if row["mineralId"] else null }},
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "Material",
+              "name": "mineral",
+              "number": 13,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["oxideUncertaintyType"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "LErrorType",
+              "name": "oxideUncertaintyType",
+              "number": 14,
+              "messages": []
+            },
+            "messages": []
+          },
+          {
+            "value": "{{ row["elementUncertaintyType"] }}",
+            "id": null,
+            "column": {
+              "mandatory": false,
+              "ignore": false,
+              "tableRef": "LErrorType",
+              "name": "elementUncertaintyType",
+              "number": 15,
+              "messages": []
+            },
+            "messages": []
+          }
+        ]
+      }{{"," if loop.index != rows|length }}{% endfor %}
+    ],
+    "table": "GCDataPoint"
+  }
