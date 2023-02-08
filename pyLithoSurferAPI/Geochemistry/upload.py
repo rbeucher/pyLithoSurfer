@@ -1,4 +1,4 @@
-from pyLithoSurferAPI.Geochemistry.schemas import GCDataPointSchema, GCAliquotSchema, ElementalConcentrationSchema, OxideConcentrationSchema, GCDataPointBatchSchema, ElementalConcentrationBatchSchema
+from pyLithoSurferAPI.Geochemistry.schemas import GCDataPointSchema, GCAliquotSchema, ElementalConcentrationSchema, OxideConcentrationBatchSchema, GCDataPointBatchSchema, ElementalConcentrationBatchSchema
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
@@ -370,41 +370,144 @@ class ElementalConcentrationBatchUploader(APIRequests, Uploader):
 
     def validate(self, lazy=False):
 
-        columns = ['gcDatapointId', 'aliquotName', 'spotID', 'Fe', 'Mg', 'K',
-                   'Al', 'Ca', 'Ga', 'Mn', 'Mo', 'Ni', 'Au',
-                   'Ag', 'P', 'Pb', 'Se', 'Na', 'Sb', 'Sc',
-                   'Sn', 'Sr', 'Ti', 'Te', 'Be', 'Bi', 'Ba',
-                   'Cd', 'Co', 'Cu', 'Cr', 'U', 'W', 'Zn', 'As'] 
+        common_cols = ['gcDatapointId', 'aliquotName', 'spotID']
+        other_cols = set(self.dataframe.columns) - set(common_cols)
+        new_cols = copy(common_cols)
+        elements_cols = []
+       
+        for col in other_cols:
+            if "_conc" in col:
+                el = col.replace("_conc", "")
+                try:
+                    id = LElement.get_id_from_name(el)
+                    new_cols += col
+                    elements_cols += col
+                    if el + "_error" in self.dataframe.columns:
+                        new_cols += el + "_error"
+                except:
+                    raise ValueError("Not good")
+            elif "_error" in col:
+                continue
+            else:
+                raise ValueError(f"column {col} is unknown")
 
-        for col in self.dataframe.columns:
-            if col not in columns:
-                raise ValueError(f"column {col} not in schema")
+        for col in other_cols:
+            # Check the column type is float
+            self.dataframe[col].astype(float)
 
+        # Save list of elements for later
+        self.elements = elements_cols
+
+        self.dataframe = self.dataframe[new_cols].copy()
         self.dataframe = self.dataframe.replace({np.nan: None})
-        self.dataframe = ElementalConcentrationBatchSchema.validate(self.dataframe, lazy=lazy)
+        # Check that the common_cols align with shema
+        self.dataframe[common_cols] = ElementalConcentrationBatchSchema.validate(self.dataframe[common_cols], lazy=lazy)
         self.dataframe = self.dataframe.astype(object).where(pd.notnull(self.dataframe), None)
         self.validated = True
 
-    def _get_payload(self):
-        elements = ['Fe', 'Mg', 'K', 'Al', 'Ca', 'Ga', 'Mn', 'Mo', 'Ni', 'Au',
-                    'Ag', 'P', 'Pb', 'Se', 'Na', 'Sb', 'Sc', 'Sn', 'Sr', 'Ti',
-                    'Te', 'Be', 'Bi', 'Ba', 'Cd', 'Co', 'Cu', 'Cr', 'U', 'W', 'Zn', 'As']
-        elements_id = [LElement.get_id_from_name(el) for el in elements]
-        df = self.dataframe.copy()
-        df["concentration"] = df[elements].values.tolist()
-        df = df.drop(columns=elements)
+    def _get_payload(self, df):
+        elements_id = [LElement.get_id_from_name(el) for el in self.elements]
+        df = df.copy()
+        df["concentration"] = df[self.elements].values.tolist()
+        df = df.drop(columns=self.elements)
         rows = df.to_dict(orient="records")
-        return self.template.render(batch_name=self.name, rows=rows, elements=elements, elements_id=elements_id)
+        return self.template.render(batch_name=self.name, rows=rows, elements=self.elements, elements_id=elements_id)
 
     def importBatch(self):
-        data = self._get_payload()
-        path = self.path() + "/importBatch"
-        response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
-        try:
-            response.raise_for_status()
-        except Exception as e:
-            print(response.json())
-            raise e
-        return response
+
+        df_list = np.array_split(self.dataframe, len(self.dataframe) / 20)
+
+        for df in tqdm(df_list):
+
+            data = self._get_payload(df)
+            path = self.path() + "/importBatch"
+            response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                print(response.json())
+                raise e
+
+        return
+
+
+class OxideConcentrationBatchUploader(APIRequests, Uploader):
+
+    name = "OxideConcentration"
+    API_PATH = "/api/other/importer"
+    
+    def __init__(self, oxc_datapoints_df, skip_columns=None):
+
+        Uploader.__init__(self, oxc_datapoints_df)
+
+        self.validated = False
+        self.skip_columns = skip_columns
+        import pkg_resources
+        path = pkg_resources.resource_filename(__name__, "../templates")
+        environment = Environment(loader=FileSystemLoader(path))
+        self.template = environment.get_template("oxideConcentration.txt")
+
+
+    def validate(self, lazy=False):
+
+        common_cols = ['gcDatapointId', 'aliquotName', 'spotID'] 
+        other_cols = list(set(self.dataframe.columns) - set(common_cols))
+        new_cols = copy(common_cols)
+        oxides_cols = []
+       
+        for col in other_cols:
+            if "_conc" in col:
+                ox = col.replace("_conc", "")
+                try:
+                    id = LOxide.get_id_from_name(ox)
+                    new_cols += col
+                    oxides_cols += col
+                    if ox + "_error" in self.dataframe.columns:
+                        new_cols += ox + "_error"
+                except:
+                    raise ValueError("Not good")
+            elif "_error" in col:
+                continue
+            else:
+                raise ValueError(f"column {col} is unknown")
+        
+        for col in other_cols:
+            # Check the column type is float
+            self.dataframe[col].astype(float)
+
+        # Save list of elements for later
+        self.oxides = oxides_cols
+
+        self.dataframe = self.dataframe[new_cols].copy()
+        self.dataframe = self.dataframe.replace({np.nan: None})
+        self.dataframe[common_cols] = OxideConcentrationBatchSchema.validate(self.dataframe[common_cols], lazy=lazy)
+        self.dataframe = self.dataframe.astype(object).where(pd.notnull(self.dataframe), None)
+        self.validated = True
+
+    def _get_payload(self, df):
+        oxides_id = [LOxide.get_id_from_name(ox) for ox in self.oxides]
+        df = df.copy()
+        df["concentration"] = df[self.oxides].values.tolist()
+        df = df.drop(columns=self.oxides)
+        rows = df.to_dict(orient="records")
+        return self.template.render(batch_name=self.name, rows=rows, oxides=self.oxides, oxides_id=oxides_id)
+        
+    def importBatch(self):
+
+        df_list = np.array_split(self.dataframe, len(self.dataframe) / 20)
+
+        for df in tqdm(df_list):
+
+            print(len(df))
+            data = self._get_payload(df)
+            path = self.path() + "/importBatch"
+            response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                print(response.json())
+                raise e
+
+        return
 
 

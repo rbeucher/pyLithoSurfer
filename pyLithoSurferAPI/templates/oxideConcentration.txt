@@ -1,0 +1,151 @@
+{# templates/oxideConcentration.txt #}
+
+{
+    "name": "Batch (2023-02-03 05:59:12)",
+    "batchId": null,
+    "messages": [],
+    "columns": [
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "GCDataPoint",
+            "name": "Datapoint Name",
+            "number": 1,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "aliquotName",
+            "number": 2,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "spotID",
+            "number": 3,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LOxide",
+            "name": "oxide",
+            "number": 4,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "Conc",
+            "number": 5,
+            "messages": []
+        },
+        {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "Uncertainty",
+            "number": 6,
+            "messages": []
+        }
+    ],
+    "rows": [
+        {% for row in rows %}
+        {% set outer_loop = loop %}
+        {% for oxide in oxides %}
+        {
+            "number": {{ outer_loop.index }},
+            "importTime": null,
+            "id": null,
+            "dirty": false,
+            "messages": [],
+            "cells": [
+                {
+                    "value": null,
+                    "id": {{ row["gcDatapointId"] }},
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "GCDataPoint",
+                        "name": "Datapoint Name",
+                        "number": 1,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value":  "{{ row["aliquotName"] }}",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "aliquotName",
+                        "number": 2,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": "{{ row["spotID"] }}",
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "spotID",
+                        "number": 3,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value":  "{{ oxides[loop.index0] }}",
+                    "id": {{ oxides_id[loop.index0] }},
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": "LOxide",
+                        "name": "oxide",
+                        "number": 4,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": {{ row["concentration"][loop.index0] }},
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "Conc",
+                        "number": 5,
+                        "messages": []
+                    },
+                    "messages": []
+                },
+                {
+                    "value": null,
+                    "id": null,
+                    "column": {
+                        "mandatory": false,
+                        "ignore": false,
+                        "tableRef": null,
+                        "name": "Uncertainty",
+                        "number": 6,
+                        "messages": []
+                    },
+                    "messages": []
+                }
+            ]
+      }{{"," if loop.index != oxides|length }}{% endfor %}
+      {{"," if outer_loop.index != rows|length }}{% endfor %}
+    ],
+    "table": "OxideConcentration"
+}

@@ -111,43 +111,11 @@ class ElementalConcentrationBatchSchema(pa.SchemaModel):
     element: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     uncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Uncertainty")
     spotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
-    fe: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Fe")
-    mg: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Mg")
-    k: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="K")
-    al: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Al")
-    ca: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ca")
-    ga: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ga")
-    mn: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Mn")
-    mo: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Mo")
-    ni: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ni")
-    au: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Au")
-    ag: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ag")
-    p: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="P")
-    pb: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Pb")
-    se: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Se")
-    na: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Na")
-    sb: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Sb")
-    sc: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Sc")
-    sn: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Sn")
-    sr: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Sr")
-    ti: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ti")
-    te: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Te")
-    be: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Be")
-    bi: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Bi")
-    ba: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Ba")
-    cd: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Cd")
-    co: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Co")
-    cu: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Cu")
-    cr: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Cr")
-    u: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="U")
-    w: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="W")
-    zn: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="Zn")
-    as_: Series[pa.Float] = pa.Field( nullable=True, coerce=True, alias="As")
-
-class OxideConcentrationSchema(pa.SchemaModel):
+    
+class OxideConcentrationBatchSchema(pa.SchemaModel):
 
     class Config:
-        name = "OxideConcentrationSchema"
+        name = "OxideConcentrationBatchSchema"
         strict = True
 
     aliquotName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
