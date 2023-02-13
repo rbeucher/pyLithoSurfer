@@ -380,8 +380,8 @@ class ElementalConcentrationBatchUploader(APIRequests, Uploader):
                 el = col.replace("_conc", "")
                 try:
                     id = LElement.get_id_from_name(el)
-                    new_cols += col
-                    elements_cols += col
+                    new_cols += [col]
+                    elements_cols += [el]
                     if el + "_error" in self.dataframe.columns:
                         new_cols += el + "_error"
                 except:
@@ -399,6 +399,7 @@ class ElementalConcentrationBatchUploader(APIRequests, Uploader):
         self.elements = elements_cols
 
         self.dataframe = self.dataframe[new_cols].copy()
+        self.dataframe = self.dataframe.rename({col: col.replace("_conc", "") for col in self.dataframe.columns}, axis=1)
         self.dataframe = self.dataframe.replace({np.nan: None})
         # Check that the common_cols align with shema
         self.dataframe[common_cols] = ElementalConcentrationBatchSchema.validate(self.dataframe[common_cols], lazy=lazy)
@@ -420,6 +421,8 @@ class ElementalConcentrationBatchUploader(APIRequests, Uploader):
         for df in tqdm(df_list):
 
             data = self._get_payload(df)
+            #print(data)
+            #break
             path = self.path() + "/importBatch"
             response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
             try:
@@ -460,8 +463,8 @@ class OxideConcentrationBatchUploader(APIRequests, Uploader):
                 ox = col.replace("_conc", "")
                 try:
                     id = LOxide.get_id_from_name(ox)
-                    new_cols += col
-                    oxides_cols += col
+                    new_cols += [col]
+                    oxides_cols += [ox]
                     if ox + "_error" in self.dataframe.columns:
                         new_cols += ox + "_error"
                 except:
@@ -479,6 +482,7 @@ class OxideConcentrationBatchUploader(APIRequests, Uploader):
         self.oxides = oxides_cols
 
         self.dataframe = self.dataframe[new_cols].copy()
+        self.dataframe = self.dataframe.rename({col: col.replace("_conc", "") for col in self.dataframe.columns}, axis=1)
         self.dataframe = self.dataframe.replace({np.nan: None})
         self.dataframe[common_cols] = OxideConcentrationBatchSchema.validate(self.dataframe[common_cols], lazy=lazy)
         self.dataframe = self.dataframe.astype(object).where(pd.notnull(self.dataframe), None)
@@ -497,8 +501,6 @@ class OxideConcentrationBatchUploader(APIRequests, Uploader):
         df_list = np.array_split(self.dataframe, len(self.dataframe) / 20)
 
         for df in tqdm(df_list):
-
-            print(len(df))
             data = self._get_payload(df)
             path = self.path() + "/importBatch"
             response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)

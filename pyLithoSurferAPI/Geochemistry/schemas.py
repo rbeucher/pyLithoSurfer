@@ -121,7 +121,7 @@ class OxideConcentrationBatchSchema(pa.SchemaModel):
     aliquotName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     concentration: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     error: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    gcdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    gcDatapointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     oxideId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     oxideName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
