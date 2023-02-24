@@ -8,13 +8,21 @@ class VitriniteDataPointSchema(pa.SchemaModel):
         name = "VitriniteDataPointSchema"
         strict = True
 
-    groupID: Optional[Series[pa.String]]
     id: Optional[Series[pa.Int64]]
+    comment: Optional[Series[pa.String]] =  pa.Field( nullable=True)
     groupID: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
-    kerogenType: Optional[Series[pa.String]] =  pa.Field( nullable=True)
+    hi: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    kerogenTypeId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    kerogenTypeName: Optional[Series[pa.String]] =  pa.Field( nullable=True)
     nmeasure: Optional[Series[pa.String]] =  pa.Field( nullable=True)
     nomeas: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    oi: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     omPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    pi: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    s1: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    s2: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    s3: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
+    tMax: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     tocPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrEquivMethodId: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrEquivMethodName: Optional[Series[pa.String]] =  pa.Field( nullable=True)
@@ -25,9 +33,8 @@ class VitriniteDataPointSchema(pa.SchemaModel):
     vrMeanPct: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrMin: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
     vrSD: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
-    tMax: Optional[Series[pa.Float]] =  pa.Field( nullable=True, coerce=True)
 
-    dataPackage: Series[pa.String] = pa.Field(coerce=True)
+    dataPackageName: Series[pa.String] = pa.Field(coerce=True)
     dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
     locationId: Series[pa.Int64] =  pa.Field( nullable=False, coerce=True)
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)

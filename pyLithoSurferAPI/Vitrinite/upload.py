@@ -6,13 +6,12 @@ from pyLithoSurferAPI.uploader import Uploader
 from tqdm import tqdm
 
 
-class VitriniteDataPointUploader(object):
+class VitriniteDataPointUploader(Uploader):
 
     name = "VitriniteDataPoint"
 
-    def __init__(self, datapackageId, vitrinite_datapoints_df):
+    def __init__(self, vitrinite_datapoints_df):
 
-        self.datapackageId = datapackageId 
         self.dataframe = vitrinite_datapoints_df
         self.validated = False
 
@@ -33,10 +32,12 @@ class VitriniteDataPointUploader(object):
             vitrinite_args = self.dataframe.loc[index].to_dict()
             sampleId = vitrinite_args.pop("sampleId")
             locationId = vitrinite_args.pop("locationId")
+            dataPackageId = vitrinite_args.pop("dataPackageId")
+
             if vitrinite_args.get("dataPointId"):
                 vitrinite_args.pop("dataPointId")
 
-            dpts_args = {"dataPackageId": self.datapackageId,
+            dpts_args = {"dataPackageId": dataPackageId,
                          "dataStructure": "SIMPLE",
                          "dataEntityId": None,
                          "name": None,
@@ -45,7 +46,7 @@ class VitriniteDataPointUploader(object):
             
             query = {"dataPointLithoCriteria.sampleId.equals": sampleId,
                      "dataPointLithoCriteria.dataStructure.equals": "SIMPLE",
-                     "dataPointLithoCriteria.dataPackageId.equals": self.datapackageId}
+                     "dataPointLithoCriteria.dataPackageId.equals": dataPackageId}
 
             response = VitriniteDataPointCRUD.query(query)
             records = response.json()
