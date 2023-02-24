@@ -421,13 +421,12 @@ class ElementalConcentrationBatchUploader(APIRequests, Uploader):
         for df in tqdm(df_list):
 
             data = self._get_payload(df)
-            #print(data)
-            #break
             path = self.path() + "/importBatch"
             response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
             try:
                 response.raise_for_status()
             except Exception as e:
+                print(data)
                 print(response.json())
                 raise e
 

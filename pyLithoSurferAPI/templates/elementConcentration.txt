@@ -65,7 +65,11 @@
     "rows": [
         {% for row in rows %}
         {% set outer_loop = loop %}
+        {% set ns = namespace(c = 0, col = false) %}
         {% for element in elements %}
+        {% if row["concentration"][ns.c] is not none %}
+        {{"," if ns.col }}
+        {% set ns.col = true %}
         {
             "number": {{ outer_loop.index }},
             "importTime": null,
@@ -113,8 +117,8 @@
                     "messages": []
                 },
                 {
-                    "value": "{{ elements[loop.index0] }}",
-                    "id": {{ elements_id[loop.index0] }},
+                    "value": "{{ elements[ns.c] }}",
+                    "id": {{ elements_id[ns.c] }},
                     "column": {
                         "mandatory": false,
                         "ignore": false,
@@ -139,7 +143,7 @@
                     "messages": []
                 },
                 {
-                    "value": {{ row["concentration"][loop.index0] }},
+                    "value": {{ row["concentration"][ns.c] }},
                     "id": null,
                     "column": {
                         "mandatory": false,
@@ -165,8 +169,10 @@
                     "messages": []
                 }
             ]
-      }{{"," if loop.index != elements|length }}{% endfor %}
-      {{"," if outer_loop.index != rows|length }}{% endfor %}
+      }
+      {% endif %}{% set ns.c = ns.c + 1 %}{% endfor %}
+      {{"," if outer_loop.index != rows|length}}
+      {% endfor %}
     ],
     "table": "ElementalConcentration"
 }
