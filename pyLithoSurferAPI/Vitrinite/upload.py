@@ -12,6 +12,8 @@ class VitriniteDataPointUploader(Uploader):
 
     def __init__(self, vitrinite_datapoints_df):
 
+        Uploader.__init__(self, vitrinite_datapoints_df)
+
         self.dataframe = vitrinite_datapoints_df
         self.validated = False
 
@@ -95,3 +97,9 @@ class VitriniteDataPointUploader(Uploader):
                 self.dataframe.loc[index, "id"] = VitriniteDataptsCRUD.id
                 self.dataframe.loc[index, "dataPointId"] = datapoint.id
 
+            index = VitriniteDataptsCRUD.id
+            self.dataframe_out.loc[index] = dpts_args
+            self.dataframe_out.loc[index, "locationId"] = locationId
+            self.dataframe_out.loc[index, "sampleId"] = sampleId
+            self.dataframe_out.loc[index, "id"] = VitriniteDataptsCRUD.id
+            self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
