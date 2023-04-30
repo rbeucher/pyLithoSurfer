@@ -188,3 +188,43 @@ def get_template_file(filename):
     filename = "/" + filename
     return pkg_resources.resource_filename(__name__, filename)
 
+
+from pyLithoSurferAPI.core.tables import DataPoint
+from pyLithoSurferAPI.core.tables import SampleWithLocation, Location, Sample
+from tqdm import tqdm
+
+
+def retrieve_page(page, size, package):
+    response = DataPoint.query({'dataPackageId.equals': package, 'page':page, 'size':size})
+    return response.json()
+
+def move_data2package(source_pkg, dest_pkg):
+    
+    page = 0
+    size = 200
+    results = []
+
+    response = retrieve_page(page, size, source_pkg)
+    
+    while response:
+        response = retrieve_page(page, size, source_pkg)
+        results += response
+        page += 1
+
+    for entry in tqdm(results):
+
+        dtpts = DataPoint(**entry)
+        dtpts.dataPackageId = dest_pkg
+        dtpts.update()
+        
+        try:
+            sampleWlocation = SampleWithLocation.query({"Id.equals": dtpts.sampleId}).json()[0]
+            sample = Sample(**sampleWlocation["sampleDTO"])
+            location = Location(**sampleWlocation["locationDTO"])
+            sample.dataPackageId = dest_pkg
+            sampleWlocation = SampleWithLocation(location, sample, auto_set_elevation=True)
+            sampleWlocation.update()
+        except:
+            pass
+        
+    return results
