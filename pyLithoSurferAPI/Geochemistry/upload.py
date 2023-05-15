@@ -77,6 +77,7 @@ class GCDataPointUploader(Uploader):
             sampleId = gc_args.pop("sampleId")
             locationId = gc_args.pop("locationId")
             dataPackageId = gc_args.pop("dataPackageId")
+            description = gc_args.pop("description") if "description" in gc_args.keys() else ""
 
             if gc_args.get("dataPointId"):
                 gc_args.pop("dataPointId")
@@ -86,7 +87,8 @@ class GCDataPointUploader(Uploader):
                          "dataEntityId": None,
                          "name": f"Data Entry {str(datetime.now())}",
                          "locationId": locationId,
-                         "sampleId": sampleId}
+                         "sampleId": sampleId,
+                         "description": description}
             
             query = {"dataPointLithoCriteria.dataStructure.equals": "GC",
                      "dataPointLithoCriteria.sampleId.equals": int(sampleId),

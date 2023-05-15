@@ -33,6 +33,7 @@ class GCDataPointSchema(pa.SchemaModel):
     dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
     locationId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     sampleId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    description: Optional[Series[pa.String]] = pa.Field(coerce=True)
 
 class GCDataPointBatchSchema(pa.SchemaModel):
 

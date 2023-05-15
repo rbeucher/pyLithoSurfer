@@ -84,7 +84,7 @@ class FTDataPointSchema(pa.SchemaModel):
     area: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 9999})
     chi2pct: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     description: Optional[Series[pa.String]] = pa.Field( nullable=True)
-    dPar: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 5.})
+    dPar: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 10.})
     dParNumTotal: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     dParStandardError: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     dPer: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, in_range={"min_value": 0., "max_value": 3.})
