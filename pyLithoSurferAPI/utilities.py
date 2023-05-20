@@ -189,9 +189,9 @@ def get_template_file(filename):
     return pkg_resources.resource_filename(__name__, filename)
 
 
-from pyLithoSurferAPI.core.tables import DataPoint
-from pyLithoSurferAPI.core.tables import SampleWithLocation, Location, Sample
-from tqdm import tqdm
+#from pyLithoSurferAPI.core.tables import DataPoint
+#from pyLithoSurferAPI.core.tables import SampleWithLocation, Location, Sample
+#from tqdm import tqdm
 
 
 def retrieve_page(page, size, package):

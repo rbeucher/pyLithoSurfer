@@ -1,6 +1,5 @@
 
 from pyLithoSurferAPI.REST import APIRequests
-from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.utilities import NumpyEncoder
 import json
 

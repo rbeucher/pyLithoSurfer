@@ -8,8 +8,6 @@ from pyLithoSurferAPI.Geochemistry.lists import (LDataReductionSoftware,
                                                  LElement,
                                                  LGCAnalysisScale,
                                                  LGCAnalyticalTechnique,
-                                                 LGrainDomain,
-                                                 LIsotope,
                                                  LOxide)
 
 from pyLithoSurferAPI.uploader import Uploader
@@ -292,6 +290,8 @@ class GCDataPointCSVBatchUploader(APIRequests):
             raise e
         response = response.json()
         return response
+    
+    
 class ElementalConcentrationDataUploader(ElementalConcentrationCRUD, Uploader):
 
     name = "ElementalConcentration"

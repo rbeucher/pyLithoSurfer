@@ -1,7 +1,8 @@
-from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTLengthDataSchema, FTSingleGrainSchema
+from pyLithoSurferAPI.FTrack.schemas import FTBinnedLengthDataSchema, FTCountDataSchema, FTDataPointSchema, FTDataPointBatchSchema, FTLengthDataSchema, FTSingleGrainSchema
+from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.core.lists import LErrorType, ReferenceMaterial
 
-from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine
+from pyLithoSurferAPI.core.tables import DataPoint, Material, Machine, SampleWithLocation
 from pyLithoSurferAPI.FTrack.tables import FTBinnedLengthDataCRUD, FTCountDataCRUD, FTDataPoint, FTDataPointCRUD, FTLengthDataCRUD, FTSingleGrainCRUD
 from pyLithoSurferAPI.FTrack.lists import (LFTPopulationType, LFTUDeterminationTechnique, 
                                            LDosimeter,
@@ -13,6 +14,9 @@ from pyLithoSurferAPI.FTrack.lists import (LFTPopulationType, LFTUDeterminationT
 
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
+from jinja2 import Environment, FileSystemLoader
+import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 
@@ -184,7 +188,107 @@ class FTDataPointUploader(Uploader):
             self.dataframe_out.loc[index, "id"] = FTDataptsCRUD.id
             self.dataframe_out.loc[index, "dataPointId"] = datapoint.id
             for k, v in ft_skip_args.items():
-                self.dataframe_out.loc[index, k] = v       
+                self.dataframe_out.loc[index, k] = v   
+
+class FTDataPointBatchUploader(APIRequests, FTDataPointUploader):
+
+    name = "FTDatapoints"
+    API_PATH = "/api/other/importer"
+    
+    def __init__(self, ft_datapoints_df, skip_columns=None):
+
+        FTDataPointUploader.__init__(self, ft_datapoints_df)
+
+        self.validated = False
+        self.skip_columns = skip_columns
+        import pkg_resources
+        path = pkg_resources.resource_filename(__name__, "../templates")
+        environment = Environment(loader=FileSystemLoader(path))
+        self.template = environment.get_template("ftdatapoints.txt")  
+
+    def validate(self, lazy=False):
+        columns = ["datapackageName", "datapointName", "sampleName",
+                    "description", "literature", "laboratory", "analyst",
+                    "funding", "mineral", "mountID", "referenceMaterial",
+                    "batchID", "ftCharacterisationMethod", "ftAnalyticalSoftware",
+                    "ftAnalyticalAlgorithm", "ftUDeterminationTechnique", "noOfGrains",
+                    "area", "rhod", "nd", "rhoS", "ns", "rhoi", "ni", "dosimeter",
+                    "uCont", "uStandardDeviation", "uCaRatio", "uCaRatioStandardDeviation",
+                    "dPar", "dParStandardError", "dParNumTotal", "dPer",
+                    "dPerStandardError", "dPerNumTotal", "rmr0", "rmr0StandardDeviation",
+                    "kParameter", "kParameterStandardDeviation", "rmr0Equation",
+                    "chi2pct", "dispersion", "ftAgeEquation", "meanAgeMa",
+                    "meanUncertaintyMa", "centralAgeMa", "centralAgeUncertaintyMa",
+                    "pooledAgeMa", "pooledAgeUncertaintyMa", "popAgeMa",
+                    "popAgeUncertaintyMa", "ageUncertaintyType", "ageComment",
+                    "mtl", "mtl1se", "nTracks", "stdDevMu", "cfIrradiation",
+                    "etchant", "etchingTime", "etchingTemp", "zetaCalibration",
+                    "zetaUncertainty", "zetaUncertaintyType", "etchableRange",
+                    "lambda", "lambdaF", "qEfficiencyFactor", "irradiationReactor",
+                    "neutronDose", "irradiationBatch", "machine", "Tag"]
+
+        for col in self.dataframe.columns:
+            if col not in columns:
+                raise ValueError(f"column {col} not in schema")
+            
+        list = {"datapackageName": DataPackage,
+                "sampleName": SampleWithLocation,
+                "mineral": Material,
+                "referenceMaterial": ReferenceMaterial,
+                "ftCharacterisationMethod": LFTCharacterisationMethod,
+                "ftAnalyticalSoftware": LFTAnalyticalSoftware,
+                "ftAnalyticalAlgorithm": LFTAnalyticalAlgorithm,
+                "ftUDeterminationTechnique": LFTUDeterminationTechnique,
+                "dosimeter": LDosimeter,
+                "rmr0Equation": LRmr0Equation,
+                "ftAgeEquation": LFTAgeEquation,
+                "ageUncertaintyType": LErrorType,
+                "elementUncertaintyType": LErrorType,
+                "etchant": LEtchant,
+                "lambda": LLambda,
+                "zetaUncertaintyType": LErrorType,
+                "lambdaF": LLambdaF,
+                "irradiationReactor": LIrradiationReactor,
+                "machine": Machine
+                }
+        
+        if self.skip_columns:
+            skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
+            self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
+
+        for key, val in list.items():
+            if key + "Id" not in self.dataframe.columns:
+                uniques = self.dataframe[key].unique()
+                uniques = [unique for unique in uniques if unique is not None]
+                mapping = {}
+                for unique in uniques:
+                    mapping[unique] = val.get_id_from_name(unique)
+                self.dataframe[key + "Id"] = self.dataframe[key].map(mapping)
+
+        self.dataframe = self.dataframe.replace({np.nan: None})
+        self.dataframe = FTDataPointBatchSchema.validate(self.dataframe, lazy=lazy)
+        self.dataframe = self.dataframe.astype(object).where(pd.notnull(self.dataframe), None)
+
+        if self.skip_columns:
+            for col in self.skip_columns:
+                self.dataframe[col] = skip_df[col]  
+       
+        self.validated = True
+
+    def _get_payload(self):
+        rows = self.dataframe.to_dict(orient="records")
+        return self.template.render(batch_name=self.name, rows=rows)
+
+    def importBatch(self):
+        data = self._get_payload()
+        path = self.path() + "/importBatch"
+        response = APIRequests.SESSION.post(path, data=data, headers=self.SESSION.headers)
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(response.json())
+            raise e
+        return response       
 
 
 class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
