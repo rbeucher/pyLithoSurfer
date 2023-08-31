@@ -1,0 +1,126 @@
+{# templates/thistnickpoints.txt #}
+
+{
+  "name": null,
+  "batchId": null,
+  "messages": [],
+  "columns": [
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "THDataPoint",
+      "name": "datapointName",
+      "number": 1,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "histRef",
+      "number": 2,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LPathType",
+      "name": "pathType",
+      "number": 3,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "modelTime",
+      "number": 4,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "modelTemp",
+      "number": 5,
+      "messages": []
+    }
+  ],
+  "rows": [
+    {% for row in rows %}
+    {
+      "number": {{ loop.index }},
+      "importTime": null,
+      "id": 18400201,
+      "dirty": false,
+      "messages": [],
+      "cells": [
+        {
+          "value": "TDM22-HeFTy1 2023-08-16 #5",
+          "id": 18399901,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "THDataPoint",
+            "name": "datapointName",
+            "number": 1,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "TDM-22",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "histRef",
+            "number": 2,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "Accepted envelope minimum T",
+          "id": 10,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LPathType",
+            "name": "pathType",
+            "number": 3,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "4.0",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "modelTime",
+            "number": 4,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "9.0",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "modelTemp",
+            "number": 5,
+            "messages": []
+          },
+          "messages": []}
+      ]
+    }{{"," if loop.index != rows|length }}{% endfor %}
+  ],
+  "table": "THistNickpoint"
+}

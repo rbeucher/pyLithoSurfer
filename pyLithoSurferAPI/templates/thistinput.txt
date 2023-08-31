@@ -1,0 +1,294 @@
+{# templates/thistinput.txt #}
+
+{
+  "name": null,
+  "batchId": null,
+  "messages": [],
+  "columns": [
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "THDataPoint",
+      "name": "datapointName",
+      "number": 1,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "histRef",
+      "number": 2,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "aliquotID",
+      "number": 3,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "Material",
+      "name": "mineral",
+      "number": 4,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "populationID",
+      "number": 5,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LPopulationType",
+      "name": "population",
+      "number": 6,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LDataType",
+      "name": "dataType",
+      "number": 7,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LAnnealingModel",
+      "name": "annealingModel",
+      "number": 8,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LKinematicIndicator",
+      "name": "kinematicIndicator",
+      "number": 9,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LDiffusionModel",
+      "name": "diffusionModel",
+      "number": 10,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "projectedLengths",
+      "number": 11,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "implantedTracks",
+      "number": 12,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "DataPoint",
+      "name": "input datapoint",
+      "number": 13,
+      "messages": []
+    }
+  ],
+  "rows": [
+    {% for row in rows %}
+    {
+      "number": {{ loop.index }},
+      "importTime": null,
+      "id": 18400151,
+      "dirty": false,
+      "messages": [],
+      "cells": [
+        {
+          "value": "TDM22-HeFTy1 2023-08-16 #5",
+          "id": 18399901,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "THDataPoint",
+            "name": "datapointName",
+            "number": 1,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "TDM-22",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "histRef",
+            "number": 2,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "aliquotID",
+            "number": 3,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "Apatite",
+          "id": 70601,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Material",
+            "name": "mineral",
+            "number": 4,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "populationID",
+            "number": 5,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LPopulationType",
+            "name": "population",
+            "number": 6,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "fission-track",
+          "id": 1,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LDataType",
+            "name": "dataType",
+            "number": 7,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "Ketcham et al., 2007",
+          "id": 2,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LAnnealingModel",
+            "name": "annealingModel",
+            "number": 8,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "Dpar",
+          "id": 2,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LKinematicIndicator",
+            "name": "kinematicIndicator",
+            "number": 9,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LDiffusionModel",
+            "name": "diffusionModel",
+            "number": 10,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "projectedLengths",
+            "number": 11,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "implantedTracks",
+            "number": 12,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "DataPoint",
+            "name": "input datapoint",
+            "number": 13,
+            "messages": []
+          },
+          "messages": []}
+      ]
+    }{{"," if loop.index != rows|length }}{% endfor %}
+  ],
+  "table": "THistInput"
+}

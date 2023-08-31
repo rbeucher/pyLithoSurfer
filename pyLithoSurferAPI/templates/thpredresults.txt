@@ -1,0 +1,168 @@
+{# templates/thpredresults.txt #}
+
+{
+  "name": null,
+  "batchId": null,
+  "messages": [],
+  "columns": [
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "THDataPoint",
+      "name": "datapointName",
+      "number": 1,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "histRef",
+      "number": 2,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LPredictedParameter",
+      "name": "predictedParameter",
+      "number": 3,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "predictedResult",
+      "number": 4,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "predictedUncertainty",
+      "number": 5,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LUncertainty",
+      "name": "uncertaintyType",
+      "number": 6,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "predictedGOF",
+      "number": 7,
+      "messages": []
+    }
+  ],
+  "rows": [
+    {% for row in rows %}
+    {
+      "number": {{ loop.index }},
+      "importTime": null,
+      "id": 18400301,
+      "dirty": false,
+      "messages": [],
+      "cells": [
+        {
+          "value": "TDM22-HeFTy1 2023-08-16 #5",
+          "id": 18399901,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "THDataPoint",
+            "name": "datapointName",
+            "number": 1,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "TDM-22",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "histRef",
+            "number": 2,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "track-length",
+          "id": 2,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LPredictedParameter",
+            "name": "predictedParameter",
+            "number": 3,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "12.99",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "predictedResult",
+            "number": 4,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "predictedUncertainty",
+            "number": 5,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LUncertainty",
+            "name": "uncertaintyType",
+            "number": 6,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "1.0",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "predictedGOF",
+            "number": 7,
+            "messages": []
+          },
+          "messages": []}
+      ]
+    }{{"," if loop.index != rows|length }}{% endfor %}
+  ],
+  "table": "THPredResult"
+}

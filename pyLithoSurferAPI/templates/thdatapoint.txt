@@ -1,0 +1,315 @@
+{# templates/thdatapoints.txt #}
+
+{
+  "name": null,
+  "batchId": null,
+  "messages": [],
+  "columns": [
+    {
+      "mandatory": true,
+      "ignore": false,
+      "tableRef": null,
+      "name": "datapointName",
+      "number": 1,
+      "messages": []
+    },
+    {
+      "mandatory": true,
+      "ignore": false,
+      "tableRef": "DataPackage",
+      "name": "datapackageName",
+      "number": 2,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "Lab",
+      "name": "laboratory",
+      "number": 3,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "PERSON",
+      "name": "analyst",
+      "number": 4,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "Literature",
+      "name": "literature",
+      "number": 5,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "Tag",
+      "number": 6,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LModelSoftware",
+      "name": "modelSoftware",
+      "number": 7,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LModelApproach",
+      "name": "modelApproach",
+      "number": 8,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": "LModelType",
+      "name": "modelType",
+      "number": 9,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "modelIterations",
+      "number": 10,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "temperatureGradient",
+      "number": 11,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "temperatureGradientRange",
+      "number": 12,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "variableOffset",
+      "number": 13,
+      "messages": []
+    },
+    {
+      "mandatory": false,
+      "ignore": false,
+      "tableRef": null,
+      "name": "description",
+      "number": 14,
+      "messages": []
+    }
+  ],
+  "rows": [
+    {% for row in rows %}
+    {
+      "number": {{ loop.index }},
+      "importTime": null,
+      "id": null,
+      "dirty": false,
+      "messages": [],
+      "cells": [
+        {
+          "value": "{{ row["datapointName"] }}",
+          "id": null,
+          "column": {
+            "mandatory": true,
+            "ignore": false,
+            "tableRef": null,
+            "name": "datapointName",
+            "number": 1,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["datapackageName"] }}",
+          "id": null,
+          "column": {
+            "mandatory": true,
+            "ignore": false,
+            "tableRef": "DataPackage",
+            "name": "datapackageName",
+            "number": 2,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["laboratory"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Lab",
+            "name": "laboratory",
+            "number": 3,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["analyst"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "PERSON",
+            "name": "analyst",
+            "number": 4,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["literature"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "Literature",
+            "name": "literature",
+            "number": 5,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["Tag"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "Tag",
+            "number": 6,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["modelSoftwareName"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LModelSoftware",
+            "name": "modelSoftware",
+            "number": 7,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["modelApproachName"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LModelApproach",
+            "name": "modelApproach",
+            "number": 8,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["modelTypeName"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": "LModelType",
+            "name": "modelType",
+            "number": 9,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["modelIterations"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "modelIterations",
+            "number": 10,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["temperatureGradient"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "temperatureGradient",
+            "number": 11,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["temperatureGradientRange"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "temperatureGradientRange",
+            "number": 12,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["variableOffset"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "variableOffset",
+            "number": 13,
+            "messages": []
+          },
+          "messages": []
+        },
+        {
+          "value": "{{ row["description"] }}",
+          "id": null,
+          "column": {
+            "mandatory": false,
+            "ignore": false,
+            "tableRef": null,
+            "name": "description",
+            "number": 14,
+            "messages": []
+          },
+          "messages": []}
+      ]
+    }{{"," if loop.index != rows|length }}{% endfor %}
+  ],
+  "table": "TH"
+}
