@@ -51,13 +51,13 @@
     {
       "number": {{ loop.index }},
       "importTime": null,
-      "id": 18400201,
+      "id": null,
       "dirty": false,
       "messages": [],
       "cells": [
         {
-          "value": "TDM22-HeFTy1 2023-08-16 #5",
-          "id": 18399901,
+          "value":  "{{ row["dataPointName"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -69,7 +69,7 @@
           "messages": []
         },
         {
-          "value": "TDM-22",
+          "value": "{{ row["histref"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -82,8 +82,8 @@
           "messages": []
         },
         {
-          "value": "Accepted envelope minimum T",
-          "id": 10,
+          "value":  "{{ row["pathType"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -95,7 +95,7 @@
           "messages": []
         },
         {
-          "value": "4.0",
+          "value":  "{{ row["modelTime"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -108,7 +108,7 @@
           "messages": []
         },
         {
-          "value": "9.0",
+          "value":  "{{ row["modelTemp"] }}",
           "id": null,
           "column": {
             "mandatory": false,

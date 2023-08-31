@@ -1,4 +1,4 @@
-{# templates/thmdelconstraint.txt #}
+{# templates/thmodelconstraint.txt #}
 
 {
   "name": null,
@@ -75,13 +75,13 @@
     {
       "number": {{ loop.index }},
       "importTime": null,
-      "id": 18400351,
+      "id": null,
       "dirty": false,
       "messages": [],
       "cells": [
         {
-          "value": "TDM22-HeFTy1 2023-08-16 #5",
-          "id": 18399901,
+          "value":  "{{ row["dataPointName"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -93,7 +93,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["literature"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -106,7 +106,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["constraintType"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -119,7 +119,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["description"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -132,7 +132,7 @@
           "messages": []
         },
         {
-          "value": "19.0",
+          "value":  "{{ row["constraintTimeMean"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -145,7 +145,7 @@
           "messages": []
         },
         {
-          "value": "17.0",
+          "value":  "{{ row["constraintTimeRange"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -158,7 +158,7 @@
           "messages": []
         },
         {
-          "value": "72.0",
+          "value":  "{{ row["constraintTempMean"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -171,7 +171,7 @@
           "messages": []
         },
         {
-          "value": "48.0",
+          "value":   "{{ row["constrainTempRange"] }}",
           "id": null,
           "column": {
             "mandatory": false,

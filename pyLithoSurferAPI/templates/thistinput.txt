@@ -115,13 +115,13 @@
     {
       "number": {{ loop.index }},
       "importTime": null,
-      "id": 18400151,
+      "id": null,
       "dirty": false,
       "messages": [],
       "cells": [
         {
-          "value": "TDM22-HeFTy1 2023-08-16 #5",
-          "id": 18399901,
+          "value":  "{{ row["datapointName"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -133,7 +133,7 @@
           "messages": []
         },
         {
-          "value": "TDM-22",
+          "value": "{{ row["histRef"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -146,7 +146,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value": "{{ row["aliquotID"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -159,8 +159,8 @@
           "messages": []
         },
         {
-          "value": "Apatite",
-          "id": 70601,
+          "value":  "{{ row["mineral"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -172,7 +172,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["populationID"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -185,7 +185,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["populationType"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -198,8 +198,8 @@
           "messages": []
         },
         {
-          "value": "fission-track",
-          "id": 1,
+          "value":  "{{ row["dataType"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -211,8 +211,8 @@
           "messages": []
         },
         {
-          "value": "Ketcham et al., 2007",
-          "id": 2,
+          "value":  "{{ row["annealingModel"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -224,8 +224,8 @@
           "messages": []
         },
         {
-          "value": "Dpar",
-          "id": 2,
+          "value":  "{{ row["kinematicType"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -237,7 +237,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["diffusionModel"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -250,7 +250,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["projectedLengths"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -263,7 +263,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["implantedTracks"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -276,7 +276,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["datapointID"] }}",
           "id": null,
           "column": {
             "mandatory": false,

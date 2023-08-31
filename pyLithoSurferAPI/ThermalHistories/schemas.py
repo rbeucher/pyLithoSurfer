@@ -88,6 +88,7 @@ class THistInputSchema(pa.SchemaModel):
     kinematicTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
     mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     mineralId: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
+    populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
     populationTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     populationTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
     thdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=False, coerce=True)
@@ -99,6 +100,27 @@ class THistInputBatchSchema(pa.SchemaModel):
     class Config:
         name = "THistInputBatchSchema"
         strict = True
+    
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
+    mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    mineralId: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
+    populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
+    populationTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    populationTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    annealingModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    annealingModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    dataTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    dataTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    kinematicTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    kinematicTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    diffusionModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    diffusionModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    projectedLengths: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
+    implantedTracks: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
+    datapointIDId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 class THistNickPointSchema(pa.SchemaModel):
 
@@ -115,12 +137,18 @@ class THistNickPointSchema(pa.SchemaModel):
     thdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=False, coerce=True)
 
 
-class THistNickPointSchema(pa.SchemaModel):
+class THistNickPointBatchSchema(pa.SchemaModel):
 
     class Config:
         name = "THistNickPointBatchSchema"
         strict = True
 
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    pathTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pathTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    modelTemp: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    modelTime: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
 
 class THModelConstraintSchema(pa.SchemaModel):
 
@@ -138,11 +166,21 @@ class THModelConstraintSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
-class THModelConstraintSchema(pa.SchemaModel):
+class THModelConstraintBatchSchema(pa.SchemaModel):
 
     class Config:
         name = "THModelConstraintBatchSchema"
         strict = True
+
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    literature: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    constraintTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    constraintTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    constraintTempMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    constraintTempRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    constraintTimeMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    constraintTimeRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
 class TPredResultSchema(pa.SchemaModel):
@@ -159,9 +197,21 @@ class TPredResultSchema(pa.SchemaModel):
     predictedResult: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     predictedUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     thdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=False, coerce=True)
+    uncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 class TPredResultBatchSchema(pa.SchemaModel):
 
     class Config:
         name = "THPredResultBatchSchema"
         strict = True
+
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})   
+    predictedParameterId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    predictedParameterName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)   
+    predictedResult: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    predictedUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    predictedGOF: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)

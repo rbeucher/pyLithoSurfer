@@ -72,8 +72,8 @@
       "messages": [],
       "cells": [
         {
-          "value": "TDM22-HeFTy1 2023-08-16 #5",
-          "id": 18399901,
+          "value":  "{{ row["dataPoinName"] }}",
+          "id": null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -85,7 +85,7 @@
           "messages": []
         },
         {
-          "value": "TDM-22",
+          "value":  "{{ row["histref"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -98,7 +98,7 @@
           "messages": []
         },
         {
-          "value": "track-length",
+          "value":  "{{ row["predictedParameter"] }}",
           "id": 2,
           "column": {
             "mandatory": false,
@@ -111,7 +111,7 @@
           "messages": []
         },
         {
-          "value": "12.99",
+          "value":  "{{ row["predictedResult"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -124,7 +124,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["predictedUncertainty"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -137,7 +137,7 @@
           "messages": []
         },
         {
-          "value": "",
+          "value":  "{{ row["uncertaintyType"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -150,7 +150,7 @@
           "messages": []
         },
         {
-          "value": "1.0",
+          "value":  "{{ row["predictedGOF"] }}",
           "id": null,
           "column": {
             "mandatory": false,

@@ -43,13 +43,13 @@
     {
       "number": {{ loop.index }},
       "importTime": null,
-      "id": 18400101,
+      "id": null,
       "dirty": false,
       "messages": [],
       "cells": [
         {
-          "value": "TDM22-HeFTy1 2023-08-16 #5",
-          "id": 18399901,
+          "value": "{{ row["thdataPointName"] }}",
+          "id":  null,
           "column": {
             "mandatory": false,
             "ignore": false,
@@ -61,7 +61,7 @@
           "messages": []
         },
         {
-          "value": "TDM-22",
+          "value": "{{ row["name"] }}",
           "id": null,
           "column": {
             "mandatory": false,
@@ -74,7 +74,7 @@
           "messages": []
         },
         {
-          "value": "TDM-22",
+          "value": "{{ row["sampleName"] }}",
           "id": null,
           "column": {
             "mandatory": false,
