@@ -1,13 +1,15 @@
 from pyLithoSurferAPI.ThermalHistories.schemas import (THDataPointSchema, THDataPointBatchSchema, THistSchema, THistBatchSchema,
                                                        THistInputSchema, THistInputBatchSchema, THistNickPointSchema, THistNickPointBatchSchema,
-                                                       THModelConstraintSchema, THModelConstraintBatchSchema, TPredResultBatchSchema, TPredResultSchema)
+                                                       THModelConstraintSchema, THModelConstraintBatchSchema, THPredResultBatchSchema, THPredResultSchema)
 from pyLithoSurferAPI.REST import APIRequests
 
-from pyLithoSurferAPI.core.tables import DataPoint
-from pyLithoSurferAPI.ThermalHistories.tables import THDataPoint, THDataPointCRUD, THistCRUD, THistInputCRUD, THistNickpointCRUD, THModelConstraintCRUD
+from pyLithoSurferAPI.core.lists import LErrorType
+from pyLithoSurferAPI.core.tables import DataPoint, Material
+from pyLithoSurferAPI.ThermalHistories.tables import THDataPoint, THDataPointCRUD, THistCRUD, THistInputCRUD, THistNickpointCRUD, THModelConstraintCRUD, THPredResultCRUD
 from pyLithoSurferAPI.ThermalHistories.lists import (LModelType,
                                                      LModelApproach,
-                                                     LModelSoftware)
+                                                     LModelSoftware, LAnnealingModel, LConstraintType, LDataType, LDiffusionModel, LImplantedTracks,
+                                                     LKinematicIndicator, LPathType, LPopulationType, LPredictedParameter, LProjectedLengths)
 
 from pyLithoSurferAPI.uploader import Uploader
 from pyLithoSurferAPI.management.tables import DataPackage
@@ -816,9 +818,9 @@ class THModelConstraintBatchUploader(APIRequests, THModelConstraintUploader):
 
 ####################################################################################################
 
-class TPredResultUploader(Uploader):
+class THPredResultUploader(Uploader):
 
-    name = "TPredResult"
+    name = "THPredResult"
 
     def __init__(self, thist_df, skip_columns=None):
 
@@ -831,13 +833,13 @@ class TPredResultUploader(Uploader):
     def validate(self, lazy=False):
 
         th_list = {"predictedParameter": LPredictedParameter,
-                   "uncertaintyType": LError}
+                   "uncertaintyType": LErrorType}
         
         if self.skip_columns:
             skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
             self.dataframe = self.dataframe.drop(columns=[col for col in self.skip_columns if col in self.dataframe.columns])
 
-        self.dataframe = Uploader._validate(self.dataframe, TPredResultSchema, th_list, lazy=lazy)
+        self.dataframe = Uploader._validate(self.dataframe, THPredResultSchema, th_list, lazy=lazy)
 
         if self.skip_columns:
             for col in self.skip_columns:
@@ -881,12 +883,12 @@ class TPredResultUploader(Uploader):
                 existing_id = None
 
             if existing_id is None:
-                obj = TPredResultCRUD(**args) 
+                obj = THPredResultCRUD(**args) 
                 obj.new() 
 
             elif update:
                 args = self._update_args(old_args, args, update_strategy)
-                obj = TPredResultCRUD(**args)
+                obj = THPredResultCRUD(**args)
                 obj.update()
 
             index = obj.id
@@ -894,14 +896,14 @@ class TPredResultUploader(Uploader):
             self.dataframe_out.loc[index, "id"] = obj.id
 
 
-class TPredResultBatchUploader(APIRequests, TPredResultUploader):
+class THPredResultBatchUploader(APIRequests, THPredResultUploader):
 
-    name = "TPredResult"
+    name = "THPredResult"
     API_PATH = "/api/other/importer"
     
     def __init__(self, datapoints_df, skip_columns=None):
 
-        TPredResultUploader.__init__(self, datapoints_df)
+        THPredResultUploader.__init__(self, datapoints_df)
 
         self.validated = False
         self.skip_columns = skip_columns
@@ -922,7 +924,7 @@ class TPredResultBatchUploader(APIRequests, TPredResultUploader):
                 raise ValueError(f"column {col} not in schema")
 
         list = {"Predicted Parameter": LPredictedParameter,
-                "Predicted Result Uncertainty Type": LError}
+                "Predicted Result Uncertainty Type": LErrorType}
         
         if self.skip_columns:
             skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
@@ -938,7 +940,7 @@ class TPredResultBatchUploader(APIRequests, TPredResultUploader):
                 self.dataframe[key + "Id"] = self.dataframe[key].map(mapping)
 
         self.dataframe = self.dataframe.replace({np.nan: None})
-        self.dataframe = TPredResultBatchSchema.validate(self.dataframe, lazy=lazy)
+        self.dataframe = THPredResultBatchSchema.validate(self.dataframe, lazy=lazy)
         self.dataframe = self.dataframe.astype(object).where(pd.notnull(self.dataframe), None)
 
         if self.skip_columns:

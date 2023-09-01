@@ -187,7 +187,7 @@ class THModelConstraintBatchSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
-class TPredResultSchema(pa.SchemaModel):
+class THPredResultSchema(pa.SchemaModel):
 
     class Config:
         name = "THPredResultSchema"
@@ -204,7 +204,7 @@ class TPredResultSchema(pa.SchemaModel):
     uncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
-class TPredResultBatchSchema(pa.SchemaModel):
+class THPredResultBatchSchema(pa.SchemaModel):
 
     class Config:
         name = "THPredResultBatchSchema"
