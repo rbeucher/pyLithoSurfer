@@ -69,7 +69,7 @@
           "messages": []
         },
         {
-          "value": "{{ row["histref"] }}",
+          "value": "{{ row["sampleName"] }}",
           "id": null,
           "column": {
             "mandatory": false,

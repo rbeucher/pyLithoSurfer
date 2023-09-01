@@ -65,6 +65,11 @@ class THistBatchSchema(pa.SchemaModel):
         name = "THistBatchSchema"
         strict = True
 
+    datapointName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Datapoint Key")
+    sampleName: Series[pa.String] = pa.Field( coerce=True, nullable=False, alias="Sample Name")
+    sampleId: Optional[Series[pa.Float]] = pa.Field( coerce=True)
+    description: Optional[Series[pa.String]] = pa.Field(coerce=True, alias="Description")
+
 
 class THistInputSchema(pa.SchemaModel):
 
@@ -84,8 +89,8 @@ class THistInputSchema(pa.SchemaModel):
     histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     id: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     implantedTracks: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
-    kinematicTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    kinematicTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    kinematicIndicatorId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    kinematicIndicatorName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
     mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     mineralId: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
     populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
@@ -101,26 +106,25 @@ class THistInputBatchSchema(pa.SchemaModel):
         name = "THistInputBatchSchema"
         strict = True
     
-    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
-    mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
-    mineralId: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
-    populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Datapoint Key")
+    sampleName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Sample name")
+    aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255}, alias="Aliquot ID")
+    mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Mineral")
+    populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True, alias="Population (if any)")    
     populationTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    populationTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    annealingModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    annealingModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    populationTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Population Type")
     dataTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    dataTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    kinematicTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    kinematicTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    dataTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Data Type")
+    projectedLengths: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True, alias="Were FT lengths projected to C-axis?")
+    implantedTracks: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True, alias="Were Californium tracks implanted?")
+    annealingModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    annealingModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias= "FT Annealing Model")
+    kinematicIndicatorId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    kinematicIndicatorName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="FT Kinematic Indicator")
     diffusionModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    diffusionModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    projectedLengths: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
-    implantedTracks: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
+    diffusionModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="He Diffusion Model")
     datapointIDId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Input Data Point")
 
 class THistNickPointSchema(pa.SchemaModel):
 
@@ -143,12 +147,12 @@ class THistNickPointBatchSchema(pa.SchemaModel):
         name = "THistNickPointBatchSchema"
         strict = True
 
-    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Datapoint Key")
+    sampleName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Sample Name")
     pathTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    pathTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    modelTemp: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    modelTime: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    pathTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Path Type")
+    modelTemp: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Temperature")
+    modelTime: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Time")
 
 class THModelConstraintSchema(pa.SchemaModel):
 
@@ -172,14 +176,14 @@ class THModelConstraintBatchSchema(pa.SchemaModel):
         name = "THModelConstraintBatchSchema"
         strict = True
 
-    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    literature: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Datapoint Key")
+    literature: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Literature")
     constraintTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    constraintTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    constraintTempMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    constraintTempRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    constraintTimeMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    constraintTimeRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    constraintTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Constraint Type")
+    constraintTempMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Constrain mean temperature")
+    constraintTempRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Constrain temperature range")
+    constraintTimeMean: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Constrain mean time")
+    constraintTimeRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="constrain time range")
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
@@ -206,12 +210,12 @@ class TPredResultBatchSchema(pa.SchemaModel):
         name = "THPredResultBatchSchema"
         strict = True
 
-    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    histRef: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})   
+    dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Datapoint Key")
+    sampleName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Sample Name")   
     predictedParameterId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    predictedParameterName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)   
-    predictedResult: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    predictedUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    predictedParameterName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Predicted Parameter")   
+    predictedResult: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Predicted Result")
+    predictedUncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Predicted Result Uncertainty")
     uncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
-    predictedGOF: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Predicted Result Uncertainty Type")
+    predictedGOF: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Predicted Goodness of Fit")

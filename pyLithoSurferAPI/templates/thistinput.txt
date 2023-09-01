@@ -133,7 +133,7 @@
           "messages": []
         },
         {
-          "value": "{{ row["histRef"] }}",
+          "value": "{{ row["sampleName"] }}",
           "id": null,
           "column": {
             "mandatory": false,
