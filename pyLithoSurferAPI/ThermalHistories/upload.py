@@ -151,7 +151,7 @@ class THDataPointBatchUploader(APIRequests, THDataPointUploader):
         import pkg_resources
         path = pkg_resources.resource_filename(__name__, "../templates")
         environment = Environment(loader=FileSystemLoader(path))
-        self.template = environment.get_template("thdatapoints.txt")
+        self.template = environment.get_template("thdatapoint.txt")
 
 
     def validate(self, lazy=False):
