@@ -156,10 +156,10 @@ class THDataPointBatchUploader(APIRequests, THDataPointUploader):
 
     def validate(self, lazy=False):
 
-        columns = ['Datapoint Name', 'Datapackage Name',
+        columns = ['Key', 'Datapackage Name',
                    'Lab', 'Analyst', 'Associated Literature',
                    'Model Software', 'Model Approach', 'Model Type',
-                   'Number of model iterations', 'Temperature Gradient', 'Temperature Gradient range', 
+            'Number of model iterations', 'Final Mean Temp. Constraint', 'Final Temp. ± Range', 'Temperature Gradient', 'Temperature Gradient ± range', 
                    'Offset Allowed to Vary?', 'Model Comment'] 
 
         for col in self.dataframe.columns:
@@ -167,9 +167,9 @@ class THDataPointBatchUploader(APIRequests, THDataPointUploader):
                 raise ValueError(f"column {col} not in schema")
 
         list = {"dataPackage": DataPackage,
-                   "modelType": LModelType,
-                   "modelSoftware": LModelSoftware,
-                   "modelApproach": LModelApproach}
+                "modelType": LModelType,
+                "modelSoftware": LModelSoftware,
+                "modelApproach": LModelApproach}
         
         if self.skip_columns:
             skip_df = self.dataframe[[col for col in self.skip_columns if col in self.dataframe.columns]]
@@ -465,9 +465,9 @@ class THistInputBatchUploader(APIRequests, THistInputUploader):
         columns = ["Datapoint Key", "Sample Name",
                    "Aliquot ID", "Mineral",	"Population (if any)",
                    "Population Type","Data Type", "Were FT lengths projected to C-axis?",
-                   "Were Californium tracks implanted?", "FT Annealing Model"
+                   "Were Californium tracks implanted?", "FT Annealing Model",
                    "FT Kinematic Indicator", "He Diffusion Model",
-                   "Input Data Point"] 
+                   "Data Point"] 
 
         for col in self.dataframe.columns:
             if col not in columns:

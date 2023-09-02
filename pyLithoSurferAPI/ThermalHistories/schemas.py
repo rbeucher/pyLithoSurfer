@@ -39,6 +39,8 @@ class THDataPointBatchSchema(pa.SchemaModel):
     modelApproach: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Approach")
     modelType: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Type")
     modelIterations: Optional[Series[pa.Float]] = pa.Field(coerce=True, alias="Number of Model iterations")
+    finalTemperature: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Final Mean Temp. Constraint")
+    finalTemperatureRange: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Final Temp. ± Range")
     temperatureGradient: Optional[Series[pa.Float]] = pa.Field(coerce=True, alias="Temperature Gradient")
     temperatureGradientRange: Optional[Series[pa.Float]] = pa.Field(coerce=True, alias="Temperature Gradient Range")
     temperatureGradientRange: Optional[Series[pa.Float]] = pa.Field(coerce=True, alias="Temperature Gradient Range")
@@ -68,7 +70,7 @@ class THistBatchSchema(pa.SchemaModel):
     datapointName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Datapoint Key")
     sampleName: Series[pa.String] = pa.Field( coerce=True, nullable=False, alias="Sample Name")
     sampleId: Optional[Series[pa.Float]] = pa.Field( coerce=True)
-    description: Optional[Series[pa.String]] = pa.Field(coerce=True, alias="Description")
+    description: Optional[Series[pa.String]] = pa.Field(coerce=True, nullable=True, alias="Description")
 
 
 class THistInputSchema(pa.SchemaModel):
@@ -107,9 +109,10 @@ class THistInputBatchSchema(pa.SchemaModel):
         strict = True
     
     dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Datapoint Key")
-    sampleName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Sample name")
+    sampleName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Sample Name")
     aliquotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255}, alias="Aliquot ID")
     mineral: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Mineral")
+    mineralId: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)    
     populationID: Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True, alias="Population (if any)")    
     populationTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     populationTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Population Type")
@@ -124,7 +127,7 @@ class THistInputBatchSchema(pa.SchemaModel):
     diffusionModelId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     diffusionModelName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="He Diffusion Model")
     datapointIDId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
-    datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Input Data Point")
+    datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Data Point")
 
 class THistNickPointSchema(pa.SchemaModel):
 
