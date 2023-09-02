@@ -244,8 +244,7 @@ class THistUploader(Uploader):
         
         query = {"THDataPointId.equals": args["thdatapointId"],
                  "name.equals": args["name"],
-                 "sampleName.equals": args["sampleName"],
-                 "description.equals": args["description"]}
+                 "sampleName.equals": args["sampleName"]}
        
         return super().query(query)
 
@@ -308,8 +307,7 @@ class THistBatchUploader(APIRequests, THistUploader):
 
     def validate(self, lazy=False):
 
-        columns = ['Datapoint Key', 'Sample Name',
-                   'Description'] 
+        columns = ['Datapoint Key', 'Sample Name', 'Description'] 
 
         for col in self.dataframe.columns:
             if col not in columns:
@@ -396,10 +394,12 @@ class THistInputUploader(Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"THDataPointId.equals": args["thdatapointId"],
-                 "name.equals": args["name"],
-                 "sampleName.equals": args["sampleName"],
-                 "description.equals": args["description"]}
+        query = {"datapointIDName.equals": args["datapointIDName"],
+                 "annealingModelName.equals": args["annealingModelName"],
+                 "diffusionModelName.equals": args["diffusionModelName"],
+                 "kinematicIndicatorName.equals": args["kinematicIndicatorName"],
+                 "mineralName.equals": args["mineralName"],
+                 "histRef.equals": args["histRef"]}
        
         return super().query(query)
 
@@ -554,10 +554,12 @@ class THistNickPointUploader(Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"THDataPointId.equals": args["thdatapointId"],
-                 "name.equals": args["name"],
-                 "sampleName.equals": args["sampleName"],
-                 "description.equals": args["description"]}
+        query = {"histRef.equals": args["histRef"],
+                 "modelTemp.equals": args["modelTemp"],
+                 "modelTime.equals": args["modelTime"],
+                 "pathTypeName.equals": args["pathTypeName"],
+                 "thdataPointId.equals": args["thdataPointId"],
+                 }
        
         return super().query(query)
 
@@ -700,10 +702,12 @@ class THModelConstraintUploader(Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"THDataPointId.equals": args["thdatapointId"],
-                 "name.equals": args["name"],
-                 "sampleName.equals": args["sampleName"],
-                 "description.equals": args["description"]}
+        query = {"constraintTempMean.equals": args["constraintTempMean"],
+                 "constraintTempRange.equals": args["constraintTempRange"],
+                 "constraintTimeMean.equals": args["constraintTimeMean"],
+                 "constraintTypeId.equals": args["constraintTypeId"],
+                 "literatureId.equals": args["literatureId"],
+                 "constraintTimeRange.equals": args["constraintTimeRange"]}
        
         return super().query(query)
 
@@ -849,10 +853,10 @@ class THPredResultUploader(Uploader):
 
     def get_unique_query(self, args):
         
-        query = {"THDataPointId.equals": args["thdatapointId"],
-                 "name.equals": args["name"],
-                 "sampleName.equals": args["sampleName"],
-                 "description.equals": args["description"]}
+        query = {"histRef.equals": args["histRef"],
+                 "predictedParameterId.equals": args["predictedParameterId"],
+                 "predictedResult.equals": args["predictedResult"],
+                 "thdataPointId.equals": args["thdataPointId"]}
        
         return super().query(query)
 

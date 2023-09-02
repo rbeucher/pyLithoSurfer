@@ -32,7 +32,7 @@ class THDataPointBatchSchema(pa.SchemaModel):
     Tag: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     dataPointName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Key")
     dataPackageName: Series[pa.String] = pa.Field(coerce=True, alias="Datapackage Name")
-    dataPackageId: Optional[Series[pa.Float]] = pa.Field(coerce=True, alias="Datapackage NameId")
+    dataPackageId: Optional[Series[pa.Float]] = pa.Field(coerce=True)
     laboratory: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Associated Literature")
     analyst: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Analyst")
     modelSoftware: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Software") 
@@ -168,6 +168,9 @@ class THModelConstraintSchema(pa.SchemaModel):
     constraintTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     constraintTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
+    literatureCalcName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
+    literatureId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
+    thdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
 
 
 class THModelConstraintBatchSchema(pa.SchemaModel):
