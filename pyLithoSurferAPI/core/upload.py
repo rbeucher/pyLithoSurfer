@@ -134,13 +134,13 @@ class SampleWithLocationUploader(Uploader):
                 SampWLocation.update()
 
             index = SampWLocation.location.id
-            self.locations_out.loc[index] = loc_args
+            self.locations_out.loc[index] = {k:v for k,v in loc_args.items() if v is not None}
             self.locations_out.loc[index, "id"] = SampWLocation.location.id
             for k, v in loc_skip_args.items():
                 self.locations_out.loc[index, k] = v
 
             index = SampWLocation.sample.id
-            self.samples_out.loc[index] = samp_args
+            self.samples_out.loc[index] = {k:v for k,v in samp_args.items() if v is not None}
             self.samples_out.loc[index, "id"] = SampWLocation.sample.id
             self.samples_out.loc[index, "locationId"] = SampWLocation.location.id
             for k, v in samp_skip_args.items():
@@ -304,5 +304,5 @@ class LiteratureUploader(Literature, Uploader):
                 obj.update()
 
             index = obj.id            
-            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index] = {k:v for k,v in args.items() if v is not None}
             self.dataframe_out.loc[index, "id"] = obj.id
