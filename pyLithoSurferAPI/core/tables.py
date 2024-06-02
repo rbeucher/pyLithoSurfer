@@ -55,7 +55,7 @@ class Lit2Sample(APIRequests):
 
 class Literature(APIRequests):
 
-    API_PATH = '/api/core/literature/'
+    API_PATH = '/api/core/literature'
 
     @classmethod
     def get_from_doi(cls, doi):
