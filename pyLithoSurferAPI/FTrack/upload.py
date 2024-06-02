@@ -116,22 +116,22 @@ class FTDataPointUploader(Uploader):
                 query["popTypeId.equals"] = int(ft_args["popTypeId"])           
 
             # We should not use ages but that will do the job for the Canadian
-            if ft_args["meanAgeMa"]:
+            if ("meanAgeMa" in ft_args.keys()) and ft_args["meanAgeMa"]:
                 query["meanAgeMa.greaterOrEqualThan"] = ft_args["meanAgeMa"]  - 0.001
                 query["meanAgeMa.lessOrEqualThan"] = ft_args["meanAgeMa"]  + 0.001
-            if ft_args["meanAgeUncertaintyMa"]:
+            if ("meanAgeUncertaintyMa" in ft_args.keys()) and ft_args["meanAgeUncertaintyMa"]:
                 query["meanAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["meanAgeUncertaintyMa"] - 0.01                      
                 query["meanAgeUncertaintyMa.lessOrEqualThan"] = ft_args["meanAgeUncertaintyMa"] + 0.01                      
-            if ft_args["centralAgeMa"]:
+            if ("centralAgeMa" in ft_args.keys()) and ft_args["centralAgeMa"]:
                 query["centralAgeMa.greaterOrEqualThan"] = ft_args["centralAgeMa"] - 0.01    
                 query["centralAgeMa.lessOrEqualThan"] = ft_args["centralAgeMa"] + 0.01    
-            if ft_args["centralAgeUncertaintyMa"]:
+            if ("centralAgeUncertaintyMa" in ft_args.keys()) and ft_args["centralAgeUncertaintyMa"]:
                 query["centralAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["centralAgeUncertaintyMa"] - 0.01                       
                 query["centralAgeUncertaintyMa.lessOrEqualThan"] = ft_args["centralAgeUncertaintyMa"] + 0.01                      
-            if ft_args["pooledAgeMa"]:
+            if ("pooledAgeMa" in ft_args.keys()) and ft_args["pooledAgeMa"]:
                 query["pooledAgeMa.greaterOrEqualThan"] = ft_args["pooledAgeMa"] - 0.01     
                 query["pooledAgeMa.lessOrEqualThan"] = ft_args["pooledAgeMa"] + 0.01    
-            if ft_args["pooledAgeUncertaintyMa"]:
+            if ("pooledAgeUncertaintyMa" in ft_args.keys()) and ft_args["pooledAgeUncertaintyMa"]:
                 query["pooledAgeUncertaintyMa.greaterOrEqualThan"] = ft_args["pooledAgeUncertaintyMa"] - 0.01 
                 query["pooledAgeUncertaintyMa.lessOrEqualThan"] = ft_args["pooledAgeUncertaintyMa"] + 0.01
 
@@ -182,7 +182,7 @@ class FTDataPointUploader(Uploader):
                 FTDataptsCRUD.update()
 
             index = FTDataptsCRUD.id
-            self.dataframe_out.loc[index] = ft_args
+            self.dataframe_out.loc[index] = {k:v for k,v in ft_args.items() if v is not None}
             self.dataframe_out.loc[index, "locationId"] = locationId
             self.dataframe_out.loc[index, "sampleId"] = sampleId
             self.dataframe_out.loc[index, "id"] = FTDataptsCRUD.id
@@ -339,7 +339,7 @@ class FTBinnedLengthsUploader(FTBinnedLengthDataCRUD, Uploader):
                 obj.update()
 
             index = obj.id
-            self.dataframe_out.loc[index] = args
+            self.dataframe_out.loc[index] = {k:v for k,v in args.items() if v is not None}
             self.dataframe_out.loc[index, "id"] = obj.id
 
 
