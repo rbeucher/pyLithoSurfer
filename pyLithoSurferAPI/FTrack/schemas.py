@@ -3,7 +3,7 @@ from pandera.typing import Index, DataFrame, Series
 from typing import Optional
 
 
-class FTBinnedLengthDataSchema(pa.SchemaModel):
+class FTBinnedLengthDataSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTBinnedLengthDataSchema"
@@ -43,7 +43,7 @@ class FTBinnedLengthDataSchema(pa.SchemaModel):
     mountID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 
-class FTCountDataSchema(pa.SchemaModel):
+class FTCountDataSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTCountDataSchema"
@@ -68,7 +68,7 @@ class FTCountDataSchema(pa.SchemaModel):
     rhoi: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
 
 
-class FTDataPointSchema(pa.SchemaModel):
+class FTDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTDataPointSchema"
@@ -166,7 +166,7 @@ class FTDataPointSchema(pa.SchemaModel):
     sampleId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
 
 
-class FTDataPointBatchSchema(pa.SchemaModel):
+class FTDataPointBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTDataPointBatchSchema"
@@ -257,7 +257,7 @@ class FTDataPointBatchSchema(pa.SchemaModel):
     machine: Series[pa.String] = pa.Field( nullable=False, str_length={"max_value": 255})
     Tag: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 
-class FTLengthDataSchema(pa.SchemaModel):
+class FTLengthDataSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTLengthDataSchema"
@@ -289,7 +289,7 @@ class FTLengthDataSchema(pa.SchemaModel):
     trackTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 
 
-class FTSingleGrainSchema(pa.SchemaModel):
+class FTSingleGrainSchema(pa.DataFrameModel):
 
     class Config:
         name = "FTSingleGrainSchema"

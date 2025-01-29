@@ -4,7 +4,7 @@ from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LSHRIMPSampleFormat, LSHRIMPAgeGroup, LSHRIMPAgeType, LErrorType
 from pyLithoSurferAPI.core.tables import Machine
 
-class SHRIMPDataPointSchema(pa.SchemaModel):
+class SHRIMPDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "SHRIMPDataPointSchema"
@@ -46,7 +46,7 @@ class SHRIMPDataPointSchema(pa.SchemaModel):
     sampleId: Series[pa.Int64] = pa.Field( nullable=False, coerce=True)
 
 
-class SHRIMPAgeSchema(pa.SchemaModel):
+class SHRIMPAgeSchema(pa.DataFrameModel):
 
     class Config:
         name = "SHRIMAgeSchema"

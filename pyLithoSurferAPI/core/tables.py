@@ -2,6 +2,7 @@
 from pyLithoSurferAPI.REST import APIRequests
 from pyLithoSurferAPI.utilities import NumpyEncoder
 import json
+import urllib
 
 class Archive(APIRequests):
 
@@ -182,6 +183,14 @@ class SampleWithLocation(APIRequests):
     
     def update(self):
         return self._send_payload(APIRequests.SESSION.put)
+    
+    @classmethod
+    def findId(cls, query):
+        query = urllib.parse.urlencode(query)
+        path = APIRequests.URL_BASE + "/api/core/findIds" + "?" + str(query)
+        response = APIRequests.SESSION.get(path)
+        response.raise_for_status()
+        return response.json()
 
 
 class DatapointProperty(APIRequests):

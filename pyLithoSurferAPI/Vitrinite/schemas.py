@@ -2,7 +2,7 @@ import pandera as pa
 from pandera.typing import Series
 from typing import Optional
 
-class VitriniteDataPointSchema(pa.SchemaModel):
+class VitriniteDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "VitriniteDataPointSchema"

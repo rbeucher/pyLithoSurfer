@@ -123,3 +123,37 @@ class APIRequests(ABC):
             return None
         
         return records[0]["id"]
+    
+    def merge(self, others):
+        if not isinstance(others, list):
+            others = list(others)
+        
+        survivorId = self.id
+        toBeDeletedIds = []
+        for other in others:
+            if not isinstance(other, [type(self), int]):
+                raise ValueError("Should be an object or an int")
+            if isinstance(other, type(self)):
+                toBeDeletedIds.append(other.id)
+            if isinstance(other, int):
+                toBeDeletedIds.append(other)
+            
+        data = {"survivorId": survivorId,
+                "toBeDeletedIds": toBeDeletedIds
+                }
+        path = self.path() + "/merge"
+        response = APIRequests.SESSION.get(path, data=data)
+        response.raise_for_status()
+        return response
+    
+    @classmethod
+    def merge2(cls, survivorId, toBeDeletedIds):
+        data = {"survivorId": survivorId,
+                "toBeDeletedIds": toBeDeletedIds
+                }
+        path = cls.path() + "/merge"
+        print(json.dumps(data, cls=NumpyEncoder))
+        response = APIRequests.SESSION.post(path, data=json.dumps(data, cls=NumpyEncoder))
+        response.raise_for_status()
+        return response
+        

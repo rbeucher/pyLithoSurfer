@@ -3,7 +3,7 @@ from pandera.typing import Index, DataFrame, Series
 from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LErrorType
 
-class AgeDataPointSchema(pa.SchemaModel):
+class AgeDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "AgeDataPointSchema"

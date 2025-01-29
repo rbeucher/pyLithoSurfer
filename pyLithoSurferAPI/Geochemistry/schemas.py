@@ -3,7 +3,7 @@ from pandera.typing import Index, DataFrame, Series
 from typing import Optional
 
 
-class GCDataPointSchema(pa.SchemaModel):
+class GCDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "GCDataPointSchema"
@@ -35,7 +35,7 @@ class GCDataPointSchema(pa.SchemaModel):
     sampleId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     description: Optional[Series[pa.String]] = pa.Field(coerce=True)
 
-class GCDataPointBatchSchema(pa.SchemaModel):
+class GCDataPointBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "GCDataPointBatchSchema"
@@ -65,7 +65,7 @@ class GCDataPointBatchSchema(pa.SchemaModel):
     elementUncertaintyType:  Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     elementUncertaintyTypeId:  Optional[Series[pa.Float]] = pa.Field( coerce=True, nullable=True)
 
-class GCAliquotSchema(pa.SchemaModel):
+class GCAliquotSchema(pa.DataFrameModel):
 
     class Config:
         name = "GCAliquotSchema"
@@ -80,7 +80,7 @@ class GCAliquotSchema(pa.SchemaModel):
     oxideTotal: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     spotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
 
-class ElementalConcentrationSchema(pa.SchemaModel):
+class ElementalConcentrationSchema(pa.DataFrameModel):
 
     class Config:
         name = "ElementalConcentrationSchema"
@@ -97,7 +97,7 @@ class ElementalConcentrationSchema(pa.SchemaModel):
     isotopeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     spotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
 
-class ElementalConcentrationBatchSchema(pa.SchemaModel):
+class ElementalConcentrationBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "ElementalConcentrationBatchSchema"
@@ -113,7 +113,7 @@ class ElementalConcentrationBatchSchema(pa.SchemaModel):
     uncertainty: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Uncertainty")
     spotID: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, str_length={"max_value": 255})
     
-class OxideConcentrationBatchSchema(pa.SchemaModel):
+class OxideConcentrationBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "OxideConcentrationBatchSchema"

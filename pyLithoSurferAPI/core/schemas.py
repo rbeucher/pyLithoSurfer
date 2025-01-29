@@ -4,7 +4,7 @@ from typing import Optional
 from pyLithoSurferAPI.core.lists import LElevationKind, LLocationKind, LSampleKind, LSampleMethod, LCelestial, LErrorType, LGeoEvent
 from pyLithoSurferAPI.management.tables import DataPackage
 
-class SampleSchema(pa.SchemaModel):
+class SampleSchema(pa.DataFrameModel):
 
     class Config:
         name = "SampleSchema"
@@ -49,7 +49,7 @@ class SampleSchema(pa.SchemaModel):
     stratographicUnitName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
 
-class LocationSchema(pa.SchemaModel):
+class LocationSchema(pa.DataFrameModel):
 
     class Config:
         name = "LocationSchema"
@@ -68,7 +68,7 @@ class LocationSchema(pa.SchemaModel):
     name: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
 
 
-class DataPointSchema(pa.SchemaModel):
+class DataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "DataPointSchema"
@@ -91,7 +91,7 @@ class DataPointSchema(pa.SchemaModel):
 
 
 
-class GeoEventAtAgeSchema(pa.SchemaModel):
+class GeoEventAtAgeSchema(pa.DataFrameModel):
 
     class Config:
         name = "GeoEventAtAgeSchema"
@@ -107,7 +107,7 @@ class GeoEventAtAgeSchema(pa.SchemaModel):
     shrimpageId: Optional[Series[pa.Int64]]
 
 
-class StatementSchema(pa.SchemaModel):
+class StatementSchema(pa.DataFrameModel):
     
     class Config:
         name = "StatementSchema"
@@ -124,7 +124,7 @@ class StatementSchema(pa.SchemaModel):
     tempGradientId: Optional[Series[pa.Int64]]
 
 
-class PersonSchema(pa.SchemaModel):
+class PersonSchema(pa.DataFrameModel):
     
     class Config:
         name = "PersonSchema"
@@ -139,7 +139,7 @@ class PersonSchema(pa.SchemaModel):
     title: Optional[Series[pa.String]] = pa.Field(nullable=True)
 
 
-class LiteratureSchema(pa.SchemaModel):
+class LiteratureSchema(pa.DataFrameModel):
     
     class Config:
         name = "LiteratureSchema"
@@ -175,7 +175,7 @@ class LiteratureSchema(pa.SchemaModel):
 
 
 
-class StratigraphicUnitSchema(pa.SchemaModel):
+class StratigraphicUnitSchema(pa.DataFrameModel):
 
     baseAge: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     baseAgeName: Optional[Series[pa.String]]

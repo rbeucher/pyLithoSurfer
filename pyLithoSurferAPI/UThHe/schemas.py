@@ -3,7 +3,7 @@ from pandera.typing import Index, DataFrame, Series
 from typing import Optional
 
 
-class HeWholeGrainSchema(pa.SchemaModel):
+class HeWholeGrainSchema(pa.DataFrameModel):
 
     class Config:
         name = "HeWholeGrainSchema"
@@ -103,7 +103,7 @@ class HeWholeGrainSchema(pa.SchemaModel):
     zrContentUncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255})
     
 
-class HeDataPointSchema(pa.SchemaModel):
+class HeDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "HeDataPointSchema"
@@ -174,7 +174,7 @@ class HeDataPointSchema(pa.SchemaModel):
     sampleId: Series[pa.Float] = pa.Field( nullable=True, coerce=True)
 
     
-class HeInSituSchema(pa.SchemaModel):
+class HeInSituSchema(pa.DataFrameModel):
 
     class Config:
         name = "HeInSituSchema"

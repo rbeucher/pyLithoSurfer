@@ -3,7 +3,7 @@ from pandera.typing import Index, DataFrame, Series
 from typing import Optional
 
 
-class THDataPointSchema(pa.SchemaModel):
+class THDataPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "THDataPointSchema"
@@ -23,7 +23,7 @@ class THDataPointSchema(pa.SchemaModel):
     dataPackageId: Optional[Series[pa.String]] = pa.Field(coerce=True)
 
     
-class THDataPointBatchSchema(pa.SchemaModel):
+class THDataPointBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THDataPointBatchSchema"
@@ -48,7 +48,7 @@ class THDataPointBatchSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
-class THistSchema(pa.SchemaModel):
+class THistSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistSchema"
@@ -61,7 +61,7 @@ class THistSchema(pa.SchemaModel):
     thdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=False, coerce=True)
     description: Optional[Series[pa.String]] = pa.Field(coerce=True)
 
-class THistBatchSchema(pa.SchemaModel):
+class THistBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistBatchSchema"
@@ -73,7 +73,7 @@ class THistBatchSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]] = pa.Field(coerce=True, nullable=True, alias="Description")
 
 
-class THistInputSchema(pa.SchemaModel):
+class THistInputSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistInputSchema"
@@ -102,7 +102,7 @@ class THistInputSchema(pa.SchemaModel):
     projectedLengths: Optional[Series[pa.Bool]] = pa.Field( nullable=True, coerce=True)
 
 
-class THistInputBatchSchema(pa.SchemaModel):
+class THistInputBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistInputBatchSchema"
@@ -129,7 +129,7 @@ class THistInputBatchSchema(pa.SchemaModel):
     datapointIDId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     datapointIDName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True, alias="Data Point")
 
-class THistNickPointSchema(pa.SchemaModel):
+class THistNickPointSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistNickPointSchema"
@@ -144,7 +144,7 @@ class THistNickPointSchema(pa.SchemaModel):
     thdataPointId: Optional[Series[pa.Int]] = pa.Field( nullable=False, coerce=True)
 
 
-class THistNickPointBatchSchema(pa.SchemaModel):
+class THistNickPointBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THistNickPointBatchSchema"
@@ -157,7 +157,7 @@ class THistNickPointBatchSchema(pa.SchemaModel):
     modelTemp: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Temperature")
     modelTime: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True, alias="Time")
 
-class THModelConstraintSchema(pa.SchemaModel):
+class THModelConstraintSchema(pa.DataFrameModel):
 
     class Config:
         name = "THModelConstraintSchema"
@@ -176,7 +176,7 @@ class THModelConstraintSchema(pa.SchemaModel):
     thdataPointId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
 
 
-class THModelConstraintBatchSchema(pa.SchemaModel):
+class THModelConstraintBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THModelConstraintBatchSchema"
@@ -193,7 +193,7 @@ class THModelConstraintBatchSchema(pa.SchemaModel):
     description: Optional[Series[pa.String]] = pa.Field( nullable=True, str_length={"max_value": 255}, alias="Model Comment")
 
 
-class THPredResultSchema(pa.SchemaModel):
+class THPredResultSchema(pa.DataFrameModel):
 
     class Config:
         name = "THPredResultSchema"
@@ -210,7 +210,7 @@ class THPredResultSchema(pa.SchemaModel):
     uncertaintyTypeId: Optional[Series[pa.Float]] = pa.Field( nullable=True, coerce=True)
     uncertaintyTypeName: Optional[Series[pa.String]] = pa.Field( nullable=True, coerce=True)
 
-class THPredResultBatchSchema(pa.SchemaModel):
+class THPredResultBatchSchema(pa.DataFrameModel):
 
     class Config:
         name = "THPredResultBatchSchema"
