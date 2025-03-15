@@ -50,4 +50,16 @@ def select_database(database="test"):
 
     return selected_db
 
+
+def init_elevation_api():
+    from .REST import XYAPIRequest
+    session = requests.Session()
+    session.headers = {'Accept': 'application/json',
+                       'Content-Type': 'application/json'}
+    session.headers["x-api-key"] = os.getenv("XYELEVATION_API_KEY")
+    
+    XYAPIRequest.URL_BASE = "https://xyelevation.com"
+    XYAPIRequest.SESSION = session
+
 select_database()
+init_elevation_api()

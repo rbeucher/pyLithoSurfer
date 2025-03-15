@@ -2,6 +2,8 @@ from abc import ABC
 import json
 import pandas as pd
 import urllib
+import requests
+import os
 from pyLithoSurferAPI.utilities import NumpyEncoder
 
 
@@ -86,7 +88,7 @@ class APIRequests(ABC):
 
     @classmethod
     def query(cls, query):
-        query = urllib.parse.urlencode(query)
+        query = urllib.parse.urlencode(query, doseq=True)
         path = cls.path() + "?" + str(query)
         response = APIRequests.SESSION.get(path)
         response.raise_for_status()
@@ -156,4 +158,37 @@ class APIRequests(ABC):
         response = APIRequests.SESSION.post(path, data=json.dumps(data, cls=NumpyEncoder))
         response.raise_for_status()
         return response
-        
+
+class XYAPIRequest(ABC):
+    URL_BASE = None
+    API_PATH = None
+    SESSION = None
+
+    @classmethod
+    def path(cls):
+        return cls.URL_BASE + cls.API_PATH
+
+    @classmethod
+    def get_values(cls, locations):
+        # locations is a list of tuples (latitude, longitude)
+        # convert to strings lat,lon separated by pipe
+        # e.g. 40.714728,-73.998672|40.714728,-73.998672
+        locations = "|".join([str(lat) + "," + str(lon) for lat, lon in locations])        
+        query = {"locations": locations}
+        response = XYAPIRequest.SESSION.get(cls.path(), params=query)
+        response.raise_for_status()
+        return response.json()        
+
+class Elevation(XYAPIRequest):
+    API_PATH = "/api/v1/elevation"
+
+    @classmethod
+    def get(cls, locations):
+        return cls.get_values(locations)
+    
+class ThermalGradient(XYAPIRequest):
+    API_PATH = "/api/v1/thermal-gradient"
+
+    @classmethod
+    def get(cls, locations):
+        return cls.get_values(locations)
